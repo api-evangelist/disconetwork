@@ -1,7 +1,23 @@
 aid: disconetwork
+accessModel:
+  pricing: unknown
+  onboarding: unknown
+  trial: false
+  try_now: false
+  public: false
+  label: Unknown
+  confidence: low
+  source: []
+  generated: '2026-07-22'
+  method: derived
+image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/icons/disconetwork.png
 name: Disconetwork
-description: Disconetwork is a company surfaced as a portfolio company of felicis and added to the API
-  Evangelist network as a stub for enrichment. This profile is a lead awaiting the enrichment pipeline.
+description: Disco (disconetwork.com) is a commerce media network focused on the post-purchase moment.
+  It helps ecommerce brands monetize their order-confirmation and thank-you pages by placing relevant
+  partner offers in front of shoppers, and gives advertisers a channel to reach buyers at the point of
+  purchase. Its products span offer placement, audience insights, and cross-brand advertising across the
+  post-purchase experience and beyond. Backed by Felicis. No public developer API surface was found at
+  the time of enrichment.
 url: https://raw.githubusercontent.com/api-evangelist/disconetwork/refs/heads/main/apis.yml
 x-type: company
 x-source: vc-portfolio
@@ -11,9 +27,16 @@ x-tier: stub
 x-tier-reason: portfolio-lead
 specificationVersion: '0.20'
 created: '2026-07-17'
-modified: '2026-07-17'
+modified: '2026-07-18'
 tags:
 - Company
+- Commerce Media
+- Retail Media
+- Post-Purchase
+- Advertising
+- Ecommerce
+- AdTech
+- Marketing
 apis: []
 maintainers:
 - FN: Kin Lane
@@ -21,5 +44,18 @@ maintainers:
 - FN: APIs.json
   email: info@apis.io
 common:
+- type: DomainSecurity
+  url: security/disconetwork-domain-security.yml
 - type: Website
   url: https://disconetwork.com
+- type: TermsOfService
+  url: https://disconetwork.com/terms-of-service
+- type: PrivacyPolicy
+  url: https://disconetwork.com/privacy-policy
+- type: ChangeLog
+  url: https://disconetwork.com/changelog
+x-enrichment:
+  date: '2026-07-19'
+  status: backfilled
+  pass: local-v1
+  note: backfilled from .gitignore signal + verified work evidence
