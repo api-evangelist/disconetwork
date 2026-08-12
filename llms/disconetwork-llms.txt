@@ -1,0 +1,83 @@
+# Disco: Commerce Media Network
+
+> Disco is the commerce media network that connects brands to high-intent consumers through AI-powered, personalized offers across every digital touchpoint.
+
+## Company
+
+- Name: Disco (Disco Technology Inc.)
+- Website: https://disconetwork.com
+- Founded: 2019
+- Headquarters: New York, NY
+- Category: Commerce Media / Advertising Technology / Post-Purchase Monetization
+
+## Key Stats
+
+- 800+ publisher surfaces across checkout, order confirmation, email, SMS, mobile apps, and order tracking
+- 160M+ shoppers reached across the Disco network
+- 1,000+ DTC and enterprise brands in the network
+- AI-powered matching engine processing offers in under 200ms
+
+## Products
+
+### DiscoOffers
+Post-purchase monetization platform for publishers. Native, AI-powered offers that consumers love. On every surface from checkout to inbox. Publishers earn incremental revenue by showing personalized third-party offers to their customers.
+URL: https://disconetwork.com/offers
+
+### DiscoBeat
+Headless commerce media API for SaaS platforms. One integration gives every merchant on a platform a white-labeled monetization layer. Built for platforms like Shopify apps, loyalty programs, and commerce SaaS.
+URL: https://disconetwork.com/beat
+
+### DiscoMix
+AI-powered cross-sell intelligence. Turns every post-purchase moment into incremental revenue through personalized product recommendations across complementary brands.
+URL: https://disconetwork.com/mix
+
+### OffersAI
+Disco's AI engine that matches the right offer to the right consumer at the right moment. Powered by cross-brand purchase data, identity graph, and real-time behavioral signals. Processes personalization in under 200ms.
+URL: https://disconetwork.com/offersai
+
+## For Advertisers
+
+Disco enables brands to acquire new customers through personalized, offer-based advertising across 800+ premium publisher touchpoints. Performance marketing with CPC and CPA pricing models, deterministic attribution, and AI-powered audience targeting.
+URL: https://disconetwork.com/advertise
+
+### Targeting & Intelligence
+AI-powered targeting across purchase behavior, brand affinity, lifestyle signals, and an identity graph built on first-party commerce data.
+URL: https://disconetwork.com/advertise/intelligence
+
+### Ad Formats & Placements
+Native offer-based formats across pre-purchase, thank you page, email, mobile apps, order tracking, and more.
+URL: https://disconetwork.com/advertise/formats
+
+### Measurement & Attribution
+Deterministic conversion tracking with WebSDK and Event API. Closed-loop attribution from impression to purchase. No cookies, no guessing. Integrations with Shopify, Triple Whale, Northbeam, and more.
+URL: https://disconetwork.com/advertise/measurement
+
+## For Publishers
+
+Publishers integrate DiscoOffers to monetize their post-purchase surfaces (checkout, order confirmation, email, SMS, order tracking) with AI-personalized offers from premium brands. No development resources required for Shopify merchants. Install and go.
+
+## Integrations
+
+One-click plugins for Shopify, Salesforce Commerce Cloud, and major e-commerce platforms. Full API access for custom integrations. WebSDK for conversion tracking.
+URL: https://disconetwork.com/integrations
+
+## How Disco Is Different
+
+1. **AI-First**: OffersAI personalizes every offer in real time using cross-brand purchase data
+2. **Brand-Safe Network**: Curated network of premium DTC and enterprise brands. No junk ads
+3. **Full-Funnel**: Pre-purchase, post-purchase, email, SMS, mobile, order tracking
+4. **Performance-Based**: CPC and CPA pricing. Advertisers only pay for results
+5. **Deterministic Attribution**: Closed-loop tracking from impression to purchase
+6. **Two-Sided Marketplace**: Both publishers and advertisers benefit from the same network
+
+## Educational Resources
+
+- What Is Commerce Media: https://disconetwork.com/what-is-commerce-media
+- Post-Purchase Advertising Guide: https://disconetwork.com/resources/post-purchase-advertising-guide
+- Disco vs Rokt: https://disconetwork.com/disco-vs-rokt
+
+## Contact
+
+- Book a Demo: https://disconetwork.com/book-a-demo
+- Careers: https://disconetwork.com/careers
+- About: https://disconetwork.com/about

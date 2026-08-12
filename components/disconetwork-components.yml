@@ -1,0 +1,61 @@
+generated: '2026-08-12'
+method: searched
+source: https://docs.disconetwork.com/docs/publish-discofeed
+docs:
+- https://docs.disconetwork.com/docs/publish-discofeed
+- https://docs.disconetwork.com/docs/introduction
+summary:
+  family_count: 2
+  component_count: 3
+  note: Disco's client-side surface is an embeddable ad unit (the DiscoFeed) plus the
+    loader script that mounts it. There is no element library, no design system and
+    no hosted dashboard component.
+families:
+- family: DiscoFeed embed
+  loader: https://d1zcmvsklxjbur.cloudfront.net/static/disco-sdk.js
+  components:
+  - name: DiscoFeed widget
+    mount: <div id="disco-widget"></div>
+    api: window.discoLauncher.loadWidget({...})
+    surfaces:
+    - thank_you
+    - order_status
+    description: The offer feed rendered on a publisher's order-confirmation or
+      order-tracking page. Order data is passed on load (email or email_hash,
+      first_name, purchases[], order_id, page_type) so Disco can rank offers for the
+      shopper.
+    required_fields:
+    - email or email_hash
+    - first_name
+    - purchases
+    - order_id
+    - page_type
+    constraints:
+    - page_type accepts only "thank_you" or "order_status"; any other value errors.
+    source: https://docs.disconetwork.com/docs/publish-discofeed
+  - name: Conversion tracker
+    api: window.discoLauncher.trackEvent({...})
+    description: The advertiser-side counterpart. Fires a SIGNUP event with one of
+      three customer identifiers (email, SHA-256 email_hash, or the URL-appended
+      click_id) so Disco can attribute a conversion to the impression that drove it.
+    source: https://docs.disconetwork.com/docs/advertiser-discofeed/track-conversions/web-sdk
+  - name: Google Tag Manager custom HTML tag
+    description: The same loader delivered through GTM, with publisher_id moved from
+      an attribute to a query parameter and shopper identifiers supplied as GTM data
+      layer variables. Disco documents it as the fallback and recommends the direct
+      integration for best results.
+    source: https://docs.disconetwork.com/docs/advertiser-discofeed/track-conversions/web-sdk
+- family: Platform apps
+  components:
+  - name: Disco Shopify app
+    url: https://apps.shopify.com/disco
+    description: A no-code install that places the DiscoFeed on a Shopify post-purchase
+      page and passes the order data Disco needs for both monetization and advertising.
+      Documented as the path that requires no development work.
+    source: https://docs.disconetwork.com/docs/introduction
+  - name: Salesforce Commerce Cloud order-data ingestion
+    status: beta
+    description: Disco documents this as in development and accepting beta partners.
+      It ingests SFCC order data as an input to the ranking engine and to advertising
+      attribution.
+    source: https://docs.disconetwork.com/docs/introduction

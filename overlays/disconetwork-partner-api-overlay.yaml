@@ -1,0 +1,80 @@
+overlay: 1.0.0
+info:
+  title: API Evangelist enhancements for the Disco Partner Integration API
+  version: 1.0.0
+extends: openapi/disconetwork-partner-api.yml
+generated: '2026-08-12'
+method: generated
+source: openapi/disconetwork-partner-api.yml
+actions:
+- target: $.info
+  update:
+    x-apievangelist:
+      catalog: https://apis.io/disconetwork
+      provider: Disco (Disco Technology Inc.)
+      maintainer: Kin Lane <kin@apievangelist.com>
+      artifacts:
+      - apis.yml
+      - authentication/disconetwork-authentication.yml
+      - conventions/disconetwork-conventions.yml
+      - conformance/disconetwork-conformance.yml
+      - errors/disconetwork-problem-types.yml
+      - data-model/disconetwork-data-model.yml
+      - lifecycle/disconetwork-lifecycle.yml
+      - packages/disconetwork-packages.yml
+      - components/disconetwork-components.yml
+      - sandbox/disconetwork-sandbox.yml
+      - rate-limits/disconetwork-rate-limits.yml
+      - well-known/disconetwork-well-known.yml
+      - mcp/disconetwork-mcp.yml
+      - mcp/disconetwork-tool-crosswalk.yml
+      - skills/_index.yml
+      source_spec: https://docs.disconetwork.com/disco-api.yaml
+- target: $.info
+  update:
+    x-api-evangelist-notes: >-
+      The published document does not declare a top-level `security` block even
+      though every operation requires the `x-api-key` header; only
+      `/recommendations` attaches `ApiKey` explicitly. The `version` request
+      header is required on all three operations and is the only versioning
+      signal this API carries.
+- target: $.servers
+  update:
+    x-environments:
+      production: https://partners.disconetwork.com
+      staging: https://partners.disconetwork-staging.com
+      note: >-
+        API keys are environment-bound. A staging key against production (or the
+        reverse) returns 401 "API key environment does not match service
+        environment."
+- target: $.paths['/recommendations'].post
+  update:
+    x-agentic-access:
+      action_class: read
+      consequence: none
+      escalation: none
+      note: >-
+        Returns ranked advertiser offers for a shopper. No state is written; safe
+        for an agent to call on behalf of a publisher integration.
+- target: $.paths['/events'].post
+  update:
+    x-agentic-access:
+      action_class: write
+      consequence: records-billable-attribution
+      escalation: none
+      idempotency: none
+      note: >-
+        Records a user action against a placement. Disco publishes no idempotency
+        key for this endpoint, so a retried event can double-count. See
+        conventions/disconetwork-conventions.yml.
+- target: $.paths['/events/batch'].post
+  update:
+    x-agentic-access:
+      action_class: write
+      consequence: records-billable-attribution
+      escalation: none
+      idempotency: none
+      note: >-
+        1-20 events per call. A 207 is a partial success — inspect `results` and
+        retry only the failed members. A 502 means the whole batch failed and the
+        entire batch should be retried.

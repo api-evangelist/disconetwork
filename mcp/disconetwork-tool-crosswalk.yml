@@ -1,0 +1,95 @@
+generated: '2026-08-12'
+method: derived
+source: >-
+  mcp/disconetwork-mcp.yml (four WebMCP tools read verbatim from
+  https://disconetwork.com/assets/index-DdW-GXFA.js) bound against
+  openapi/disconetwork-partner-api.yml,
+  openapi/disconetwork-reporting-api-v1.yml and
+  openapi/disconetwork-reporting-api-v2.yml.
+summary: >-
+  Disco's declared agent tool surface and Disco's actual API surface do not
+  intersect at a single operation. All four WebMCP tools are marketing-site
+  navigation with no REST backing; all six published OpenAPI operations have no
+  tool. This is a total crosswalk miss, and recording it is the point — the
+  provider ships an agent surface that cannot transact against the business.
+surfaces:
+  openapi:
+  - file: openapi/disconetwork-partner-api.yml
+    host: https://partners.disconetwork.com
+    gated: true
+    note: x-api-key issued by a Disco representative; no self-serve signup.
+  - file: openapi/disconetwork-reporting-api-v1.yml
+    host: https://api.disconetwork.com
+    gated: true
+  - file: openapi/disconetwork-reporting-api-v2.yml
+    host: https://api.disconetwork.com
+    gated: true
+  graphql:
+    present: false
+  mcp:
+    hosted_url: null
+    kind: in-page WebMCP (navigator.modelContext)
+    host: https://disconetwork.com
+    gated: false
+    note: >-
+      Anonymous and callable by any WebMCP-capable browsing agent, because it
+      does nothing privileged.
+coverage:
+  mcp_tools: 4
+  rest_operations: 6
+  bound: 0
+  mcp_only: 4
+  rest_only: 6
+  binding_rate: 0.0
+crosswalk: []
+mcp_only:
+- tool: navigate
+  reason: >-
+    Client-side route change on the marketing site. No server operation exists or
+    could exist behind it.
+- tool: list_products
+  reason: >-
+    Returns a hardcoded product list from the JS bundle. Disco publishes no
+    products/catalog operation in any OpenAPI.
+- tool: book_demo
+  reason: >-
+    Navigates to the HubSpot-backed /book-a-demo form. The lead-capture endpoint
+    is not part of any published Disco API.
+- tool: get_developer_docs
+  reason: >-
+    Returns documentation links. Two of the four returned paths
+    (/.well-known/api-catalog, /.well-known/agent-skills/index.json) are not
+    served.
+rest_only:
+- operationId: getDiscoAdvertiserRecommendations
+  api: Disco Partner Integration API
+  method_path: POST /recommendations
+  note: The core offer-ranking call. No tool exposes it.
+- operationId: createAnEventUsedToRecordUserActions
+  api: Disco Partner Integration API
+  method_path: POST /events
+- operationId: createABatchOfEventsUsedToRecordUserActions
+  api: Disco Partner Integration API
+  method_path: POST /events/batch
+- operationId: getReportingSummary
+  api: Disco Reporting API V1
+  method_path: GET /discobeat/reporting/v1/summary/
+- operationId: getReportingPublishers
+  api: Disco Reporting API V1
+  method_path: GET /discobeat/reporting/v1/publishers/
+- operationId: getReportingV2Report
+  api: Disco Reporting API V2
+  method_path: GET /discobeat/reporting/v2/report/
+  note: >-
+    The single richest operation Disco publishes — selectable metrics, five time
+    grains, three breakdown columns, filters — and the most obvious candidate for
+    a real MCP tool.
+not_crosswalked:
+- api: DiscoBeat Channel API
+  reason: >-
+    Documented with curl examples on disconetwork.com/developers/discobeat but no
+    machine-readable specification is published, so its operations cannot be bound
+    by operationId.
+- api: Disco Event API
+  reason: >-
+    Documented on docs.disconetwork.com only; no specification published.

@@ -1,0 +1,335 @@
+openapi: 3.0.3
+info:
+  title: Disco Reporting API
+  version: "1.0.0"
+  description: >
+    Read-only channel analytics. Authenticate with your management API key in
+    the `x-api-key` header. All data is scoped to your channel. Reporting is not
+    live. Requests can span up to 90 days and must fit inside the returned
+    `available_window`. Check `available_window`, `data_freshness`, and
+    `generated_at` in each response.
+servers:
+  - url: https://api.disconetwork.com
+    description: Disco API
+security:
+  - ManagementApiKey: []
+paths:
+  /discobeat/reporting/v1/summary/:
+    get:
+      summary: Channel summary
+      description: Channel-level metric totals across all your publishers for a date range.
+      operationId: getReportingSummary
+      parameters:
+        - $ref: "#/components/parameters/From"
+        - $ref: "#/components/parameters/To"
+      responses:
+        "200":
+          description: Channel totals.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SummaryResponse"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "405":
+          $ref: "#/components/responses/MethodNotAllowed"
+  /discobeat/reporting/v1/publishers/:
+    get:
+      summary: Publisher breakdown
+      description: Per-publisher metrics.
+      operationId: getReportingPublishers
+      parameters:
+        - $ref: "#/components/parameters/From"
+        - $ref: "#/components/parameters/To"
+        - name: granularity
+          in: query
+          required: false
+          description: Time-series bucket size.
+          schema:
+            type: string
+            enum: [day, hour]
+            default: day
+        - name: breakdown
+          in: query
+          required: false
+          description: Series split.
+          schema:
+            type: string
+            enum: [page_type, widget_type, widget_id]
+        - name: offset
+          in: query
+          required: false
+          schema:
+            type: integer
+            minimum: 0
+            default: 0
+        - name: limit
+          in: query
+          required: false
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 50
+            default: 50
+      responses:
+        "200":
+          description: Per-publisher metrics.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PublishersResponse"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "405":
+          $ref: "#/components/responses/MethodNotAllowed"
+components:
+  securitySchemes:
+    ManagementApiKey:
+      type: apiKey
+      in: header
+      name: x-api-key
+  parameters:
+    From:
+      name: from
+      in: query
+      required: false
+      description: Start date YYYY-MM-DD (UTC), inclusive. Default 6 days before `to` (7-day window).
+      schema:
+        type: string
+        format: date
+    To:
+      name: to
+      in: query
+      required: false
+      description: End date YYYY-MM-DD (UTC), inclusive. Default today. Max range 90 days.
+      schema:
+        type: string
+        format: date
+  responses:
+    BadRequest:
+      description: Invalid parameters, unsupported date range, or unavailable reporting data.
+      content:
+        application/json:
+          schema:
+            oneOf:
+              - $ref: "#/components/schemas/ValidationError"
+              - $ref: "#/components/schemas/AvailabilityError"
+          examples:
+            rangeTooLarge:
+              value:
+                date_range: ["Date range cannot exceed 90 days."]
+            badGranularity:
+              value:
+                granularity: ['"weekly" is not a valid choice.']
+            outsideAvailableWindow:
+              value:
+                code: DATE_RANGE_OUTSIDE_AVAILABLE_WINDOW
+                message: Reporting data is available from 2026-05-26 through 2026-06-30.
+                available_window:
+                  from: "2026-05-26"
+                  to: "2026-06-30"
+    Unauthorized:
+      description: Missing or invalid management API key.
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/AuthError"
+          example:
+            detail: Invalid or expired management API key.
+    MethodNotAllowed:
+      description: Only GET is supported.
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/AuthError"
+          example:
+            detail: Method "POST" not allowed.
+  schemas:
+    RawMetrics:
+      type: object
+      required:
+        - impressions
+        - clicks
+        - conversions
+        - channel_payout
+        - revenue_with_email
+        - revenue_without_email
+        - sessions
+        - feed_loads
+      properties:
+        impressions: { type: integer, example: 480000 }
+        clicks: { type: integer, example: 13440 }
+        conversions: { type: integer, example: 672 }
+        channel_payout: { type: number, format: float, example: 9600.0 }
+        revenue_with_email: { type: number, format: float, example: 7200.0 }
+        revenue_without_email: { type: number, format: float, example: 2400.0 }
+        sessions: { type: integer, example: 240000 }
+        feed_loads: { type: integer, example: 256000 }
+    CalculatedMetrics:
+      description: Derived from raw metrics. Ratios are rounded to four decimals. Zero denominators return 0.
+      type: object
+      required:
+        - ctr
+        - cvr
+        - rps
+        - rpl
+      properties:
+        ctr: { type: number, format: float, example: 0.028 }
+        cvr: { type: number, format: float, example: 0.05 }
+        rps: { type: number, format: float, example: 0.04 }
+        rpl: { type: number, format: float, example: 0.0375 }
+    MetricBlock:
+      type: object
+      required:
+        - raw
+        - calculated
+      properties:
+        raw: { $ref: "#/components/schemas/RawMetrics" }
+        calculated: { $ref: "#/components/schemas/CalculatedMetrics" }
+    DateRange:
+      type: object
+      required:
+        - from
+        - to
+      properties:
+        from: { type: string, format: date, example: "2026-06-08" }
+        to: { type: string, format: date, example: "2026-06-14" }
+    AvailableWindow:
+      type: object
+      required:
+        - from
+        - to
+      description: Date range currently available from this reporting source.
+      properties:
+        from: { type: string, format: date, example: "2026-05-26" }
+        to: { type: string, format: date, example: "2026-06-30" }
+    SeriesPoint:
+      type: object
+      required:
+        - bucket
+        - metrics
+      properties:
+        bucket:
+          type: string
+          description: A date (granularity=day) or an ISO hour timestamp (granularity=hour).
+          example: "2026-06-14"
+        page_type:
+          type: string
+          nullable: true
+          description: Present when breakdown=page_type.
+          example: ORDER_TRACKING
+        widget_type:
+          type: string
+          nullable: true
+          description: Present when breakdown=widget_type.
+          example: APP_NATIVE_ESSENTIAL
+        widget_id:
+          type: string
+          nullable: true
+          maxLength: 64
+          description: Present when breakdown=widget_id.
+        metrics: { $ref: "#/components/schemas/MetricBlock" }
+    PublisherRow:
+      type: object
+      required:
+        - publisher_uuid
+        - publisher_name
+        - publisher_category
+        - metrics
+        - series
+      properties:
+        publisher_uuid: { type: string, example: "f47ac10b-58cc-4372-a567-0e02b2c3d479" }
+        publisher_name: { type: string, example: "Acme Tracking Page" }
+        publisher_category: { type: string, nullable: true, example: "Logistics" }
+        metrics: { $ref: "#/components/schemas/MetricBlock" }
+        series:
+          type: array
+          items: { $ref: "#/components/schemas/SeriesPoint" }
+    Pagination:
+      type: object
+      required:
+        - offset
+        - limit
+        - total
+      properties:
+        offset: { type: integer, example: 0 }
+        limit: { type: integer, example: 50 }
+        total: { type: integer, example: 1 }
+    SummaryResponse:
+      type: object
+      required:
+        - channel_id
+        - channel_name
+        - date_range
+        - available_window
+        - has_data
+        - metrics
+        - data_freshness
+        - generated_at
+      properties:
+        channel_id: { type: string, example: "7c3e1a90-4b2d-4f8a-9c11-2e6b5a0d8f34" }
+        channel_name: { type: string, example: "Acme" }
+        date_range: { $ref: "#/components/schemas/DateRange" }
+        available_window: { $ref: "#/components/schemas/AvailableWindow" }
+        has_data: { type: boolean, example: true }
+        metrics: { $ref: "#/components/schemas/MetricBlock" }
+        data_freshness: { type: string, nullable: true, example: "2026-06-14T05:00:00" }
+        generated_at: { type: string, nullable: true, example: "2026-06-14T05:25:11" }
+    PublishersResponse:
+      type: object
+      required:
+        - channel_id
+        - channel_name
+        - date_range
+        - available_window
+        - granularity
+        - breakdown
+        - has_data
+        - publishers
+        - pagination
+        - data_freshness
+        - generated_at
+      properties:
+        channel_id: { type: string, example: "7c3e1a90-4b2d-4f8a-9c11-2e6b5a0d8f34" }
+        channel_name: { type: string, example: "Acme" }
+        date_range: { $ref: "#/components/schemas/DateRange" }
+        available_window: { $ref: "#/components/schemas/AvailableWindow" }
+        granularity: { type: string, enum: [day, hour], example: "day" }
+        breakdown:
+          type: string
+          nullable: true
+          enum: [page_type, widget_type, widget_id]
+          example: page_type
+        has_data: { type: boolean, example: true }
+        publishers:
+          type: array
+          items: { $ref: "#/components/schemas/PublisherRow" }
+        pagination: { $ref: "#/components/schemas/Pagination" }
+        data_freshness: { type: string, nullable: true, example: "2026-06-14T05:00:00" }
+        generated_at: { type: string, nullable: true, example: "2026-06-14T05:25:11" }
+    AuthError:
+      type: object
+      required:
+        - detail
+      properties:
+        detail: { type: string, example: "Invalid or expired management API key." }
+    ValidationError:
+      type: object
+      additionalProperties: true
+    AvailabilityError:
+      type: object
+      required:
+        - code
+        - message
+      properties:
+        code:
+          type: string
+          enum:
+            - REPORTING_DATA_UNAVAILABLE
+            - DATE_RANGE_OUTSIDE_AVAILABLE_WINDOW
+        message: { type: string }
+        available_window: { $ref: "#/components/schemas/AvailableWindow" }

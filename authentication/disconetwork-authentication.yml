@@ -1,0 +1,79 @@
+generated: '2026-08-12'
+method: searched
+source: https://disconetwork.com/developers/discobeat
+docs:
+- https://disconetwork.com/developers/discobeat
+- https://docs.disconetwork.com/docs/api-ref/external-api-for-disco-integration-partners
+- https://disconetwork.com/reporting-api
+summary:
+  types:
+  - apiKey
+  api_key_in:
+  - header
+  oauth2: false
+  openid_connect: false
+  mutual_tls: false
+  note: Every Disco API surface authenticates with a static API key in the `x-api-key`
+    request header. There is no OAuth, no OIDC and no token exchange. Keys are issued
+    by a Disco representative, not through self-service; there is no public key-minting
+    endpoint.
+schemes:
+- name: ApiKey
+  type: apiKey
+  in: header
+  parameter: x-api-key
+  description: 'Key Auth: Requests contain a valid `x-api-key` in the request headers.'
+  applies_to:
+  - Disco Partner Integration API (partners.disconetwork.com)
+  sources:
+  - openapi/disconetwork-partner-api.yml
+- name: ManagementApiKey
+  type: apiKey
+  in: header
+  parameter: x-api-key
+  description: The DiscoBeat management API key. The same key authenticates the DiscoBeat
+    Channel API and both versions of the Reporting API.
+  applies_to:
+  - DiscoBeat Channel API (api.disconetwork.com)
+  - Disco Reporting API V1 (api.disconetwork.com)
+  - Disco Reporting API V2 (api.disconetwork.com)
+  sources:
+  - openapi/disconetwork-reporting-api-v1.yml
+  - openapi/disconetwork-reporting-api-v2.yml
+  - https://disconetwork.com/developers/discobeat
+key_classes:
+- class: secret / management key
+  usage: Server-to-server. Authenticates the DiscoBeat Channel API and the Reporting
+    API.
+  transport: x-api-key header
+- class: publishable key
+  usage: Referenced in the DiscoBeat docs alongside the secret key; the docs draw a
+    secret-vs-publishable distinction but do not publish the publishable key's own
+    call surface.
+  transport: not documented publicly
+  observed_prefix_example: disco_pk_live_ (shown in a DiscoBeat publisher-detail response
+    example on https://disconetwork.com/developers/discobeat)
+environment_binding:
+  documented: true
+  rule: Keys are environment-specific. A staging key works only against the staging
+    base URL and a production key only against production.
+  mismatch_behavior: HTTP 401 with the message "API key environment does not match
+    service environment."
+  source: https://disconetwork.com/developers/discobeat
+failure_modes:
+- status: 401
+  body: '{"detail": "Invalid or expired API key."}'
+  cause: invalid, expired or missing key
+  source: https://disconetwork.com/developers/discobeat
+- status: 401
+  cause: missing or invalid management API key on a Reporting API request
+  source: openapi/disconetwork-reporting-api-v1.yml
+provisioning:
+  self_service: false
+  how: A Disco representative issues the management API key; partners request one via
+    https://disconetwork.com/book-a-demo.
+  rotation_policy_published: false
+notes:
+- The Disco Event API (https://consumer.disconetwork.com/api/events) is documented
+  without an authentication header; identity is carried in the payload as a raw email,
+  a SHA-256 email hash, or a click identifier, plus the publisher account_id.

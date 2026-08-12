@@ -1,0 +1,264 @@
+generated: '2026-08-12'
+method: derived
+source: openapi/disconetwork-partner-api.yml, openapi/disconetwork-reporting-api-v1.yml,
+  openapi/disconetwork-reporting-api-v2.yml, https://disconetwork.com/developers/discobeat
+summary: >-
+  Disco's model has two halves that never meet in a single document. The Partner API
+  models the runtime placement — a shopper, an order, a resolved widget, the offers
+  ranked into it, and the events fired against them. The DiscoBeat Channel and
+  Reporting APIs model the account side — a channel, its publishers, the categories
+  those publishers are excluded from, and the metrics rolled up per publisher. The
+  only key that crosses is the publisher identity, and it is named three different
+  ways (account_id, publisher_remote_id, publisher_uuid / publisher_id).
+id_conventions:
+- domain: DiscoBeat channel + publishers
+  format: UUID v4
+  fields:
+  - channel_id
+  - publisher_uuid
+  - publisher_id
+  - publisher_remote_id
+  - pending_publisher_id
+  - remote_id (categories and subcategories)
+  example: f47ac10b-58cc-4372-a567-0e02b2c3d479
+  source: https://disconetwork.com/developers/discobeat
+- domain: API keys
+  format: prefixed opaque string
+  observed_example: disco_pk_live_...
+  note: Only the publishable-key prefix appears in a documentation example; the secret
+    key's prefix is not published.
+  source: https://disconetwork.com/developers/discobeat
+- domain: Partner API runtime
+  format: opaque strings
+  fields:
+  - session_id
+  - widget_id
+  - layout_id
+  - offer_id
+  - advertiser_id
+  - insertion_id
+  - product_id
+  source: openapi/disconetwork-partner-api.yml
+entities:
+- name: CommonRequestProperties
+  api: partner
+  role: The shared request envelope for a recommendation call — who the shopper is,
+    where the placement sits, and what they just bought.
+  fields:
+  - user_details
+  - placement_details
+  - order_details
+  - purchases
+  - attributes
+  - custom_metadata
+  - shipping
+  - billing
+  - running_experiments
+- name: UserDetails
+  api: partner
+  fields: [title, first_name, last_name, phone, gender, dob, age]
+- name: AddressRequestDto
+  api: partner
+  fields: [address_line_1, address_line_2, city, state, zip, phone]
+- name: PlacementDetailsObject
+  api: partner
+  fields: [display_mode, layout_id, widget_id, view, sub_view]
+- name: ProductSummaryDto
+  api: partner
+  fields: [name, type, variant, quantity, description, cost_details, product_id, attributes]
+- name: CostDetailsSummary
+  api: partner
+  fields: [amount, currency_code]
+- name: PurchaseAttributes
+  api: partner
+  fields: [is_clearance, is_gift]
+- name: RecommendationsResponse
+  api: partner
+  fields: [session_id, resolved_widget, recommendations, recommendation_groups, recommendation_group_properties,
+    running_experiments, footer]
+- name: ResolvedWidget
+  api: partner
+  fields: [widget_id, layout_id, widget_mode, widget_type, widget_version, content]
+- name: ExperimentSummaryDTO
+  api: partner
+  fields: [name, version]
+- name: EventRequest
+  api: partner
+  role: A oneOf across the event shapes — widget, brand display/click, product display/click,
+    element click — all sharing BaseEventProperties.
+  fields: [event_name, event_datetime, session_id]
+- name: BatchEventRequest
+  api: partner
+  fields: [events]
+- name: BatchEventResponse
+  api: partner
+  fields: [results, accepted, failed]
+- name: Channel
+  api: discobeat
+  fields: [name, exclusions.subcategories.channel]
+- name: Publisher
+  api: discobeat
+  fields: [pending_publisher_id, publisher_remote_id, api_key, brand_name, domain,
+    primary_category, status, created_at, exclusions]
+  states: [PENDING, APPROVED]
+- name: Category
+  api: discobeat
+  fields: [remote_id, name, subcategories]
+- name: Subcategory
+  api: discobeat
+  fields: [remote_id, name]
+- name: SummaryResponse
+  api: reporting-v1
+  fields: [channel_id, channel_name, date_range, available_window, has_data, metrics,
+    data_freshness, generated_at]
+- name: PublisherRow
+  api: reporting-v1
+  fields: [publisher_uuid, publisher_name, publisher_category, metrics, series]
+- name: MetricBlock
+  api: reporting-v1
+  fields: [raw, calculated]
+- name: RawMetrics
+  api: reporting-v1
+  fields: [impressions, clicks, conversions, channel_payout, revenue_with_email, revenue_without_email,
+    sessions, feed_loads]
+- name: CalculatedMetrics
+  api: reporting-v1
+  fields: [ctr, cvr, rps, rpl]
+- name: ReportRow
+  api: reporting-v2
+  fields: [period_start, period_end, publisher_id, publisher_name, page_type, '<selected
+      metrics>']
+- name: ReportMeta
+  api: reporting-v2
+  fields: [timezone, data_through, request_id]
+relationships:
+- from: RecommendationsRequest
+  to: CommonRequestProperties
+  type: has_one
+  via: allOf composition
+- from: CommonRequestProperties
+  to: UserDetails
+  type: has_one
+  via: user_details
+- from: CommonRequestProperties
+  to: PlacementDetailsObject
+  type: has_one
+  via: placement_details
+- from: CommonRequestProperties
+  to: ProductSummaryDto
+  type: has_many
+  via: purchases
+- from: CommonRequestProperties
+  to: AddressRequestDto
+  type: has_one
+  via: shipping
+- from: CommonRequestProperties
+  to: AddressRequestDto
+  type: has_one
+  via: billing
+- from: CommonRequestProperties
+  to: CostDetailsSummary
+  type: has_one
+  via: order_details
+- from: CommonRequestProperties
+  to: ExperimentSummaryDTO
+  type: has_many
+  via: running_experiments
+- from: ProductSummaryDto
+  to: CostDetailsSummary
+  type: has_one
+  via: cost_details
+- from: ProductSummaryDto
+  to: PurchaseAttributes
+  type: has_one
+  via: attributes
+- from: RecommendationsResponse
+  to: ResolvedWidget
+  type: has_one
+  via: resolved_widget
+- from: RecommendationsResponse
+  to: ExperimentSummaryDTO
+  type: has_many
+  via: running_experiments
+- from: BatchEventRequest
+  to: EventRequest
+  type: has_many
+  via: events
+- from: BatchEventResponse
+  to: BatchEventResult
+  type: has_many
+  via: results
+- from: EventRequest
+  to: ResolvedWidget
+  type: belongs_to
+  via: session_id + widget_id
+  confidence: medium
+  note: Not a $ref. The recommendation response returns session_id and the resolved
+    widget; the event bodies carry session_id back. The join is by convention, not
+    declared in the spec.
+- from: EventRequest
+  to: Offer
+  type: belongs_to
+  via: offer_id / advertiser_id / insertion_id
+  confidence: medium
+  note: 'Brand and product events carry these identifiers, but the Partner API
+    publishes no Offer or Advertiser schema — the identifiers arrive in the
+    recommendations payload and are echoed back. The offer entity itself is not
+    modeled in any published spec.'
+- from: Channel
+  to: Publisher
+  type: has_many
+  via: /discobeat/publishers/list/
+- from: Publisher
+  to: Category
+  type: has_one
+  via: primary_category / primary_category_id
+- from: Publisher
+  to: Subcategory
+  type: has_many
+  via: subcategory_ids
+- from: Category
+  to: Subcategory
+  type: has_many
+  via: subcategories
+- from: Channel
+  to: Subcategory
+  type: has_many
+  via: exclusions.subcategories.channel
+- from: Publisher
+  to: Subcategory
+  type: has_many
+  via: exclusions.subcategories.publisher and exclusions.subcategories.external
+- from: SummaryResponse
+  to: Channel
+  type: belongs_to
+  via: channel_id
+- from: PublisherRow
+  to: Publisher
+  type: belongs_to
+  via: publisher_uuid
+- from: ReportRow
+  to: Publisher
+  type: belongs_to
+  via: publisher_id
+- from: PublisherRow
+  to: MetricBlock
+  type: has_one
+  via: metrics
+- from: MetricBlock
+  to: RawMetrics
+  type: has_one
+  via: raw
+- from: MetricBlock
+  to: CalculatedMetrics
+  type: has_one
+  via: calculated
+gaps:
+- The Offer and Advertiser entities are the commercial core of the network and are
+  not modeled in any published specification; they appear only as opaque ids inside
+  event payloads.
+- Publisher identity is spelled account_id (Event API), publisher_remote_id
+  (DiscoBeat), publisher_uuid (Reporting V1) and publisher_id (Reporting V2). Nothing
+  published states these are the same value.
+- Exclusions carry three sources (channel, publisher, external) that are applied at
+  runtime; the precedence order is described in prose only.

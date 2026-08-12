@@ -1,0 +1,69 @@
+generated: '2026-08-12'
+method: searched
+source: https://disconetwork.com/changelog
+limit_count: 1
+headers_documented: false
+status_on_exhaustion: null
+summary: >-
+  Disco documents exactly one rate limit, and it appears in the changelog rather than
+  in any reference page or specification. No response headers, no 429, no Retry-After
+  and no per-endpoint quotas are published. None of the three OpenAPI files declares
+  a 429 response. An integrator can read the number but cannot detect approaching it
+  at runtime — there is no signal to back off on.
+limits:
+- id: default-api-key-rpm
+  scope: per-key
+  window: 1 minute
+  limit: 10000
+  unit: requests
+  burst: null
+  applies_to: authenticated API keys
+  detail: 'Changelog entry, Week 8 / 2026-02-23: "API rate limit increase to 10K RPM
+    — default rate limit for authenticated API keys increased from 5K to 10K requests
+    per minute." The previous default was 5,000 RPM.'
+  source: https://disconetwork.com/changelog
+  confidence: medium
+  confidence_note: Published as a product changelog line, not as a documented API
+    limit; it does not say which surfaces it covers.
+response_headers:
+  ratelimit_headers: []
+  retry_after: false
+  detail: No X-RateLimit-*, RateLimit-* (RFC 9331 style) or Retry-After header is
+    documented on any Disco surface, and none is declared in any published spec.
+request_guardrails:
+- id: reporting-date-range
+  scope: per-request
+  applies_to:
+  - GET /discobeat/reporting/v1/summary/
+  - GET /discobeat/reporting/v1/publishers/
+  - GET /discobeat/reporting/v2/report/
+  rule: A request may span at most 90 days and must fall inside the returned
+    available_window.
+  violation: 400 with a field-keyed body, or code DATE_RANGE_OUTSIDE_AVAILABLE_WINDOW
+  source: openapi/disconetwork-reporting-api-v1.yml
+- id: reporting-page-size
+  scope: per-request
+  applies_to:
+  - GET /discobeat/reporting/v1/publishers/
+  - GET /discobeat/reporting/v2/report/
+  rule: limit is 1-50, default 50
+  source: openapi/disconetwork-reporting-api-v1.yml
+- id: event-batch-size
+  scope: per-request
+  applies_to:
+  - POST /events/batch
+  rule: Between 1 and 20 events per request; each event is processed independently
+    and reported per-event in `results`.
+  source: openapi/disconetwork-partner-api.yml
+  note: The changelog claims 1,000 events per request for the batch endpoint. The
+    published spec says 20. They disagree; the spec is what ships in openapi/.
+- id: publisher-add-batch-size
+  scope: per-request
+  applies_to:
+  - POST /discobeat/publishers/add/
+  rule: Maximum 50 create requests per call.
+  source: https://disconetwork.com/developers/discobeat
+- id: reporting-method
+  scope: per-request
+  rule: Reporting endpoints accept GET only; any other method returns 405.
+  source: openapi/disconetwork-reporting-api-v1.yml

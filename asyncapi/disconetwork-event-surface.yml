@@ -1,0 +1,84 @@
+generated: '2026-08-12'
+method: searched
+source: https://disconetwork.com/assets/index-DdW-GXFA.js
+docs:
+- https://disconetwork.com/developers.md
+- https://docs.disconetwork.com/sitemap.xml
+- https://docs.disconetwork.com/docs/advertiser-discofeed/track-conversions/event-api
+summary: >-
+  Disco publishes NO AsyncAPI and NO webhook documentation. Its only event surface
+  is INBOUND — publishers and advertisers POST events to Disco. Nothing is
+  documented that Disco pushes back out. No AsyncAPI or Webhooks pointer is
+  emitted, because neither a specification nor a webhook catalog exists to point
+  at.
+asyncapi:
+  present: false
+  probes:
+  - url: https://disconetwork.com/asyncapi.yaml
+    status: 200
+    content_type: text/html
+    result: miss
+    note: SPA catch-all shell, as with every path on this host.
+  - url: https://docs.disconetwork.com/asyncapi.yaml
+    status: 404
+    result: miss
+inbound_events:
+  note: >-
+    These are event INTAKE endpoints, not an event stream. They are already covered
+    by openapi/disconetwork-partner-api.yml and the Event API entry in apis.yml.
+  surfaces:
+  - name: Partner event intake
+    operations:
+    - createAnEventUsedToRecordUserActions
+    - createABatchOfEventsUsedToRecordUserActions
+    spec: openapi/disconetwork-partner-api.yml
+  - name: Disco Event API (server-to-server conversion intake)
+    endpoint: POST https://consumer.disconetwork.com/api/events
+    spec: null
+    note: Documented in prose only; 405 on GET confirms the POST-only route is live.
+outbound_webhooks:
+  documented: false
+  advertised: true
+  claim:
+    text: >-
+      "Webhooks & APIs — Real-time webhooks fire on every conversion. Build custom
+      integrations into your BI tool, data warehouse, or internal dashboards."
+    also: '"Webhook events" is listed as a platform capability on the same page.'
+    location: https://disconetwork.com/ (integrations section, rendered from the site
+      bundle)
+  evidence_of_absence:
+  - No webhook page exists in the docs sitemap — all ten documented URLs are listed
+    in docs.disconetwork.com/sitemap.xml and none concerns webhooks.
+  - No event catalog, no event-type list, no payload schema and no signing/verification
+    documentation is published on any Disco host.
+  - No subscription-management endpoint appears in any of the three published OpenAPI
+    documents.
+  - docs.disconetwork.com/docs/webhooks returns 404.
+  verdict: >-
+    Advertised capability with no developer-facing surface. A partner cannot
+    subscribe to, verify, or replay a Disco webhook from anything Disco publishes.
+    This is a real, fixable gap on the provider's side, not a probe failure on ours.
+stated_vs_deployed:
+- claim: >-
+    Disco's changelog (Week 11, 2026-03-16) announces a "DiscoBeat API: Batch event
+    ingestion — New /v1/events/batch endpoint accepts up to 1,000 events per
+    request."
+  deployed: >-
+    The published OpenAPI documents the batch endpoint as POST /events/batch on
+    partners.disconetwork.com, accepting between 1 and 20 events. Neither the path
+    nor the ceiling matches the announcement, and no /v1/ event route is documented
+    anywhere.
+  source: openapi/disconetwork-partner-api.yml
+- claim: >-
+    https://disconetwork.com/developers.md advertises an "Offers API — Create,
+    update, target, and bid on offers programmatically."
+  deployed: >-
+    No Offers API reference, specification or endpoint list is published. The only
+    place "POST /v1/offers" appears is a decorative animated code panel in the site
+    bundle (with a mocked "Authorization: Bearer sk_live_" header that also
+    contradicts the x-api-key scheme every real Disco surface uses).
+- claim: '"Web / iOS / Android SDKs" is listed as a platform capability.'
+  deployed: >-
+    Only a CDN-hosted JavaScript Web SDK exists. No iOS or Android client library is
+    published to any registry or distribution channel — see
+    packages/disconetwork-packages.yml.

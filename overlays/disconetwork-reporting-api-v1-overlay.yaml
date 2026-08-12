@@ -1,0 +1,61 @@
+overlay: 1.0.0
+info:
+  title: API Evangelist enhancements for the Disco Reporting API V1
+  version: 1.0.0
+extends: openapi/disconetwork-reporting-api-v1.yml
+generated: '2026-08-12'
+method: generated
+source: openapi/disconetwork-reporting-api-v1.yml
+actions:
+- target: $.info
+  update:
+    x-apievangelist:
+      catalog: https://apis.io/disconetwork
+      provider: Disco (Disco Technology Inc.)
+      maintainer: Kin Lane <kin@apievangelist.com>
+      artifacts:
+      - apis.yml
+      - authentication/disconetwork-authentication.yml
+      - conventions/disconetwork-conventions.yml
+      - errors/disconetwork-problem-types.yml
+      - lifecycle/disconetwork-lifecycle.yml
+      - rate-limits/disconetwork-rate-limits.yml
+      - skills/_index.yml
+      source_spec: https://disconetwork.com/reporting-api
+- target: $.info
+  update:
+    x-lifecycle:
+      state: available
+      superseded_by: openapi/disconetwork-reporting-api-v2.yml
+      statement: >-
+        Disco states V1 remains available for existing integrations. No Sunset or
+        Deprecation header, and no dated end-of-life, has been published — so this
+        is a soft supersession, not a deprecation. See
+        lifecycle/disconetwork-lifecycle.yml.
+- target: $.paths['/discobeat/reporting/v1/summary/'].get
+  update:
+    x-agentic-access:
+      action_class: read
+      consequence: none
+      escalation: none
+    x-freshness-contract: >-
+      Reporting is not live. Always read `available_window`, `data_freshness` and
+      `generated_at` off the response before treating a number as current; a
+      request outside the window returns 400
+      DATE_RANGE_OUTSIDE_AVAILABLE_WINDOW rather than an empty result.
+- target: $.paths['/discobeat/reporting/v1/publishers/'].get
+  update:
+    x-agentic-access:
+      action_class: read
+      consequence: none
+      escalation: none
+    x-pagination:
+      style: offset-limit
+      params:
+      - offset
+      - limit
+      max_limit: 50
+      note: >-
+        Offset/limit inside a `pagination` object. This differs from the
+        page/page_size scheme on the DiscoBeat Channel API — see
+        conventions/disconetwork-conventions.yml.

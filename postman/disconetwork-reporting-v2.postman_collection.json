@@ -1,0 +1,127 @@
+{
+  "info": {
+    "name": "Disco Reporting API V2",
+    "description": "Build flat, paginated channel reports with selectable metrics, UTC time grains, up to three breakdown columns, and filters. Set `api_key` to your management API key and keep report dates inside the available window provided by Disco.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "auth": {
+    "type": "apikey",
+    "apikey": [
+      {
+        "key": "key",
+        "value": "x-api-key",
+        "type": "string"
+      },
+      {
+        "key": "value",
+        "value": "{{api_key}}",
+        "type": "string"
+      },
+      {
+        "key": "in",
+        "value": "header",
+        "type": "string"
+      }
+    ]
+  },
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "https://api.disconetwork.com",
+      "type": "string"
+    },
+    {
+      "key": "api_key",
+      "value": "your-management-api-key",
+      "type": "string"
+    },
+    {
+      "key": "date_from",
+      "value": "2026-07-18",
+      "type": "string"
+    },
+    {
+      "key": "date_to",
+      "value": "2026-07-20",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "Report",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/discobeat/reporting/v2/report/?from={{date_from}}&to={{date_to}}&time_grain=day&group_by=publisher,page_type&metrics=impressions,clicks,channel_payout,ctr&offset=0&limit=50",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "discobeat",
+            "reporting",
+            "v2",
+            "report",
+            ""
+          ],
+          "query": [
+            {
+              "key": "from",
+              "value": "{{date_from}}",
+              "description": "UTC start date, inclusive. Required."
+            },
+            {
+              "key": "to",
+              "value": "{{date_to}}",
+              "description": "UTC end date, inclusive. Required. Maximum range: 90 days."
+            },
+            {
+              "key": "time_grain",
+              "value": "day",
+              "description": "total | day | week | month | hour. Default: total."
+            },
+            {
+              "key": "group_by",
+              "value": "publisher,page_type",
+              "description": "Up to three: publisher, page_type, widget_type, widget_id."
+            },
+            {
+              "key": "metrics",
+              "value": "impressions,clicks,channel_payout,ctr",
+              "description": "Required comma-separated metrics enabled for your channel."
+            },
+            {
+              "key": "publisher_ids",
+              "value": "",
+              "description": "Optional comma-separated publisher UUID filter.",
+              "disabled": true
+            },
+            {
+              "key": "page_types",
+              "value": "ORDER_TRACKING,THANK_YOU",
+              "description": "Optional comma-separated page-type filter.",
+              "disabled": true
+            },
+            {
+              "key": "widget_types",
+              "value": "APP_NATIVE_ESSENTIAL",
+              "description": "Optional comma-separated widget-type filter.",
+              "disabled": true
+            },
+            {
+              "key": "offset",
+              "value": "0",
+              "description": "Pagination offset. Default: 0."
+            },
+            {
+              "key": "limit",
+              "value": "50",
+              "description": "Page size from 1 to 250. Default: 50."
+            }
+          ]
+        },
+        "description": "Returns flat report rows, complete filtered summary metrics, pagination, and UTC freshness metadata. Summary is not limited to the current page."
+      }
+    }
+  ]
+}

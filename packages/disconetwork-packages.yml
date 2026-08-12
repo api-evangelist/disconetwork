@@ -1,0 +1,71 @@
+generated: '2026-08-12'
+method: searched
+source: https://docs.disconetwork.com/docs/publish-discofeed
+docs:
+- https://docs.disconetwork.com/docs/publish-discofeed
+- https://docs.disconetwork.com/docs/advertiser-discofeed/track-conversions/web-sdk
+summary:
+  package_count: 1
+  official_count: 1
+  registries_searched:
+  - npm
+  - PyPI
+  - RubyGems
+  - crates.io
+  - NuGet
+  - Maven Central
+  - pkg.go.dev
+  - Packagist
+  registry_hits: 0
+  note: >-
+    Disco publishes no client library to any package registry. Its only distributed
+    client artifact is the Disco Web SDK, a CDN-hosted script tag. Direct lookups for
+    `disco-sdk`, `@disconetwork/sdk`, `disco-network`, `@disco/sdk` and `discofeed`
+    on registry.npmjs.org all returned 404, and an npm text search for
+    "disconetwork" returned zero packages.
+packages:
+- name: disco-sdk.js (Disco Web SDK)
+  language: javascript
+  registry: cdn
+  official: true
+  url: https://d1zcmvsklxjbur.cloudfront.net/static/disco-sdk.js
+  resolved_url: https://widget2.disconetwork.com/static/disco-sdk.js
+  version: null
+  published: null
+  install: |
+    <script
+      src="https://d1zcmvsklxjbur.cloudfront.net/static/disco-sdk.js"
+      type="text/javascript"
+      publisher_id="<<PUBLISHER_ID>>"
+    ></script>
+  description: The browser SDK that mounts the DiscoFeed on a publisher's thank-you
+    or order-tracking page (`window.discoLauncher.loadWidget`) and reports advertiser
+    conversions (`window.discoLauncher.trackEvent`). A `publisher_id` attribute, or
+    a `?publisher_id=` query parameter for the Google Tag Manager variant, selects
+    the tenant.
+  note: >-
+    Checked, nothing to record: the distribution is a CDN URL with no version in the
+    path and no metadata endpoint to query, so `version` and `published` are null
+    rather than omitted. The URL floats to whatever build is live — that is the
+    finding, because an integrator cannot pin or diff what they are loading either.
+    The documented CloudFront URL 301-redirects to
+    https://widget2.disconetwork.com/static/disco-sdk.js, which served a 99,399-byte
+    application/javascript body with Last-Modified 2026-08-12T15:58:43 GMT when
+    probed on 2026-08-12 — actively deployed, but unpinned and unversioned.
+  probed:
+    url: https://d1zcmvsklxjbur.cloudfront.net/static/disco-sdk.js
+    http_status: 301
+    redirect_to: https://widget2.disconetwork.com/static/disco-sdk.js
+    final_status: 200
+    content_type: application/javascript
+    content_length: 99399
+    last_modified: '2026-08-12T15:58:43Z'
+    fetched: '2026-08-12'
+unresolved:
+- name: Disco React SDK
+  claimed_in: https://www.globenewswire.com/news-release/2026/07/16/3328500/0/en/disco-and-refundly-partner-to-bring-commerce-media-to-the-refund-moment.html
+  note: >-
+    A July 2026 Disco press release describes a partner embedding offers "using
+    Disco's new React SDK". No React package was found on npm and the developer docs
+    do not document one, so nothing is recorded as a package. Recorded here as an
+    open lead, not as a shipped artifact.

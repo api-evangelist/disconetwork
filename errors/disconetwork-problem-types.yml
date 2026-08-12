@@ -1,0 +1,190 @@
+generated: '2026-08-12'
+method: derived
+source: openapi/disconetwork-partner-api.yml, openapi/disconetwork-reporting-api-v1.yml,
+  openapi/disconetwork-reporting-api-v2.yml, https://disconetwork.com/developers/discobeat,
+  https://disconetwork.com/reporting-api
+format: vendor-json
+rfc9457: false
+summary:
+  envelope_count: 4
+  note: >-
+    Disco does not use RFC 9457 problem+json anywhere. Four different error envelopes
+    ship across four surfaces: a `message` object on the Partner API, a `detail`
+    string on Reporting auth failures, a field-keyed validation object on Reporting
+    and DiscoBeat 400s, and a coded `{code, message, ...}` object for reporting
+    availability and metric-permission errors. An agent handling Disco errors has to
+    branch on the surface, not on a single shape.
+envelopes:
+- id: partner-message
+  applies_to: Disco Partner Integration API (partners.disconetwork.com)
+  media_type: application/json
+  shape: '{"message": string, "errors"?: [{"message": string}]}'
+  source: openapi/disconetwork-partner-api.yml
+- id: reporting-detail
+  applies_to: Reporting API V1 and V2, authentication failures
+  media_type: application/json
+  shape: '{"detail": string}'
+  example: '{"detail": "Invalid or expired management API key."}'
+  source: openapi/disconetwork-reporting-api-v1.yml
+- id: field-keyed-validation
+  applies_to: Reporting API 400s, DiscoBeat Channel API 400s
+  media_type: application/json
+  shape: 'object keyed by field name, each value an array of messages'
+  example: '{"date_range": ["Date range cannot exceed 90 days."]}'
+  source: https://disconetwork.com/reporting-api
+- id: coded-error
+  applies_to: Reporting API availability and metric-permission failures
+  media_type: application/json
+  shape: '{"code": string, "message": string, ...context}'
+  source: openapi/disconetwork-reporting-api-v1.yml
+problem_types:
+- status: 400
+  envelope: partner-message
+  title: Bad Request
+  detail: The server could not understand the request due to invalid syntax. The client
+    should modify the request and try again.
+  operations:
+  - createAnEventUsedToRecordUserActions
+  - createABatchOfEventsUsedToRecordUserActions
+  - getDiscoAdvertiserRecommendations
+  remediation: Fix the request body or headers and retry. Batch callers should read
+    `results` rather than retrying the whole batch.
+  source: openapi/disconetwork-partner-api.yml
+- status: 401
+  envelope: partner-message
+  title: Unauthenticated
+  detail: Authentication is required to access the requested resource. The client must
+    include the appropriate credentials.
+  operations:
+  - createAnEventUsedToRecordUserActions
+  - createABatchOfEventsUsedToRecordUserActions
+  - getDiscoAdvertiserRecommendations
+  remediation: Send a valid x-api-key header for the environment you are calling.
+  source: openapi/disconetwork-partner-api.yml
+- status: 403
+  envelope: partner-message
+  title: Unauthorized
+  detail: The server understood the request, but refuses to authorize it. Ensure the
+    client has appropriate permissions.
+  operations:
+  - createAnEventUsedToRecordUserActions
+  - createABatchOfEventsUsedToRecordUserActions
+  - getDiscoAdvertiserRecommendations
+  source: openapi/disconetwork-partner-api.yml
+- status: 404
+  envelope: partner-message
+  title: Not Found
+  detail: The server cannot find the requested resource. The endpoint may be invalid
+    or the resource may no longer exist.
+  note: Declared as a reusable component response but not referenced by any operation
+    in the published spec.
+  source: openapi/disconetwork-partner-api.yml
+- status: 500
+  envelope: partner-message
+  title: Internal Server Error
+  detail: The server encountered an unexpected condition that prevented it from fulfilling
+    the request. Report the issue to the support team if it persists.
+  source: openapi/disconetwork-partner-api.yml
+- status: 207
+  envelope: partner-message
+  title: Multi-Status (partial batch acceptance)
+  detail: Some events were accepted and others failed. Inspect `results` to determine
+    which events to retry.
+  operations:
+  - createABatchOfEventsUsedToRecordUserActions
+  remediation: Retry only the failed entries. `results` is ordered to match the submitted
+    `events` array and the response carries `accepted` and `failed` counts.
+  note: Not an error status, but the caller must treat it as a partial failure.
+  source: openapi/disconetwork-partner-api.yml
+- status: 502
+  envelope: partner-message
+  title: Bad Gateway (whole batch rejected)
+  detail: Every event in the batch failed to be accepted for processing. The caller
+    should retry the whole batch.
+  operations:
+  - createABatchOfEventsUsedToRecordUserActions
+  source: openapi/disconetwork-partner-api.yml
+- status: 400
+  envelope: field-keyed-validation
+  title: Reporting validation error
+  detail: '`from` after `to`, a future `to` date, a range exceeding 90 days, a request
+    outside the available window, an invalid granularity or breakdown, or a malformed
+    date.'
+  operations:
+  - getReportingSummary
+  - getReportingPublishers
+  - getReportingV2Report
+  remediation: Read `available_window` from a successful response and clamp the requested
+    range inside it.
+  source: https://disconetwork.com/reporting-api
+- status: 400
+  envelope: coded-error
+  code: DATE_RANGE_OUTSIDE_AVAILABLE_WINDOW
+  title: Requested range is outside the cached reporting window
+  detail: 'Reporting data is available from <from> through <to>. The response repeats
+    `available_window` so the caller can correct and retry.'
+  operations:
+  - getReportingSummary
+  - getReportingPublishers
+  source: openapi/disconetwork-reporting-api-v1.yml
+- status: 400
+  envelope: coded-error
+  code: REPORTING_DATA_UNAVAILABLE
+  title: Reporting data unavailable
+  operations:
+  - getReportingSummary
+  - getReportingPublishers
+  source: openapi/disconetwork-reporting-api-v1.yml
+- status: 400
+  envelope: coded-error
+  code: METRIC_NOT_AVAILABLE
+  title: Requested metric is not enabled for this channel
+  detail: The body carries `unsupported_metrics` and `allowed_metrics` so the caller
+    can retry with the permitted set.
+  operations:
+  - getReportingV2Report
+  remediation: Request only metrics enabled for your channel; your Disco representative
+    confirms the enabled set.
+  source: https://disconetwork.com/reporting-api
+- status: 401
+  envelope: reporting-detail
+  title: Missing or invalid management API key
+  operations:
+  - getReportingSummary
+  - getReportingPublishers
+  - getReportingV2Report
+  source: openapi/disconetwork-reporting-api-v1.yml
+- status: 405
+  envelope: reporting-detail
+  title: Method Not Allowed
+  detail: Any method other than GET on a Reporting endpoint.
+  operations:
+  - getReportingSummary
+  - getReportingPublishers
+  - getReportingV2Report
+  source: openapi/disconetwork-reporting-api-v1.yml
+- status: 401
+  envelope: reporting-detail
+  title: Invalid or expired API key (DiscoBeat)
+  detail: '{"detail": "Invalid or expired API key."} An environment mismatch returns
+    401 with "API key environment does not match service environment."'
+  surface: DiscoBeat Channel API
+  source: https://disconetwork.com/developers/discobeat
+- status: 409
+  envelope: '{"error": string}'
+  title: Duplicate create request
+  detail: 'A create request for this brand and domain already exists.'
+  surface: DiscoBeat Channel API — POST /discobeat/publishers/add/
+  note: 'In a batch add, a duplicate is reported per item with `"status": "duplicate"`
+    and does not fail the batch.'
+  source: https://disconetwork.com/developers/discobeat
+- status: 404
+  envelope: '{"error": string}'
+  title: Publisher not found
+  surface: DiscoBeat Channel API
+  source: https://disconetwork.com/developers/discobeat
+non_error_empty_result:
+- status: 200
+  condition: valid Reporting request that matches no data
+  behavior: '`has_data: false` with zeroed metrics rather than a 404 or an error.'
+  source: https://disconetwork.com/reporting-api

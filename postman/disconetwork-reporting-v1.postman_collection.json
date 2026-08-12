@@ -1,0 +1,207 @@
+{
+  "info": {
+    "name": "Disco Reporting API",
+    "description": "Read-only channel analytics. Set the `api_key` collection variable to your management API key from your Disco contact. It is sent as the `x-api-key` header on every request. Requests use the production base URL (https://api.disconetwork.com). Reporting is not live. Requests can span up to 90 days and must fit inside the returned `available_window`. Check `available_window`, `data_freshness`, and `generated_at` in each response. Requests outside the available window return a 400 availability error. Raw metrics include `channel_payout`, `revenue_with_email`, and `revenue_without_email`.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "auth": {
+    "type": "apikey",
+    "apikey": [
+      {
+        "key": "key",
+        "value": "x-api-key",
+        "type": "string"
+      },
+      {
+        "key": "value",
+        "value": "{{api_key}}",
+        "type": "string"
+      },
+      {
+        "key": "in",
+        "value": "header",
+        "type": "string"
+      }
+    ]
+  },
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "https://api.disconetwork.com",
+      "type": "string"
+    },
+    {
+      "key": "api_key",
+      "value": "your-management-api-key",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "Channel Summary",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/discobeat/reporting/v1/summary/?from=2026-06-08&to=2026-06-14",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "discobeat",
+            "reporting",
+            "v1",
+            "summary",
+            ""
+          ],
+          "query": [
+            {
+              "key": "from",
+              "value": "2026-06-08",
+              "description": "Start date YYYY-MM-DD (UTC). Optional. Default is 6 days before `to`."
+            },
+            {
+              "key": "to",
+              "value": "2026-06-14",
+              "description": "End date YYYY-MM-DD (UTC). Optional. Default is today. Max range is 90 days. Requested dates must be inside the available reporting window."
+            }
+          ]
+        },
+        "description": "Channel-level metric totals (raw + calculated) for a date range."
+      }
+    },
+    {
+      "name": "Publisher Breakdown (daily)",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/discobeat/reporting/v1/publishers/?from=2026-06-08&to=2026-06-14&granularity=day&limit=50&offset=0",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "discobeat",
+            "reporting",
+            "v1",
+            "publishers",
+            ""
+          ],
+          "query": [
+            {
+              "key": "from",
+              "value": "2026-06-08"
+            },
+            {
+              "key": "to",
+              "value": "2026-06-14"
+            },
+            {
+              "key": "granularity",
+              "value": "day",
+              "description": "day | hour. Controls the per-publisher `series` buckets."
+            },
+            {
+              "key": "limit",
+              "value": "50",
+              "description": "Page size 1-50. Default 50."
+            },
+            {
+              "key": "offset",
+              "value": "0",
+              "description": "Pagination offset. Default 0."
+            }
+          ]
+        },
+        "description": "Per-publisher metrics with a daily time series. Read `pagination.total` to page through publishers."
+      }
+    },
+    {
+      "name": "Publisher Breakdown (daily by page type)",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/discobeat/reporting/v1/publishers/?from=2026-06-08&to=2026-06-14&granularity=day&breakdown=page_type&limit=50&offset=0",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "discobeat",
+            "reporting",
+            "v1",
+            "publishers",
+            ""
+          ],
+          "query": [
+            {
+              "key": "from",
+              "value": "2026-06-08"
+            },
+            {
+              "key": "to",
+              "value": "2026-06-14"
+            },
+            {
+              "key": "granularity",
+              "value": "day",
+              "description": "day | hour. Controls the per-publisher `series` buckets."
+            },
+            {
+              "key": "breakdown",
+              "value": "page_type",
+              "description": "Optional: page_type, widget_type, widget_id."
+            },
+            {
+              "key": "limit",
+              "value": "50",
+              "description": "Page size 1-50. Default 50."
+            },
+            {
+              "key": "offset",
+              "value": "0",
+              "description": "Pagination offset. Default 0."
+            }
+          ]
+        },
+        "description": "Per-publisher metrics with daily series points split by page_type."
+      }
+    },
+    {
+      "name": "Publisher Breakdown (hourly)",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/discobeat/reporting/v1/publishers/?from=2026-06-14&to=2026-06-14&granularity=hour",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "discobeat",
+            "reporting",
+            "v1",
+            "publishers",
+            ""
+          ],
+          "query": [
+            {
+              "key": "from",
+              "value": "2026-06-14"
+            },
+            {
+              "key": "to",
+              "value": "2026-06-14"
+            },
+            {
+              "key": "granularity",
+              "value": "hour",
+              "description": "Hourly series buckets (ISO hour timestamps)."
+            }
+          ]
+        },
+        "description": "Per-publisher metrics with an hourly time series."
+      }
+    }
+  ]
+}

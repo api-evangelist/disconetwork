@@ -1,0 +1,32 @@
+generated: '2026-08-12'
+method: generated
+source: >-
+  Packaged Agent Skills generated from Disco's published OpenAPI. Every step is
+  grounded in an operationId verified verbatim in ../openapi/*.yml; cross-cutting
+  rules cite ../conventions/, ../errors/, ../authentication/, ../lifecycle/,
+  ../rate-limits/ and ../sandbox/.
+summary: >-
+  Two skills cover all six operationIds Disco publishes across its three
+  machine-readable specifications. The DiscoBeat Channel API and the Event API are
+  deliberately not covered — both are documented in prose only, with no
+  specification to ground an operationId in, and this pipeline does not invent
+  operations.
+skills:
+- file: disconetwork-serve-post-purchase-offers.md
+  name: Serve post-purchase offers and record the resulting events
+  api: openapi/disconetwork-partner-api.yml
+  operations: [getDiscoAdvertiserRecommendations, createAnEventUsedToRecordUserActions,
+    createABatchOfEventsUsedToRecordUserActions]
+- file: disconetwork-pull-channel-reporting.md
+  name: Pull DiscoBeat channel reporting
+  api: openapi/disconetwork-reporting-api-v2.yml
+  operations: [getReportingV2Report, getReportingSummary, getReportingPublishers]
+not_covered:
+- api: DiscoBeat Channel API
+  reason: Documented with curl examples only; no machine-readable specification published.
+- api: Disco Event API
+  reason: Documented on docs.disconetwork.com only; no machine-readable specification
+    published.
+coverage:
+  operations_in_specs: 6
+  operations_covered: 6

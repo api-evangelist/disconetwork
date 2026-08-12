@@ -1,0 +1,64 @@
+generated: '2026-08-12'
+method: searched
+source: https://disconetwork.com/developers/discobeat
+docs:
+- https://disconetwork.com/developers/discobeat
+- https://docs.disconetwork.com/docs/api-ref/external-api-for-disco-integration-partners
+summary: >-
+  Disco runs a full parallel staging estate on its own domain
+  (*.disconetwork-staging.com) with environment-bound API keys, and documents it as
+  the place to integrate and test before going live. It is a real second environment,
+  not a mock: there are no published test cards, no fixture generators, no test
+  clocks and no seeded data, and access still requires a key issued by a Disco
+  representative.
+environments:
+- name: production
+  hosts:
+  - https://api.disconetwork.com
+  - https://partners.disconetwork.com
+  key_class: production key
+- name: staging
+  hosts:
+  - https://api.disconetwork-staging.com
+  - https://partners.disconetwork-staging.com
+  - https://docs.disconetwork-staging.com
+  key_class: staging key
+  declared_in:
+  - openapi/disconetwork-partner-api.yml (servers[1], description "Staging")
+  - https://disconetwork.com/developers/discobeat
+  - https://disconetwork.com/developers.md
+key_binding:
+  environment_specific: true
+  rule: A staging key works only against the staging base URL; a production key works
+    only against production.
+  mismatch_response:
+    status: 401
+    message: API key environment does not match service environment.
+  key_classes:
+  - secret / management key
+  - publishable key
+  source: https://disconetwork.com/developers/discobeat
+guidance:
+  statement: 'Use staging while you''re integrating and testing; switch to production
+    once you''re ready to go live.'
+  source: https://disconetwork.com/developers/discobeat
+test_data:
+  test_cards: []
+  test_accounts: []
+  fixtures: false
+  triggers: false
+  time_simulation: false
+  note: Disco publishes no test values of any kind. Nothing is invented here — the
+    absence is the finding.
+tooling:
+  postman_collections:
+  - postman/disconetwork-reporting-v1.postman_collection.json
+  - postman/disconetwork-reporting-v2.postman_collection.json
+  note: The Reporting API Postman collections use an `api_key` collection variable,
+    which the docs tell the integrator to set to their own key. The collections
+    target the production base URL.
+access:
+  self_service: false
+  detail: Staging access is not self-service. The docs direct the reader to their
+    Disco representative for a management API key, which is the same gate as
+    production.

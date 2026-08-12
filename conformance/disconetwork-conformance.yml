@@ -1,0 +1,119 @@
+generated: '2026-08-12'
+method: derived
+source: openapi/disconetwork-partner-api.yml, openapi/disconetwork-reporting-api-v1.yml,
+  openapi/disconetwork-reporting-api-v2.yml, https://disconetwork.com/developers/discobeat,
+  https://disconetwork.com/developers.md
+summary:
+  conforms_count: 3
+  asserted_not_verified: 1
+standards:
+- id: openapi-3.0
+  name: OpenAPI Specification 3.0
+  conforms: true
+  evidence: Three published documents parse as OpenAPI — disco-api.yaml declares
+    openapi 3.0.0, and both reporting specs declare 3.0.3. All three are linked from
+    Disco's own pages (an Export menu on the docs API reference, and download buttons
+    on /reporting-api).
+- id: openapi-3.1
+  name: OpenAPI Specification 3.1
+  conforms: false
+  evidence: No document targets 3.1; the newest spec published (Reporting V2) is
+    still 3.0.3.
+- id: postman-collection-2.1
+  name: Postman Collection Format v2.1.0
+  conforms: true
+  evidence: Both downloadable collections declare
+    https://schema.getpostman.com/json/collection/v2.1.0/collection.json.
+- id: llms-txt
+  name: llms.txt
+  conforms: true
+  evidence: https://disconetwork.com/llms.txt returns 200 text/plain with a
+    conforming H1 + blockquote summary + sectioned link structure. Saved verbatim to
+    llms/disconetwork-llms.txt.
+- id: rfc9727
+  name: 'RFC 9727: API Catalog (/.well-known/api-catalog)'
+  conforms: false
+  asserted: true
+  evidence: >-
+    https://disconetwork.com/developers.md advertises "API catalog (RFC 9727):
+    /.well-known/api-catalog". The path returns HTTP 200 with the marketing SPA's
+    HTML shell, not a linkset document. Asserted by the provider, not served.
+- id: rfc9457
+  name: 'RFC 9457: Problem Details for HTTP APIs'
+  conforms: false
+  evidence: No surface returns application/problem+json. Four distinct vendor error
+    envelopes ship instead — see errors/disconetwork-problem-types.yml.
+- id: rfc8594
+  name: 'RFC 8594: Sunset HTTP Header'
+  conforms: false
+  evidence: No Sunset or Deprecation header is documented and no operation is marked
+    deprecated in any published spec.
+- id: rfc9331-ratelimit-headers
+  name: RateLimit header fields for HTTP
+  conforms: false
+  evidence: No rate-limit response headers are documented and no 429 is declared in
+    any spec.
+- id: idempotency-key
+  name: Idempotency-Key HTTP header
+  conforms: false
+  evidence: No idempotency key or replay window on any write endpoint, including the
+    three event-ingestion paths.
+- id: oauth2
+  name: OAuth 2.0
+  conforms: false
+  evidence: Authentication is a static x-api-key header everywhere. No oauth2
+    securityScheme in any spec, and /.well-known/oauth-authorization-server and
+    /.well-known/oauth-protected-resource are not served on any host.
+- id: oidc
+  name: OpenID Connect
+  conforms: false
+  evidence: No /.well-known/openid-configuration on any host.
+- id: a2a
+  name: A2A Agent Card
+  conforms: false
+  evidence: /.well-known/agent-card.json and /.well-known/agent.json return the SPA
+    HTML shell on the marketing hosts and 404 on every other host. No card is served.
+- id: mcp
+  name: Model Context Protocol
+  conforms: partial
+  evidence: >-
+    Disco ships an in-page WebMCP tool declaration — the site bundle calls
+    navigator.modelContext.provideContext({tools}) with four tools (navigate,
+    list_products, book_demo, get_developer_docs), each with a JSON Schema
+    inputSchema. That is a real, provider-authored agent tool surface running in the
+    browser. It is NOT an MCP server: there is no JSON-RPC endpoint, and the
+    /.well-known/mcp/server-card.json that /developers.md advertises returns the SPA
+    HTML shell. See mcp/disconetwork-mcp.yml.
+- id: agent-skills
+  name: Agent Skills (/.well-known/agent-skills/index.json)
+  conforms: false
+  asserted: true
+  evidence: Advertised in /developers.md and returned by the site's own WebMCP
+    get_developer_docs tool; the path serves the SPA HTML shell.
+- id: markdown-for-agents
+  name: Markdown content negotiation for agents
+  conforms: true
+  evidence: >-
+    A service worker at /sw-markdown.js intercepts same-origin navigations carrying
+    `Accept: text/markdown` and serves a .md companion. Four twins are real and
+    fetchable directly — /index.md, /developers.md, /advertise.md and /disco-beat.md
+    (200 text/markdown). Coverage is partial; most routes, including
+    /developers/discobeat, have no twin.
+compliance:
+  certifications_published: []
+  programs: []
+  claims:
+  - claim: CCPA
+    evidence: 'The docs footer links a CCPA article in the Disco help center:
+      https://support.disconetwork.com/hc/en-us/articles/4418121857819-CCPA-on-Disco.
+      The article itself is behind a Cloudflare challenge (403).'
+  - claim: zero PII / hashed anonymized matching
+    evidence: Asserted on the DiscoMix page and in llms.txt ("Zero-cookie identity
+      matching"). The Event API and Web SDK both document a raw-email identifier as a
+      supported option, which cuts against the claim.
+  - claim: US-only operations
+    evidence: https://disconetwork.com/developers.md
+  note: >-
+    No SOC 2, ISO 27001, PCI or HIPAA attestation is published, and no trust center
+    exists — probe-security-programs.py found nothing. Because no certification is
+    published, NO `Compliance` pointer is wired in apis.yml.

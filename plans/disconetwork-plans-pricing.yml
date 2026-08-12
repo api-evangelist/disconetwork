@@ -1,0 +1,72 @@
+generated: '2026-08-12'
+method: searched
+source: https://disconetwork.com/advertise
+plan_count: 0
+currency: USD
+model: performance
+summary: >-
+  Disco publishes no plans, no tiers and no rate card. There is nothing to sign up
+  for and no price on any public page. Advertisers pay per outcome on a CPA/CPO or
+  CPC basis with the rate set per advertiser during onboarding; publishers pay
+  nothing and are paid out of the network. Every commercial path on the site ends at
+  https://disconetwork.com/book-a-demo. plan_count is 0 because that is the true
+  state, not because pricing was missed.
+pricing_models:
+- id: advertiser-cpa
+  audience: advertiser
+  basis: cost per acquisition / cost per order
+  detail: Advertisers set the rate they will pay and are charged only for conversions
+    Disco drives and can attribute. Disco's own copy is "You only pay when it works"
+    and "You only pay for conversions we can prove."
+  published_rate: null
+  source: https://disconetwork.com/advertise
+- id: advertiser-cpc
+  audience: advertiser
+  basis: cost per click
+  detail: A CPC bidding model for advertisers who prefer to pay per verified click.
+    The enrollment form asks the advertiser for "your ideal CPC bid range and
+    optimization target", which confirms the rate is negotiated per advertiser rather
+    than listed.
+  published_rate: null
+  source: https://disconetwork.com/disco-cpc
+- id: publisher-revenue-share
+  audience: publisher
+  basis: revenue share on offers served
+  detail: Publishers are not charged. Revenue can be taken as a payout or applied
+    against the publisher's own Disco ad spend. The split is not published.
+  published_rate: null
+  source: https://docs.disconetwork.com/docs/publish-discofeed
+- id: enterprise-custom
+  audience: advertiser
+  basis: custom
+  detail: The site invites advertisers spending $50K+/month to build a custom plan.
+  published_rate: null
+  source: https://disconetwork.com/advertise
+api_pricing:
+  metered: false
+  detail: No API surface is priced or metered separately. API access is bundled with
+    the commercial relationship — a management API key is issued by a Disco
+    representative, not purchased.
+  source: https://disconetwork.com/reporting-api
+signup:
+  self_service: false
+  url: https://disconetwork.com/book-a-demo
+  shopify_install: https://apps.shopify.com/disco
+  detail: Publishers on Shopify can self-install the app; every other path (advertiser,
+    platform partner, API key) is sales-gated.
+evidence:
+- url: https://disconetwork.com/advertise
+  status: 200
+  note: Marketing copy describes the performance model; no numbers.
+- url: https://support.disconetwork.com/hc/en-us/articles/15854633791003-Disco-Pricing-Billing
+  status: 403
+  note: >-
+    Disco's Zendesk help center holds the articles that carry the actual figures
+    (membership fee, CPA and CPO minimums, the CPC bidding model) but sits behind a
+    Cloudflare managed challenge and returns 403 "Just a moment..." to any
+    non-browser client, including with a browser User-Agent. The numbers surfaced in
+    search-engine summaries of those pages were NOT recorded here, because they could
+    not be read from the provider's own surface at capture time.
+- url: https://support.disconetwork.com/hc/en-us/articles/34221245020315-CPC-Bidding-Model
+  status: 403
+  note: Same Cloudflare challenge.

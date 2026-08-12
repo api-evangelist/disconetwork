@@ -1,0 +1,62 @@
+overlay: 1.0.0
+info:
+  title: API Evangelist enhancements for the Disco Reporting API V2
+  version: 1.0.0
+extends: openapi/disconetwork-reporting-api-v2.yml
+generated: '2026-08-12'
+method: generated
+source: openapi/disconetwork-reporting-api-v2.yml
+actions:
+- target: $.info
+  update:
+    x-apievangelist:
+      catalog: https://apis.io/disconetwork
+      provider: Disco (Disco Technology Inc.)
+      maintainer: Kin Lane <kin@apievangelist.com>
+      artifacts:
+      - apis.yml
+      - authentication/disconetwork-authentication.yml
+      - conventions/disconetwork-conventions.yml
+      - errors/disconetwork-problem-types.yml
+      - lifecycle/disconetwork-lifecycle.yml
+      - rate-limits/disconetwork-rate-limits.yml
+      - data-model/disconetwork-data-model.yml
+      - skills/_index.yml
+      source_spec: https://disconetwork.com/reporting-api
+- target: $.info
+  update:
+    x-lifecycle:
+      state: current
+      supersedes: openapi/disconetwork-reporting-api-v1.yml
+- target: $.paths['/discobeat/reporting/v2/report/'].get
+  update:
+    x-agentic-access:
+      action_class: read
+      consequence: none
+      escalation: none
+    x-query-constraints:
+      required:
+      - from
+      - to
+      - metrics
+      max_date_range_days: 90
+      time_grain:
+        values: [total, day, week, month, hour]
+        hour_max_days: 3
+        hour_max_group_by: 1
+      group_by_max: 3
+      note: >-
+        `metrics` is required and must name metrics enabled for the authenticated
+        channel — a channel that is not entitled to a metric gets a 400, not a
+        null column. Week and month edge periods are clipped to the requested
+        range, so the first and last rows of a weekly report are usually partial
+        periods and must not be compared like-for-like against interior rows.
+    x-pagination:
+      style: offset-limit
+      params:
+      - offset
+      - limit
+      note: >-
+        Rows are paginated but the `summary` block is computed across the COMPLETE
+        filtered result, not the current page. Do not sum the page rows to
+        reconstruct the total.

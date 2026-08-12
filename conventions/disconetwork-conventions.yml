@@ -1,0 +1,149 @@
+generated: '2026-08-12'
+method: searched
+source: https://disconetwork.com/reporting-api
+docs:
+- https://disconetwork.com/reporting-api
+- https://disconetwork.com/developers/discobeat
+- https://docs.disconetwork.com/docs/api-ref/external-api-for-disco-integration-partners
+summary: >-
+  Disco runs four API surfaces with a single auth style and no shared runtime
+  contract. Every surface takes a static x-api-key. Pagination differs between the
+  Reporting API (offset/limit inside a `pagination` object) and the DiscoBeat Channel
+  API (page/page_size with url-bearing next/previous). Versioning is expressed three
+  different ways: a required `version` header on the Partner API, a version segment
+  in the Reporting path, and no version at all on DiscoBeat. There is no idempotency
+  key, no request-id echo except on Reporting V2, and no rate-limit response headers
+  are documented anywhere.
+authentication:
+  style: static API key
+  transport: x-api-key request header
+  scheme_count: 1
+  environment_bound: true
+  detail: A staging key works only against the staging base URL and a production key
+    only against production; a mismatch returns 401 "API key environment does not match
+    service environment."
+  cross_link: authentication/disconetwork-authentication.yml
+idempotency:
+  supported: false
+  header: null
+  detail: >-
+    No idempotency key, no replay window, no retry-safety contract is published on
+    any Disco surface. The closest thing is the batch event endpoint's per-item
+    result array (`results`, `accepted`, `failed`), which lets a caller retry only
+    the entries that failed instead of replaying the whole batch — that is partial-
+    failure reporting, not idempotency. Event writes (POST /events, POST
+    /events/batch, POST /api/events) are therefore not safely retryable without
+    risking duplicate attribution.
+  cross_link: null
+pagination:
+  styles:
+  - id: reporting-offset-limit
+    applies_to:
+    - GET /discobeat/reporting/v1/publishers/
+    - GET /discobeat/reporting/v2/report/
+    params:
+      offset: integer, default 0
+      limit: integer, 1-50, default 50
+    response_fields:
+    - pagination.offset
+    - pagination.limit
+    - pagination.total
+    - pagination.has_more (V2 only)
+    source: openapi/disconetwork-reporting-api-v1.yml
+  - id: discobeat-page-cursor
+    applies_to:
+    - GET /discobeat/publishers/list/
+    params:
+      page: integer
+      page_size: integer
+    response_fields:
+    - count
+    - next (absolute URL or null)
+    - previous (absolute URL or null)
+    source: https://disconetwork.com/developers/discobeat
+  note: Two incompatible pagination contracts on the same base host (api.disconetwork.com).
+sparse_fields_and_expansion:
+  supported: partial
+  detail: Reporting V2 uses a `metrics` query parameter as an explicit column selector
+    — the caller names which measured and calculated metrics come back — and rejects
+    metrics not enabled for the channel with METRIC_NOT_AVAILABLE. There is no
+    `expand`, no `fields`, and no include/embed convention on any other surface.
+  source: https://disconetwork.com/reporting-api
+grouping_and_filtering:
+  applies_to: GET /discobeat/reporting/v2/report/
+  breakdown_params:
+    time_grain: controls the period columns (period_start / period_end)
+    group_by: adds identifying columns, e.g. publisher,page_type
+  filter_params:
+  - publisher_ids
+  - page_types
+  - widget_types
+  detail: Filters restrict the source rows without adding columns; breakdowns add
+    columns. V1 expresses the same idea as a single `breakdown` enum (page_type,
+    widget_type, widget_id) plus a `granularity` of day or hour.
+  source: https://disconetwork.com/reporting-api
+metadata:
+  supported: false
+  detail: No customer-defined metadata bag on any object.
+request_tracing:
+  supported: partial
+  field: meta.request_id
+  applies_to:
+  - GET /discobeat/reporting/v2/report/
+  detail: Reporting V2 returns a UUID `request_id` inside the response `meta` block.
+    No request-id request header is documented, and no other surface returns one, so
+    a caller cannot correlate a Partner API or DiscoBeat call with Disco's logs.
+  source: https://disconetwork.com/reporting-api
+versioning:
+  styles:
+  - surface: Disco Partner Integration API
+    style: required request header
+    detail: A `version` header is a REQUIRED parameter on every operation (example
+      1.0.0). Omitting it is a client error, which makes the header part of the call
+      contract rather than an optional pin.
+    source: openapi/disconetwork-partner-api.yml
+  - surface: Disco Reporting API
+    style: URL path segment
+    detail: /discobeat/reporting/v1/... and /discobeat/reporting/v2/.... V1 remains
+      available for existing integrations alongside V2.
+    source: https://disconetwork.com/reporting-api
+  - surface: DiscoBeat Channel API
+    style: unversioned
+    detail: /discobeat/... paths carry no version segment and no version header is
+      documented.
+    source: https://disconetwork.com/developers/discobeat
+  cross_link: lifecycle/disconetwork-lifecycle.yml
+error_envelope:
+  uniform: false
+  rfc9457: false
+  detail: Four envelopes across four surfaces — see errors/disconetwork-problem-types.yml.
+  cross_link: errors/disconetwork-problem-types.yml
+rate_limit_signaling:
+  headers_documented: false
+  detail: >-
+    No X-RateLimit-*, RateLimit-* or Retry-After header is documented on any surface,
+    and no 429 is declared in any published spec. The only published limit is a
+    changelog line raising the default per-key limit to 10,000 requests per minute.
+    An agent has no runtime signal to back off on.
+  cross_link: rate-limits/disconetwork-rate-limits.yml
+data_freshness:
+  applies_to: Reporting API
+  detail: >-
+    Reporting is explicitly not live. Every V1 response carries `available_window`,
+    `data_freshness` and `generated_at`; V2 carries `meta.data_through` and
+    `meta.timezone` (UTC). Callers are told to read these rather than assume
+    coverage, and a request outside the window is a 400 with the window echoed back.
+  source: https://disconetwork.com/reporting-api
+numeric_conventions:
+  detail: Calculated ratios are returned as decimal ratios (not percentages), rounded
+    to four decimal places; a zero denominator returns 0. Monetary values are rounded
+    to two decimal places. Pop-up (modal) placements are excluded from reporting.
+  source: https://disconetwork.com/reporting-api
+identity_and_pii:
+  detail: >-
+    Shopper identity is carried as one of a raw email, a SHA-256 email hash, or a
+    URL-appended click identifier. Disco's own material states it processes zero PII
+    and matches on hashed, anonymized signals, which sits in tension with the
+    documented raw-email path — both are published, and the raw-email option is the
+    first one listed in the Event API docs.
+  source: https://docs.disconetwork.com/docs/advertiser-discofeed/track-conversions/event-api

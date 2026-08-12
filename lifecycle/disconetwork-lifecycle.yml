@@ -1,0 +1,83 @@
+generated: '2026-08-12'
+method: searched
+source: https://disconetwork.com/reporting-api
+docs:
+- https://disconetwork.com/reporting-api
+- https://disconetwork.com/changelog
+- https://status.disconetwork.com
+versioning:
+  scheme: mixed
+  detail: Path-versioned Reporting API (v1, v2), a required `version` request header
+    on the Partner API (example 1.0.0), and an unversioned DiscoBeat Channel API.
+  current_versions:
+  - api: Disco Reporting API
+    version: v2
+    spec_version: 2.0.0
+  - api: Disco Reporting API
+    version: v1
+    spec_version: 1.0.0
+    state: available
+    statement: 'V1 remains available for existing integrations.'
+  - api: Disco Partner Integration API
+    version: 1.0.0
+  - api: DiscoBeat Channel API
+    version: unversioned
+deprecation:
+  policy_published: false
+  sunset_header: false
+  deprecation_header: false
+  rfc8594: false
+  deprecated_operations: []
+  detail: >-
+    Disco publishes no deprecation policy, no sunset schedule, and no Deprecation or
+    Sunset response headers. No operation in any of the three published OpenAPI files
+    carries `deprecated: true`. The only forward-looking statement is a "What's Next"
+    roadmap block on the DiscoBeat docs page that previews upcoming changes and says
+    plainly that "dates aren't firm yet" and to ask your Disco contact — a courtesy
+    heads-up, not a deprecation contract. Reporting V1's continued availability is
+    asserted in prose with no end date attached.
+  source: https://disconetwork.com/developers/discobeat
+status_page:
+  published: true
+  url: https://status.disconetwork.com
+  provider: Atlassian Statuspage
+  page_id: y91wg3v13rfm
+  page_name: Disco Network
+  machine_readable: https://status.disconetwork.com/api/v2/summary.json
+  components_observed:
+  - Management Portal
+  - Shopify API & Mobile
+  - Shopify Admin
+  - Shopify Checkout
+  - Shopify Storefront
+  - Shopify Third party services
+  note: >-
+    The status page tracks the Management Portal and the Shopify dependencies. None
+    of the four developer-facing API hosts (partners., api., consumer., docs.) is
+    listed as a component, so a partner cannot use this page to tell whether the API
+    they integrate against is up.
+  probed:
+    url: https://status.disconetwork.com/api/v2/summary.json
+    http_status: 200
+    fetched: '2026-08-12'
+sla:
+  published: false
+  detail: No uptime or latency SLA is published. The DiscoBeat docs quote a P95
+    latency under 80ms for batch event ingestion as a changelog claim, not a
+    commitment.
+support:
+  named_contacts:
+  - role: Product Lead for Integrations
+    email: aryan@disconetwork.com
+  - role: Engineering Lead for Integrations
+    email: gaurav@disconetwork.com
+  help_center: https://support.disconetwork.com/hc/en-us
+  detail: The docs describe integrators as "early integration partners" receiving
+    hands-on support, and name two individuals directly — a pre-scale support posture,
+    not a ticketing contract.
+  source: https://docs.disconetwork.com/docs/introduction
+release_cadence:
+  claim: weekly
+  detail: Disco publishes a weekly changelog ("We ship every week") with week-numbered
+    entries.
+  cross_link: changelog/disconetwork-changelog.yml

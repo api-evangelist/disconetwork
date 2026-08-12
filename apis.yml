@@ -1,33 +1,45 @@
 aid: disconetwork
+x-enrichment:
+  date: '2026-08-12'
+  status: enriched
+  artifacts_added: 10
+  pass: local-v1
 accessModel:
-  pricing: unknown
-  onboarding: unknown
+  pricing: paid
+  onboarding: sales
   trial: false
   try_now: false
   public: false
-  label: Unknown
-  confidence: low
-  source: []
-  generated: '2026-07-22'
-  method: derived
+  label: Sales-Gated
+  confidence: medium
+  source:
+  - https://support.disconetwork.com/hc/en-us/articles/15854633791003-Disco-Pricing-Billing
+  - https://disconetwork.com/reporting-api
+  generated: '2026-08-12'
+  method: searched
 image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/icons/disconetwork.png
 name: Disconetwork
-description: Disco (disconetwork.com) is a commerce media network focused on the post-purchase moment.
-  It helps ecommerce brands monetize their order-confirmation and thank-you pages by placing relevant
-  partner offers in front of shoppers, and gives advertisers a channel to reach buyers at the point of
-  purchase. Its products span offer placement, audience insights, and cross-brand advertising across the
-  post-purchase experience and beyond. Backed by Felicis. No public developer API surface was found at
-  the time of enrichment.
+description: 'Disco (disconetwork.com, Disco Technology Inc.) is a commerce media network
+  focused on the post-purchase moment. It helps ecommerce brands and platforms monetize
+  order-confirmation, order-tracking, checkout, email and app surfaces by placing relevant
+  partner offers in front of shoppers, and gives advertisers a performance channel to
+  reach buyers at the point of purchase. Its product suite spans DiscoOffers (publisher
+  monetization), DiscoBeat (a headless, white-labeled commerce media API for SaaS platforms),
+  DiscoMix (non-endemic demand for retail media networks) and OffersAI (the ranking and
+  personalization engine). Disco publishes a real developer surface: a partner-integration
+  OpenAPI at docs.disconetwork.com, two versions of a Reporting API with downloadable
+  OpenAPI 3.0.3 specs and Postman collections, a documented DiscoBeat Channel API, a
+  JavaScript Web SDK, and an llms.txt. Backed by Felicis.'
 url: https://raw.githubusercontent.com/api-evangelist/disconetwork/refs/heads/main/apis.yml
 x-type: company
 x-source: vc-portfolio
 x-backed-by:
 - felicis
-x-tier: stub
-x-tier-reason: portfolio-lead
+x-tier: profiled
+x-tier-reason: published-openapi-and-developer-docs
 specificationVersion: '0.20'
 created: '2026-07-17'
-modified: '2026-07-18'
+modified: '2026-08-12'
 tags:
 - Company
 - Commerce Media
@@ -37,25 +49,164 @@ tags:
 - Ecommerce
 - AdTech
 - Marketing
-apis: []
+- Analytics
+- Reporting
+apis:
+- aid: disconetwork-partner-api
+  name: Disco Partner Integration API
+  description: The API used by Disco partners that provide their own UI experience.
+    Returns Disco advertiser recommendations for post-purchase placements and accepts
+    the widget, brand, product and element events (single and batched) that record
+    user actions against those placements. Authenticated with an x-api-key header.
+  humanURL: https://docs.disconetwork.com/docs/api-ref/external-api-for-disco-integration-partners
+  baseURL: https://partners.disconetwork.com
+  tags:
+  - Recommendations
+  - Events
+  - Commerce Media
+  - Post-Purchase
+  properties:
+  - type: OpenAPI
+    url: openapi/disconetwork-partner-api.yml
+  - type: Documentation
+    url: https://docs.disconetwork.com/docs/introduction
+  - type: APIReference
+    url: https://docs.disconetwork.com/docs/api-ref/external-api-for-disco-integration-partners
+  - type: Overlay
+    url: overlays/disconetwork-partner-api-overlay.yaml
+  - type: ErrorCatalog
+    url: errors/disconetwork-problem-types.yml
+  - type: DataModel
+    url: data-model/disconetwork-data-model.yml
+- aid: disconetwork-reporting-api
+  name: Disco Reporting API
+  description: Read-only channel analytics for DiscoBeat channel partners. V1 exposes
+    a channel summary and a per-publisher breakdown with daily or hourly time series;
+    V2 returns a flat, paginated report table driven by time grain, group-by breakdowns,
+    metric selection and filters. Authenticated with a management API key in the x-api-key
+    header; data is not live and is bounded by a published available_window.
+  humanURL: https://disconetwork.com/reporting-api
+  baseURL: https://api.disconetwork.com
+  tags:
+  - Reporting
+  - Analytics
+  - Commerce Media
+  properties:
+  - type: OpenAPI
+    url: openapi/disconetwork-reporting-api-v1.yml
+  - type: OpenAPI
+    url: openapi/disconetwork-reporting-api-v2.yml
+  - type: Postman
+    url: postman/disconetwork-reporting-v1.postman_collection.json
+  - type: Postman
+    url: postman/disconetwork-reporting-v2.postman_collection.json
+  - type: APIReference
+    url: https://disconetwork.com/reporting-api
+  - type: Overlay
+    url: overlays/disconetwork-reporting-api-v1-overlay.yaml
+  - type: Overlay
+    url: overlays/disconetwork-reporting-api-v2-overlay.yaml
+- aid: disconetwork-discobeat-channel-api
+  name: DiscoBeat Channel API
+  description: The channel-partner management API behind DiscoBeat. Lists ad categories
+    and subcategories, reads channel details, manages channel-wide and publisher-specific
+    subcategory exclusions, and lists, inspects, adds and removes the publishers in
+    a channel. Documented with request/response examples and curl on disconetwork.com;
+    no machine-readable specification is published for it.
+  humanURL: https://disconetwork.com/developers/discobeat
+  baseURL: https://api.disconetwork.com
+  tags:
+  - Channel Management
+  - Publishers
+  - Commerce Media
+  properties:
+  - type: APIReference
+    url: https://disconetwork.com/developers/discobeat
+  - type: Documentation
+    url: https://disconetwork.com/developers
+- aid: disconetwork-event-api
+  name: Disco Event API
+  description: The server-to-server conversion intake used by advertisers who cannot
+    run the Web SDK. A POST carries an event name, the publisher account id and one
+    of three customer identifiers (raw email, SHA-256 email hash, or the URL-appended
+    click identifier) so Disco can attribute a conversion back to the impression that
+    drove it.
+  humanURL: https://docs.disconetwork.com/docs/advertiser-discofeed/track-conversions/event-api
+  baseURL: https://consumer.disconetwork.com
+  tags:
+  - Events
+  - Attribution
+  - Conversion Tracking
+  properties:
+  - type: APIReference
+    url: https://docs.disconetwork.com/docs/advertiser-discofeed/track-conversions/event-api
+  - type: Documentation
+    url: https://docs.disconetwork.com/docs/advertiser-discofeed/track-conversions/
 maintainers:
 - FN: Kin Lane
   email: kin@apievangelist.com
 - FN: APIs.json
   email: info@apis.io
 common:
-- type: DomainSecurity
-  url: security/disconetwork-domain-security.yml
+- type: AgenticAccess
+  url: agentic-access/disconetwork-agentic-access.yml
 - type: Website
   url: https://disconetwork.com
+- type: DeveloperPortal
+  url: https://disconetwork.com/developers
+- type: Documentation
+  url: https://docs.disconetwork.com/docs/introduction
+- type: APIReference
+  url: https://docs.disconetwork.com/docs/api-ref/external-api-for-disco-integration-partners
+- type: GettingStarted
+  url: https://docs.disconetwork.com/docs/publish-discofeed
+- type: Postman
+  url: postman/disconetwork-reporting-v2.postman_collection.json
+- type: HelpCenter
+  url: https://support.disconetwork.com/hc/en-us
+- type: Pricing
+  url: https://support.disconetwork.com/hc/en-us/articles/15854633791003-Disco-Pricing-Billing
+- type: Plans
+  url: plans/disconetwork-plans-pricing.yml
+- type: RateLimits
+  url: rate-limits/disconetwork-rate-limits.yml
+- type: SignUp
+  url: https://disconetwork.com/book-a-demo
+- type: StatusPage
+  url: https://status.disconetwork.com
+- type: Lifecycle
+  url: lifecycle/disconetwork-lifecycle.yml
+- type: ChangeLog
+  url: changelog/disconetwork-changelog.yml
+- type: Authentication
+  url: authentication/disconetwork-authentication.yml
+- type: Conventions
+  url: conventions/disconetwork-conventions.yml
+- type: Conformance
+  url: conformance/disconetwork-conformance.yml
+- type: ErrorCatalog
+  url: errors/disconetwork-problem-types.yml
+- type: DataModel
+  url: data-model/disconetwork-data-model.yml
+- type: Sandbox
+  url: sandbox/disconetwork-sandbox.yml
+- type: Packages
+  url: packages/disconetwork-packages.yml
+- type: SDKs
+  url: packages/disconetwork-packages.yml
+- type: Components
+  url: components/disconetwork-components.yml
+- type: LLMsTxt
+  url: llms/disconetwork-llms.txt
+- type: AgentSkill
+  url: skills/_index.yml
+- type: ToolCrosswalk
+  url: mcp/disconetwork-tool-crosswalk.yml
+- type: DomainSecurity
+  url: security/disconetwork-domain-security.yml
 - type: TermsOfService
   url: https://disconetwork.com/terms-of-service
 - type: PrivacyPolicy
   url: https://disconetwork.com/privacy-policy
-- type: ChangeLog
-  url: https://disconetwork.com/changelog
-x-enrichment:
-  date: '2026-07-19'
-  status: backfilled
-  pass: local-v1
-  note: backfilled from .gitignore signal + verified work evidence
+- type: Blog
+  url: https://disconetwork.com/press

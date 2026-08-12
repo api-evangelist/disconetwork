@@ -1,0 +1,179 @@
+generated: '2026-08-12'
+method: probed
+source: live GET of each path on every Disco host on 2026-08-12
+summary:
+  hits: 0
+  note: >-
+    Nothing was found. Every /.well-known/* path on disconetwork.com and
+    www.disconetwork.com answers HTTP 200 with the marketing site's SPA HTML shell
+    (the same <!doctype html> body as the homepage, title "Disco: Commerce Media
+    Network for Post-Purchase & Beyond"), not a document. That is a catch-all, not
+    a served well-known surface, so NO WellKnown or SecurityTxt pointer is emitted.
+    The API, docs, consumer and support hosts return honest 404s.
+  stated_vs_deployed: >-
+    Disco's own agent-facing material advertises three well-known documents that are
+    not actually served. https://disconetwork.com/developers.md lists "API catalog
+    (RFC 9727): /.well-known/api-catalog", "Agent skills:
+    /.well-known/agent-skills/index.json" and "WebMCP:
+    /.well-known/mcp/server-card.json", and the site's in-page WebMCP
+    `get_developer_docs` tool returns the first two paths as if they resolve. All
+    three return the SPA HTML shell. This is a real, fixable gap on the provider's
+    side, not a probe failure on ours.
+hosts:
+- host: disconetwork.com
+  paths:
+  - path: /.well-known/security.txt
+    status: 200
+    content_type: text/html
+    result: miss
+    note: SPA HTML shell, not a security.txt
+  - path: /.well-known/openid-configuration
+    status: 200
+    content_type: text/html
+    result: miss
+    note: SPA HTML shell
+  - path: /.well-known/oauth-authorization-server
+    status: 200
+    content_type: text/html
+    result: miss
+    note: SPA HTML shell
+  - path: /.well-known/oauth-protected-resource
+    status: 200
+    content_type: text/html
+    result: miss
+    note: SPA HTML shell
+  - path: /.well-known/api-catalog
+    status: 200
+    content_type: text/html
+    result: miss
+    note: SPA HTML shell; advertised as RFC 9727 in /developers.md
+  - path: /.well-known/ai-plugin.json
+    status: 200
+    content_type: text/html
+    result: miss
+    note: SPA HTML shell
+  - path: /.well-known/agent-card.json
+    status: 200
+    content_type: text/html
+    result: miss
+    note: SPA HTML shell; not an A2A AgentCard
+  - path: /.well-known/agent.json
+    status: 200
+    content_type: text/html
+    result: miss
+    note: SPA HTML shell
+  - path: /.well-known/agent-skills/index.json
+    status: 200
+    content_type: text/html
+    result: miss
+    note: SPA HTML shell; advertised in /developers.md and by the in-page WebMCP tool
+  - path: /.well-known/mcp/server-card.json
+    status: 200
+    content_type: text/html
+    result: miss
+    note: SPA HTML shell; advertised in /developers.md
+  - path: /llms.txt
+    status: 200
+    content_type: text/plain
+    result: hit
+    file: llms/disconetwork-llms.txt
+    note: A real llms.txt, 4213 bytes. Saved verbatim.
+- host: www.disconetwork.com
+  paths:
+  - path: /.well-known/security.txt
+    status: 200
+    result: miss
+    note: same SPA catch-all as the apex
+  - path: /llms.txt
+    status: 200
+    result: hit
+    note: same document as the apex host
+- host: partners.disconetwork.com
+  paths:
+  - path: /.well-known/security.txt
+    status: 404
+    result: miss
+  - path: /.well-known/openid-configuration
+    status: 404
+    result: miss
+  - path: /.well-known/oauth-authorization-server
+    status: 404
+    result: miss
+  - path: /.well-known/oauth-protected-resource
+    status: 404
+    result: miss
+  - path: /.well-known/api-catalog
+    status: 404
+    result: miss
+  - path: /.well-known/ai-plugin.json
+    status: 404
+    result: miss
+  - path: /.well-known/agent-card.json
+    status: 404
+    result: miss
+  - path: /.well-known/agent.json
+    status: 404
+    result: miss
+  - path: /llms.txt
+    status: 404
+    result: miss
+- host: api.disconetwork.com
+  paths:
+  - path: /
+    status: 404
+    result: miss
+    note: bare API host root returns 404; all routes are prefixed /discobeat/
+- host: docs.disconetwork.com
+  paths:
+  - path: /.well-known/security.txt
+    status: 404
+    result: miss
+  - path: /.well-known/agent-card.json
+    status: 404
+    result: miss
+  - path: /.well-known/api-catalog
+    status: 404
+    result: miss
+  - path: /llms.txt
+    status: 404
+    result: miss
+  - path: /robots.txt
+    status: 404
+    result: miss
+  - path: /sitemap.xml
+    status: 200
+    content_type: application/xml
+    result: hit
+    note: Docusaurus sitemap. Every <loc> points at docs.disconetwork-staging.com,
+      not the production docs host — the sitemap was generated against staging and
+      shipped to production.
+  - path: /disco-api.yaml
+    status: 200
+    content_type: application/yaml
+    result: hit
+    file: openapi/disconetwork-partner-api.yml
+    note: The partner-integration OpenAPI 3.0.0, linked from the API Reference page's
+      Export menu.
+- host: consumer.disconetwork.com
+  paths:
+  - path: /.well-known/security.txt
+    status: 404
+    result: miss
+  - path: /.well-known/agent-card.json
+    status: 404
+    result: miss
+  - path: /llms.txt
+    status: 404
+    result: miss
+  - path: /api/events
+    status: 405
+    result: hit
+    note: 405 on GET confirms the documented POST-only conversion intake is live.
+- host: support.disconetwork.com
+  paths:
+  - path: /.well-known/security.txt
+    status: 404
+    result: miss
+  - path: /llms.txt
+    status: 404
+    result: miss
