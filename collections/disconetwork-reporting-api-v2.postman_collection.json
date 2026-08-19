@@ -1,0 +1,490 @@
+{
+  "item": [
+    {
+      "id": "c5431f00-38ee-4efd-a38e-63885d6f9fc2",
+      "name": "Build a report",
+      "request": {
+        "name": "Build a report",
+        "description": {
+          "content": "Returns flat, paginated rows plus summary metrics across the complete filtered result. The response includes only the requested metrics and selected breakdown columns.\n",
+          "type": "text/plain"
+        },
+        "url": {
+          "path": [
+            "discobeat",
+            "reporting",
+            "v2",
+            "report",
+            ""
+          ],
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "query": [
+            {
+              "disabled": false,
+              "key": "from",
+              "value": "<date>",
+              "description": "(Required) Start date in UTC, inclusive."
+            },
+            {
+              "disabled": false,
+              "key": "to",
+              "value": "<date>",
+              "description": "(Required) End date in UTC, inclusive. The requested range can span at most 90 days."
+            },
+            {
+              "disabled": false,
+              "key": "metrics",
+              "value": "<string>",
+              "description": "(Required) Comma-separated metrics enabled for the authenticated channel. Metrics must be unique.\n"
+            },
+            {
+              "disabled": false,
+              "key": "time_grain",
+              "value": "total",
+              "description": "UTC row interval. Hour supports at most 3 days and one breakdown. Week and month edge periods are clipped to the requested date range.\n"
+            },
+            {
+              "disabled": false,
+              "key": "group_by",
+              "value": "<string>,<string>",
+              "description": "Comma-separated breakdown columns. Up to three are supported except hourly reports, which support at most one.\n"
+            },
+            {
+              "disabled": false,
+              "key": "publisher_ids",
+              "value": "<string>,<string>",
+              "description": "Comma-separated publisher UUID filter. Filtering does not add a report column."
+            },
+            {
+              "disabled": false,
+              "key": "page_types",
+              "value": "<string>,<string>",
+              "description": "Comma-separated page-type filter. Filtering does not add a report column."
+            },
+            {
+              "disabled": false,
+              "key": "widget_types",
+              "value": "<string>,<string>",
+              "description": "Comma-separated widget-type filter. Filtering does not add a report column."
+            },
+            {
+              "disabled": false,
+              "key": "offset",
+              "value": "0",
+              "description": "Pagination offset."
+            },
+            {
+              "disabled": false,
+              "key": "limit",
+              "value": "50",
+              "description": "JSON page size."
+            }
+          ],
+          "variable": []
+        },
+        "header": [
+          {
+            "key": "Accept",
+            "value": "application/json"
+          }
+        ],
+        "method": "GET",
+        "auth": null
+      },
+      "response": [
+        {
+          "id": "7b98f130-2ecb-46b4-a0ce-39110fbac2e5",
+          "name": "Paginated report rows and complete matching summary.",
+          "originalRequest": {
+            "url": {
+              "path": [
+                "discobeat",
+                "reporting",
+                "v2",
+                "report",
+                ""
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "key": "from",
+                  "value": "2026-07-18"
+                },
+                {
+                  "key": "to",
+                  "value": "2026-07-20"
+                },
+                {
+                  "key": "metrics",
+                  "value": "impressions,clicks,channel_payout,ctr"
+                },
+                {
+                  "key": "time_grain",
+                  "value": "total"
+                },
+                {
+                  "key": "group_by",
+                  "value": "publisher,page_type"
+                },
+                {
+                  "key": "publisher_ids",
+                  "value": "9aa17f8c-7746-4218-9025-83d38c406179"
+                },
+                {
+                  "key": "page_types",
+                  "value": "ORDER_TRACKING,THANK_YOU"
+                },
+                {
+                  "key": "widget_types",
+                  "value": "APP_NATIVE_ESSENTIAL"
+                },
+                {
+                  "key": "offset",
+                  "value": "0"
+                },
+                {
+                  "key": "limit",
+                  "value": "50"
+                }
+              ],
+              "variable": []
+            },
+            "header": [
+              {
+                "description": {
+                  "content": "Added as a part of security scheme: apikey",
+                  "type": "text/plain"
+                },
+                "key": "x-api-key",
+                "value": "<API Key>"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "body": {}
+          },
+          "status": "OK",
+          "code": 200,
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "body": "{\n  \"data\": [\n    {\n      \"period_start\": \"2026-07-18T00:00:00Z\",\n      \"period_end\": \"2026-07-19T00:00:00Z\",\n      \"publisher_id\": \"9aa17f8c-7746-4218-9025-83d38c406179\",\n      \"publisher_name\": \"AfterShip Tracking Page\",\n      \"page_type\": \"ORDER_TRACKING\",\n      \"widget_type\": \"APP_NATIVE_ESSENTIAL\",\n      \"widget_id\": \"string\",\n      \"impressions\": 225072,\n      \"clicks\": 8928,\n      \"conversions\": 864,\n      \"channel_payout\": 6546.24,\n      \"revenue_with_email\": 4909.68,\n      \"revenue_without_email\": 1636.56,\n      \"sessions\": 120000,\n      \"feed_loads\": 135000,\n      \"ctr\": 0.0397,\n      \"cvr\": 0.0968,\n      \"rps\": 0.0546,\n      \"rpl\": 0.0485\n    },\n    {\n      \"period_start\": \"2026-07-18T00:00:00Z\",\n      \"period_end\": \"2026-07-19T00:00:00Z\",\n      \"publisher_id\": \"9aa17f8c-7746-4218-9025-83d38c406179\",\n      \"publisher_name\": \"AfterShip Tracking Page\",\n      \"page_type\": \"ORDER_TRACKING\",\n      \"widget_type\": \"APP_NATIVE_ESSENTIAL\",\n      \"widget_id\": \"string\",\n      \"impressions\": 225072,\n      \"clicks\": 8928,\n      \"conversions\": 864,\n      \"channel_payout\": 6546.24,\n      \"revenue_with_email\": 4909.68,\n      \"revenue_without_email\": 1636.56,\n      \"sessions\": 120000,\n      \"feed_loads\": 135000,\n      \"ctr\": 0.0397,\n      \"cvr\": 0.0968,\n      \"rps\": 0.0546,\n      \"rpl\": 0.0485\n    }\n  ],\n  \"summary\": {\n    \"impressions\": 225072,\n    \"clicks\": 8928,\n    \"conversions\": 864,\n    \"channel_payout\": 6546.24,\n    \"revenue_with_email\": 4909.68,\n    \"revenue_without_email\": 1636.56,\n    \"sessions\": 120000,\n    \"feed_loads\": 135000,\n    \"ctr\": 0.0397,\n    \"cvr\": 0.0968,\n    \"rps\": 0.0546,\n    \"rpl\": 0.0485\n  },\n  \"pagination\": {\n    \"offset\": 0,\n    \"limit\": 50,\n    \"total\": 36,\n    \"has_more\": false\n  },\n  \"meta\": {\n    \"timezone\": \"UTC\",\n    \"data_through\": \"2026-07-22T23:00:00Z\",\n    \"request_id\": \"7e9fe348-7558-4e28-b8c6-b26ea44899eb\"\n  }\n}",
+          "cookie": [],
+          "_postman_previewlanguage": "json"
+        },
+        {
+          "id": "68127edb-8222-45c4-8c46-d2e275d7af34",
+          "name": "Invalid query, unavailable metric or data, date outside the available window, or result over 10,000 rows.",
+          "originalRequest": {
+            "url": {
+              "path": [
+                "discobeat",
+                "reporting",
+                "v2",
+                "report",
+                ""
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "key": "from",
+                  "value": "2026-07-18"
+                },
+                {
+                  "key": "to",
+                  "value": "2026-07-20"
+                },
+                {
+                  "key": "metrics",
+                  "value": "impressions,clicks,channel_payout,ctr"
+                },
+                {
+                  "key": "time_grain",
+                  "value": "total"
+                },
+                {
+                  "key": "group_by",
+                  "value": "publisher,page_type"
+                },
+                {
+                  "key": "publisher_ids",
+                  "value": "9aa17f8c-7746-4218-9025-83d38c406179"
+                },
+                {
+                  "key": "page_types",
+                  "value": "ORDER_TRACKING,THANK_YOU"
+                },
+                {
+                  "key": "widget_types",
+                  "value": "APP_NATIVE_ESSENTIAL"
+                },
+                {
+                  "key": "offset",
+                  "value": "0"
+                },
+                {
+                  "key": "limit",
+                  "value": "50"
+                }
+              ],
+              "variable": []
+            },
+            "header": [
+              {
+                "description": {
+                  "content": "Added as a part of security scheme: apikey",
+                  "type": "text/plain"
+                },
+                "key": "x-api-key",
+                "value": "<API Key>"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "body": {}
+          },
+          "status": "Bad Request",
+          "code": 400,
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "body": "{\n  \"code\": \"METRIC_NOT_AVAILABLE\",\n  \"unsupported_metrics\": [\n    \"channel_payout\"\n  ],\n  \"allowed_metrics\": [\n    \"impressions\",\n    \"clicks\",\n    \"ctr\"\n  ]\n}",
+          "cookie": [],
+          "_postman_previewlanguage": "json"
+        },
+        {
+          "id": "40e8c16a-6977-4f98-bcd6-f59bef58440f",
+          "name": "Missing or invalid management API key.",
+          "originalRequest": {
+            "url": {
+              "path": [
+                "discobeat",
+                "reporting",
+                "v2",
+                "report",
+                ""
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "key": "from",
+                  "value": "2026-07-18"
+                },
+                {
+                  "key": "to",
+                  "value": "2026-07-20"
+                },
+                {
+                  "key": "metrics",
+                  "value": "impressions,clicks,channel_payout,ctr"
+                },
+                {
+                  "key": "time_grain",
+                  "value": "total"
+                },
+                {
+                  "key": "group_by",
+                  "value": "publisher,page_type"
+                },
+                {
+                  "key": "publisher_ids",
+                  "value": "9aa17f8c-7746-4218-9025-83d38c406179"
+                },
+                {
+                  "key": "page_types",
+                  "value": "ORDER_TRACKING,THANK_YOU"
+                },
+                {
+                  "key": "widget_types",
+                  "value": "APP_NATIVE_ESSENTIAL"
+                },
+                {
+                  "key": "offset",
+                  "value": "0"
+                },
+                {
+                  "key": "limit",
+                  "value": "50"
+                }
+              ],
+              "variable": []
+            },
+            "header": [
+              {
+                "description": {
+                  "content": "Added as a part of security scheme: apikey",
+                  "type": "text/plain"
+                },
+                "key": "x-api-key",
+                "value": "<API Key>"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "body": {}
+          },
+          "status": "Unauthorized",
+          "code": 401,
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "body": "{\n  \"detail\": \"Invalid or expired management API key.\"\n}",
+          "cookie": [],
+          "_postman_previewlanguage": "json"
+        },
+        {
+          "id": "c819a925-5351-4eab-880a-d3d1cf6e4fb3",
+          "name": "Only GET is supported.",
+          "originalRequest": {
+            "url": {
+              "path": [
+                "discobeat",
+                "reporting",
+                "v2",
+                "report",
+                ""
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "key": "from",
+                  "value": "2026-07-18"
+                },
+                {
+                  "key": "to",
+                  "value": "2026-07-20"
+                },
+                {
+                  "key": "metrics",
+                  "value": "impressions,clicks,channel_payout,ctr"
+                },
+                {
+                  "key": "time_grain",
+                  "value": "total"
+                },
+                {
+                  "key": "group_by",
+                  "value": "publisher,page_type"
+                },
+                {
+                  "key": "publisher_ids",
+                  "value": "9aa17f8c-7746-4218-9025-83d38c406179"
+                },
+                {
+                  "key": "page_types",
+                  "value": "ORDER_TRACKING,THANK_YOU"
+                },
+                {
+                  "key": "widget_types",
+                  "value": "APP_NATIVE_ESSENTIAL"
+                },
+                {
+                  "key": "offset",
+                  "value": "0"
+                },
+                {
+                  "key": "limit",
+                  "value": "50"
+                }
+              ],
+              "variable": []
+            },
+            "header": [
+              {
+                "description": {
+                  "content": "Added as a part of security scheme: apikey",
+                  "type": "text/plain"
+                },
+                "key": "x-api-key",
+                "value": "<API Key>"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "body": {}
+          },
+          "status": "Method Not Allowed",
+          "code": 405,
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "body": "{\n  \"detail\": \"Method \\\"POST\\\" not allowed.\"\n}",
+          "cookie": [],
+          "_postman_previewlanguage": "json"
+        }
+      ],
+      "event": [],
+      "protocolProfileBehavior": {
+        "disableBodyPruning": true
+      }
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "https://api.disconetwork.com",
+      "key": "baseUrl"
+    }
+  ],
+  "auth": {
+    "type": "apikey",
+    "apikey": [
+      {
+        "key": "key",
+        "value": "x-api-key"
+      },
+      {
+        "key": "value",
+        "value": "{{apiKey}}"
+      },
+      {
+        "key": "in",
+        "value": "header"
+      }
+    ]
+  },
+  "info": {
+    "_postman_id": "c38c34d3-1859-46f7-86e6-921a65a08d50",
+    "name": "Disco Reporting API V2",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "Build flat, paginated channel reports with selectable metrics, UTC time grains, up to three breakdown columns, and filters. Authenticate with a management API key in the `x-api-key` header. Every request is scoped to the authenticated channel.\n",
+      "type": "text/plain"
+    }
+  }
+}

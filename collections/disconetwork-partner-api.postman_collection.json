@@ -1,0 +1,1095 @@
+{
+  "item": [
+    {
+      "id": "b5bb221a-dcf2-4367-8c09-0b0077f2bae4",
+      "name": "Recommendations",
+      "description": {
+        "content": "",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "9f9f6d87-2c36-4707-bb68-a04b0ef856f9",
+          "name": "Get Disco Advertiser Recommendations",
+          "request": {
+            "name": "Get Disco Advertiser Recommendations",
+            "description": {
+              "content": "Use the Disco Network advertiser recommendation engine to get the best offers for your customers in post-purchase experiences.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "recommendations"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "disabled": false,
+                "description": "(Required) The version of the API you wish to use",
+                "key": "version",
+                "value": "<string>"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": {
+              "type": "apikey",
+              "apikey": [
+                {
+                  "key": "key",
+                  "value": "x-api-key"
+                },
+                {
+                  "key": "value",
+                  "value": "{{apiKey}}"
+                },
+                {
+                  "key": "in",
+                  "value": "header"
+                }
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"placement_details\": {\n    \"display_mode\": \"<string>\",\n    \"view\": \"<string>\",\n    \"layout_id\": \"<string>\",\n    \"widget_id\": \"<string>\",\n    \"sub_view\": \"DEFAULT\"\n  },\n  \"user_details\": \"<object>\",\n  \"order_details\": {\n    \"cost_details\": {\n      \"amount\": \"<float>\",\n      \"currency_code\": \"<string>\"\n    },\n    \"order_id\": \"<string>\",\n    \"payment_type\": \"<string>\"\n  },\n  \"purchases\": [\n    {\n      \"name\": \"<string>\",\n      \"type\": \"<string>\",\n      \"variant\": {\n        \"key_0\": \"<string>\"\n      },\n      \"quantity\": \"<number>\",\n      \"description\": \"<string>\",\n      \"cost_details\": {\n        \"amount\": \"<float>\",\n        \"currency_code\": \"<string>\"\n      },\n      \"product_id\": \"<string>\",\n      \"attributes\": {\n        \"is_clearance\": \"<boolean>\",\n        \"is_gift\": \"<boolean>\"\n      }\n    },\n    {\n      \"name\": \"<string>\",\n      \"type\": \"<string>\",\n      \"variant\": {\n        \"key_0\": \"<string>\",\n        \"key_1\": \"<string>\",\n        \"key_2\": \"<string>\"\n      },\n      \"quantity\": \"<number>\",\n      \"description\": \"<string>\",\n      \"cost_details\": {\n        \"amount\": \"<float>\",\n        \"currency_code\": \"<string>\"\n      },\n      \"product_id\": \"<string>\",\n      \"attributes\": {\n        \"is_clearance\": \"<boolean>\",\n        \"is_gift\": \"<boolean>\"\n      }\n    }\n  ],\n  \"attributes\": {\n    \"user_agent\": \"<string>\",\n    \"device_type\": \"<string>\",\n    \"operating_system\": \"<string>\",\n    \"operating_system_version\": \"<string>\",\n    \"ip_address\": \"<string>\",\n    \"ip_address_hash\": \"<string>\",\n    \"platform_type\": \"<string>\",\n    \"language\": \"<string>\"\n  },\n  \"custom_metadata\": {\n    \"is_sandbox\": \"<boolean>\",\n    \"is_add_to_order_customer\": \"<boolean>\",\n    \"is_sports_betting_eligible\": \"<boolean>\",\n    \"is_fam\": \"<boolean>\",\n    \"is_student\": \"<boolean>\"\n  },\n  \"shipping\": {\n    \"address_line_1\": \"<string>\",\n    \"address_line_2\": \"<string>\",\n    \"city\": \"<string>\",\n    \"state\": \"<string>\",\n    \"zip\": \"<string>\",\n    \"phone\": \"<string>\"\n  },\n  \"billing\": {\n    \"address_line_1\": \"<string>\",\n    \"address_line_2\": \"<string>\",\n    \"city\": \"<string>\",\n    \"state\": \"<string>\",\n    \"zip\": \"<string>\",\n    \"phone\": \"<string>\"\n  },\n  \"running_experiments\": [\n    {\n      \"name\": \"<string>\",\n      \"version\": \"<integer>\"\n    },\n    {\n      \"name\": \"<string>\",\n      \"version\": \"<integer>\"\n    }\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "40c9ff1d-4dae-4639-b93d-b0eebbbb78cc",
+              "name": "The request was successful, and the server has returned the requested resource in the response body.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "recommendations"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "x-api-key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "(Required) The version of the API you wish to use",
+                    "key": "version",
+                    "value": "1.0.0"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"placement_details\": {\n    \"display_mode\": \"<string>\",\n    \"view\": \"<string>\",\n    \"layout_id\": \"<string>\",\n    \"widget_id\": \"<string>\",\n    \"sub_view\": \"DEFAULT\"\n  },\n  \"user_details\": {\n    \"email\": \"michelle@disconetwork.com\",\n    \"title\": \"<string>\",\n    \"first_name\": \"Monica\",\n    \"last_name\": \"Stone\",\n    \"phone\": \"+1 (415) 123-4567\",\n    \"gender\": \"<string>\",\n    \"dob\": \"<string>\",\n    \"age\": \"<number>\"\n  },\n  \"order_details\": {\n    \"cost_details\": {\n      \"amount\": 100,\n      \"currency_code\": \"USD\"\n    },\n    \"order_id\": \"<string>\",\n    \"payment_type\": \"VISA\"\n  },\n  \"purchases\": [\n    {\n      \"name\": \"<string>\",\n      \"type\": \"Electronics\",\n      \"variant\": {\n        \"key_0\": \"<string>\",\n        \"key_1\": \"<string>\"\n      },\n      \"quantity\": \"<number>\",\n      \"description\": \"Noise-cancelling headphones\",\n      \"cost_details\": {\n        \"amount\": 100,\n        \"currency_code\": \"USD\"\n      },\n      \"product_id\": \"<string>\",\n      \"attributes\": {\n        \"is_clearance\": \"<boolean>\",\n        \"is_gift\": \"<boolean>\"\n      }\n    },\n    {\n      \"name\": \"<string>\",\n      \"type\": \"Electronics\",\n      \"variant\": {\n        \"key_0\": \"<string>\"\n      },\n      \"quantity\": \"<number>\",\n      \"description\": \"Noise-cancelling headphones\",\n      \"cost_details\": {\n        \"amount\": 100,\n        \"currency_code\": \"USD\"\n      },\n      \"product_id\": \"<string>\",\n      \"attributes\": {\n        \"is_clearance\": \"<boolean>\",\n        \"is_gift\": \"<boolean>\"\n      }\n    }\n  ],\n  \"attributes\": {\n    \"user_agent\": \"<string>\",\n    \"device_type\": \"<string>\",\n    \"operating_system\": \"iOS\",\n    \"operating_system_version\": \"18.3.2\",\n    \"ip_address\": \"<string>\",\n    \"ip_address_hash\": \"<string>\",\n    \"platform_type\": \"<string>\",\n    \"language\": \"<string>\"\n  },\n  \"custom_metadata\": {\n    \"is_sandbox\": \"<boolean>\",\n    \"is_add_to_order_customer\": \"<boolean>\",\n    \"is_sports_betting_eligible\": \"<boolean>\",\n    \"is_fam\": \"<boolean>\",\n    \"is_student\": \"<boolean>\"\n  },\n  \"shipping\": {\n    \"address_line_1\": \"431 Main St.\",\n    \"address_line_2\": \"Suite 2A\",\n    \"city\": \"Miami\",\n    \"state\": \"FL\",\n    \"zip\": \"45231\",\n    \"phone\": \"+1 (415) 123-4567\"\n  },\n  \"billing\": {\n    \"address_line_1\": \"431 Main St.\",\n    \"address_line_2\": \"Suite 2A\",\n    \"city\": \"Miami\",\n    \"state\": \"FL\",\n    \"zip\": \"45231\",\n    \"phone\": \"+1 (415) 123-4567\"\n  },\n  \"running_experiments\": [\n    {\n      \"name\": \"optimization_04\",\n      \"version\": 1\n    },\n    {\n      \"name\": \"optimization_04\",\n      \"version\": 1\n    }\n  ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"recommendations\": {\n    \"key_0\": {\n      \"advertiser\": {\n        \"name\": \"Marlowe's Roastery\",\n        \"logo_url\": \"http://jlgtJtOxobPxPaXX.mrzx0gHwAW9KbLOItMGtAMnutm8e,RHeIaO.ry2fh4EaBRuhlI0HxcF\",\n        \"id\": \"30576e99-fda5-41bc-b62c-65109ba47147\",\n        \"description\": \"string\"\n      },\n      \"offer\": {\n        \"heading\": \"15% OFF\",\n        \"target_url\": \"https://some-shop.com/collections/hop-shop/products/large-suit\",\n        \"metadata\": {\n          \"type\": \"PROMO_CODE\",\n          \"code\": \"IR3723\",\n          \"layout_type\": \"STACKED_TILE\"\n        },\n        \"cta_details\": {\n          \"accept_copy\": \"Claim Offer\",\n          \"decline_copy\": \"No Thanks\",\n          \"transition_copy\": \"Taking you to Marlowe's Roastery\",\n          \"claimed_accept_copy\": \"Copy code & shop\",\n          \"claimed_decline_copy\": \"Next offer\"\n        },\n        \"id\": \"adb0e805-ef67-4083-a2be-0ff3e0b16dce\",\n        \"subheading\": \"On your next purchase\",\n        \"json_content\": {\n          \"key_0\": \"string\",\n          \"key_1\": 4888,\n          \"key_2\": 7748\n        },\n        \"assets\": [\n          {\n            \"id\": \"PROD123\",\n            \"asset_type\": \"PRODUCT\",\n            \"insertion_order\": 0,\n            \"image_url\": \"https://sqmFFiwXPHATVAXntPDUOcpUTEpTQEpu.zxRpA-WHWxJngloHduYEnz1I3ZKsSdVRvk7.l,hkDVx6\",\n            \"should_trigger_claim_flow\": true,\n            \"target_url\": \"https://www.my-shop.com/\"\n          },\n          {\n            \"id\": \"PROD123\",\n            \"asset_type\": \"PRODUCT\",\n            \"insertion_order\": 0,\n            \"image_url\": \"https://YMCGwxVanKfLYymNeaYKyinzFxEY.swPmurKFXn8kOQ1kXY,k9hMaYRbfYZrJqnwQ.J2EqAynWY\",\n            \"should_trigger_claim_flow\": false,\n            \"target_url\": \"https://www.my-shop.com/\"\n          }\n        ],\n        \"disclosure_details\": {\n          \"copy\": \"string\",\n          \"target_url\": \"https://www.your-site.com/terms-and-conditions\",\n          \"content\": \"string\"\n        }\n      }\n    }\n  },\n  \"recommendation_groups\": {\n    \"group_0\": [\n      {\n        \"insertion_order\": 0,\n        \"insertion_id\": \"827d0-eniu29dbnf92\",\n        \"offer_id\": \"7c2d0ba1-9c53-4032-824d-72e49850ecc6\",\n        \"advertiser_id\": \"6d3f8745-9fde-47be-91fa-fbe09870f997\"\n      }\n    ]\n  },\n  \"footer\": {\n    \"attribution_details\": {\n      \"copy\": \"Powered by\",\n      \"disco_logo_url\": \"https://launcher.disconetwork.com/static/media/disco-logo-gray.01a8140f2bc1b025de45ba9950bc6341.svg\",\n      \"target_url\": \"https://disconetwork.com\"\n    },\n    \"privacy_policy\": {\n      \"copy\": \"Privacy Policy\",\n      \"target_url\": \"https://www.disconetwork.com/privacy-policy\"\n    }\n  },\n  \"session_id\": \"30576e99-fda5-41bc-b62c-65109ba47147\",\n  \"resolved_widget\": {\n    \"widget_id\": \"string\",\n    \"widget_mode\": \"INLINE\",\n    \"widget_type\": \"APP_NATIVE_SCROLLABLE\",\n    \"widget_version\": 6642.067485377074,\n    \"content\": {\n      \"key_0\": \"string\"\n    },\n    \"layout_id\": \"string\"\n  },\n  \"recommendation_group_properties\": {\n    \"key_0\": {\n      \"slot_context\": \"SCROLLABLE\",\n      \"heading\": \"string\"\n    },\n    \"key_1\": {\n      \"slot_context\": \"HERO\",\n      \"heading\": \"string\"\n    }\n  },\n  \"running_experiments\": [\n    {\n      \"name\": \"optimization_04\",\n      \"version\": 1\n    },\n    {\n      \"name\": \"optimization_04\",\n      \"version\": 1\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "68114c1c-fb9e-4a2b-83fc-537963817b05",
+              "name": "The server could not understand the request due to invalid syntax. The client should modify the request and try again.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "recommendations"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "x-api-key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "(Required) The version of the API you wish to use",
+                    "key": "version",
+                    "value": "1.0.0"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"placement_details\": {\n    \"display_mode\": \"<string>\",\n    \"view\": \"<string>\",\n    \"layout_id\": \"<string>\",\n    \"widget_id\": \"<string>\",\n    \"sub_view\": \"DEFAULT\"\n  },\n  \"user_details\": {\n    \"email\": \"michelle@disconetwork.com\",\n    \"title\": \"<string>\",\n    \"first_name\": \"Monica\",\n    \"last_name\": \"Stone\",\n    \"phone\": \"+1 (415) 123-4567\",\n    \"gender\": \"<string>\",\n    \"dob\": \"<string>\",\n    \"age\": \"<number>\"\n  },\n  \"order_details\": {\n    \"cost_details\": {\n      \"amount\": 100,\n      \"currency_code\": \"USD\"\n    },\n    \"order_id\": \"<string>\",\n    \"payment_type\": \"VISA\"\n  },\n  \"purchases\": [\n    {\n      \"name\": \"<string>\",\n      \"type\": \"Electronics\",\n      \"variant\": {\n        \"key_0\": \"<string>\",\n        \"key_1\": \"<string>\"\n      },\n      \"quantity\": \"<number>\",\n      \"description\": \"Noise-cancelling headphones\",\n      \"cost_details\": {\n        \"amount\": 100,\n        \"currency_code\": \"USD\"\n      },\n      \"product_id\": \"<string>\",\n      \"attributes\": {\n        \"is_clearance\": \"<boolean>\",\n        \"is_gift\": \"<boolean>\"\n      }\n    },\n    {\n      \"name\": \"<string>\",\n      \"type\": \"Electronics\",\n      \"variant\": {\n        \"key_0\": \"<string>\"\n      },\n      \"quantity\": \"<number>\",\n      \"description\": \"Noise-cancelling headphones\",\n      \"cost_details\": {\n        \"amount\": 100,\n        \"currency_code\": \"USD\"\n      },\n      \"product_id\": \"<string>\",\n      \"attributes\": {\n        \"is_clearance\": \"<boolean>\",\n        \"is_gift\": \"<boolean>\"\n      }\n    }\n  ],\n  \"attributes\": {\n    \"user_agent\": \"<string>\",\n    \"device_type\": \"<string>\",\n    \"operating_system\": \"iOS\",\n    \"operating_system_version\": \"18.3.2\",\n    \"ip_address\": \"<string>\",\n    \"ip_address_hash\": \"<string>\",\n    \"platform_type\": \"<string>\",\n    \"language\": \"<string>\"\n  },\n  \"custom_metadata\": {\n    \"is_sandbox\": \"<boolean>\",\n    \"is_add_to_order_customer\": \"<boolean>\",\n    \"is_sports_betting_eligible\": \"<boolean>\",\n    \"is_fam\": \"<boolean>\",\n    \"is_student\": \"<boolean>\"\n  },\n  \"shipping\": {\n    \"address_line_1\": \"431 Main St.\",\n    \"address_line_2\": \"Suite 2A\",\n    \"city\": \"Miami\",\n    \"state\": \"FL\",\n    \"zip\": \"45231\",\n    \"phone\": \"+1 (415) 123-4567\"\n  },\n  \"billing\": {\n    \"address_line_1\": \"431 Main St.\",\n    \"address_line_2\": \"Suite 2A\",\n    \"city\": \"Miami\",\n    \"state\": \"FL\",\n    \"zip\": \"45231\",\n    \"phone\": \"+1 (415) 123-4567\"\n  },\n  \"running_experiments\": [\n    {\n      \"name\": \"optimization_04\",\n      \"version\": 1\n    },\n    {\n      \"name\": \"optimization_04\",\n      \"version\": 1\n    }\n  ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": \"string\",\n  \"errors\": [\n    {\n      \"message\": \"string\"\n    },\n    {\n      \"message\": \"string\"\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "1bbae648-32b2-4716-9129-6ef1d62e4885",
+              "name": "Authentication is required to access the requested resource. The client must include the appropriate credentials.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "recommendations"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "x-api-key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "(Required) The version of the API you wish to use",
+                    "key": "version",
+                    "value": "1.0.0"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"placement_details\": {\n    \"display_mode\": \"<string>\",\n    \"view\": \"<string>\",\n    \"layout_id\": \"<string>\",\n    \"widget_id\": \"<string>\",\n    \"sub_view\": \"DEFAULT\"\n  },\n  \"user_details\": {\n    \"email\": \"michelle@disconetwork.com\",\n    \"title\": \"<string>\",\n    \"first_name\": \"Monica\",\n    \"last_name\": \"Stone\",\n    \"phone\": \"+1 (415) 123-4567\",\n    \"gender\": \"<string>\",\n    \"dob\": \"<string>\",\n    \"age\": \"<number>\"\n  },\n  \"order_details\": {\n    \"cost_details\": {\n      \"amount\": 100,\n      \"currency_code\": \"USD\"\n    },\n    \"order_id\": \"<string>\",\n    \"payment_type\": \"VISA\"\n  },\n  \"purchases\": [\n    {\n      \"name\": \"<string>\",\n      \"type\": \"Electronics\",\n      \"variant\": {\n        \"key_0\": \"<string>\",\n        \"key_1\": \"<string>\"\n      },\n      \"quantity\": \"<number>\",\n      \"description\": \"Noise-cancelling headphones\",\n      \"cost_details\": {\n        \"amount\": 100,\n        \"currency_code\": \"USD\"\n      },\n      \"product_id\": \"<string>\",\n      \"attributes\": {\n        \"is_clearance\": \"<boolean>\",\n        \"is_gift\": \"<boolean>\"\n      }\n    },\n    {\n      \"name\": \"<string>\",\n      \"type\": \"Electronics\",\n      \"variant\": {\n        \"key_0\": \"<string>\"\n      },\n      \"quantity\": \"<number>\",\n      \"description\": \"Noise-cancelling headphones\",\n      \"cost_details\": {\n        \"amount\": 100,\n        \"currency_code\": \"USD\"\n      },\n      \"product_id\": \"<string>\",\n      \"attributes\": {\n        \"is_clearance\": \"<boolean>\",\n        \"is_gift\": \"<boolean>\"\n      }\n    }\n  ],\n  \"attributes\": {\n    \"user_agent\": \"<string>\",\n    \"device_type\": \"<string>\",\n    \"operating_system\": \"iOS\",\n    \"operating_system_version\": \"18.3.2\",\n    \"ip_address\": \"<string>\",\n    \"ip_address_hash\": \"<string>\",\n    \"platform_type\": \"<string>\",\n    \"language\": \"<string>\"\n  },\n  \"custom_metadata\": {\n    \"is_sandbox\": \"<boolean>\",\n    \"is_add_to_order_customer\": \"<boolean>\",\n    \"is_sports_betting_eligible\": \"<boolean>\",\n    \"is_fam\": \"<boolean>\",\n    \"is_student\": \"<boolean>\"\n  },\n  \"shipping\": {\n    \"address_line_1\": \"431 Main St.\",\n    \"address_line_2\": \"Suite 2A\",\n    \"city\": \"Miami\",\n    \"state\": \"FL\",\n    \"zip\": \"45231\",\n    \"phone\": \"+1 (415) 123-4567\"\n  },\n  \"billing\": {\n    \"address_line_1\": \"431 Main St.\",\n    \"address_line_2\": \"Suite 2A\",\n    \"city\": \"Miami\",\n    \"state\": \"FL\",\n    \"zip\": \"45231\",\n    \"phone\": \"+1 (415) 123-4567\"\n  },\n  \"running_experiments\": [\n    {\n      \"name\": \"optimization_04\",\n      \"version\": 1\n    },\n    {\n      \"name\": \"optimization_04\",\n      \"version\": 1\n    }\n  ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "1d438d50-9b90-467b-9261-bcecb5ba3b28",
+              "name": "The server understood the request, but refuses to authorize it. Ensure the client has appropriate permissions.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "recommendations"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "x-api-key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "(Required) The version of the API you wish to use",
+                    "key": "version",
+                    "value": "1.0.0"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"placement_details\": {\n    \"display_mode\": \"<string>\",\n    \"view\": \"<string>\",\n    \"layout_id\": \"<string>\",\n    \"widget_id\": \"<string>\",\n    \"sub_view\": \"DEFAULT\"\n  },\n  \"user_details\": {\n    \"email\": \"michelle@disconetwork.com\",\n    \"title\": \"<string>\",\n    \"first_name\": \"Monica\",\n    \"last_name\": \"Stone\",\n    \"phone\": \"+1 (415) 123-4567\",\n    \"gender\": \"<string>\",\n    \"dob\": \"<string>\",\n    \"age\": \"<number>\"\n  },\n  \"order_details\": {\n    \"cost_details\": {\n      \"amount\": 100,\n      \"currency_code\": \"USD\"\n    },\n    \"order_id\": \"<string>\",\n    \"payment_type\": \"VISA\"\n  },\n  \"purchases\": [\n    {\n      \"name\": \"<string>\",\n      \"type\": \"Electronics\",\n      \"variant\": {\n        \"key_0\": \"<string>\",\n        \"key_1\": \"<string>\"\n      },\n      \"quantity\": \"<number>\",\n      \"description\": \"Noise-cancelling headphones\",\n      \"cost_details\": {\n        \"amount\": 100,\n        \"currency_code\": \"USD\"\n      },\n      \"product_id\": \"<string>\",\n      \"attributes\": {\n        \"is_clearance\": \"<boolean>\",\n        \"is_gift\": \"<boolean>\"\n      }\n    },\n    {\n      \"name\": \"<string>\",\n      \"type\": \"Electronics\",\n      \"variant\": {\n        \"key_0\": \"<string>\"\n      },\n      \"quantity\": \"<number>\",\n      \"description\": \"Noise-cancelling headphones\",\n      \"cost_details\": {\n        \"amount\": 100,\n        \"currency_code\": \"USD\"\n      },\n      \"product_id\": \"<string>\",\n      \"attributes\": {\n        \"is_clearance\": \"<boolean>\",\n        \"is_gift\": \"<boolean>\"\n      }\n    }\n  ],\n  \"attributes\": {\n    \"user_agent\": \"<string>\",\n    \"device_type\": \"<string>\",\n    \"operating_system\": \"iOS\",\n    \"operating_system_version\": \"18.3.2\",\n    \"ip_address\": \"<string>\",\n    \"ip_address_hash\": \"<string>\",\n    \"platform_type\": \"<string>\",\n    \"language\": \"<string>\"\n  },\n  \"custom_metadata\": {\n    \"is_sandbox\": \"<boolean>\",\n    \"is_add_to_order_customer\": \"<boolean>\",\n    \"is_sports_betting_eligible\": \"<boolean>\",\n    \"is_fam\": \"<boolean>\",\n    \"is_student\": \"<boolean>\"\n  },\n  \"shipping\": {\n    \"address_line_1\": \"431 Main St.\",\n    \"address_line_2\": \"Suite 2A\",\n    \"city\": \"Miami\",\n    \"state\": \"FL\",\n    \"zip\": \"45231\",\n    \"phone\": \"+1 (415) 123-4567\"\n  },\n  \"billing\": {\n    \"address_line_1\": \"431 Main St.\",\n    \"address_line_2\": \"Suite 2A\",\n    \"city\": \"Miami\",\n    \"state\": \"FL\",\n    \"zip\": \"45231\",\n    \"phone\": \"+1 (415) 123-4567\"\n  },\n  \"running_experiments\": [\n    {\n      \"name\": \"optimization_04\",\n      \"version\": 1\n    },\n    {\n      \"name\": \"optimization_04\",\n      \"version\": 1\n    }\n  ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Forbidden",
+              "code": 403,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "3c1fcc22-b305-4ce6-bd56-6caa9bbb1f1f",
+              "name": "The server encountered an unexpected condition that prevented it from fulfilling the request. Report the issue to the support team if it persists.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "recommendations"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "x-api-key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "(Required) The version of the API you wish to use",
+                    "key": "version",
+                    "value": "1.0.0"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"placement_details\": {\n    \"display_mode\": \"<string>\",\n    \"view\": \"<string>\",\n    \"layout_id\": \"<string>\",\n    \"widget_id\": \"<string>\",\n    \"sub_view\": \"DEFAULT\"\n  },\n  \"user_details\": {\n    \"email\": \"michelle@disconetwork.com\",\n    \"title\": \"<string>\",\n    \"first_name\": \"Monica\",\n    \"last_name\": \"Stone\",\n    \"phone\": \"+1 (415) 123-4567\",\n    \"gender\": \"<string>\",\n    \"dob\": \"<string>\",\n    \"age\": \"<number>\"\n  },\n  \"order_details\": {\n    \"cost_details\": {\n      \"amount\": 100,\n      \"currency_code\": \"USD\"\n    },\n    \"order_id\": \"<string>\",\n    \"payment_type\": \"VISA\"\n  },\n  \"purchases\": [\n    {\n      \"name\": \"<string>\",\n      \"type\": \"Electronics\",\n      \"variant\": {\n        \"key_0\": \"<string>\",\n        \"key_1\": \"<string>\"\n      },\n      \"quantity\": \"<number>\",\n      \"description\": \"Noise-cancelling headphones\",\n      \"cost_details\": {\n        \"amount\": 100,\n        \"currency_code\": \"USD\"\n      },\n      \"product_id\": \"<string>\",\n      \"attributes\": {\n        \"is_clearance\": \"<boolean>\",\n        \"is_gift\": \"<boolean>\"\n      }\n    },\n    {\n      \"name\": \"<string>\",\n      \"type\": \"Electronics\",\n      \"variant\": {\n        \"key_0\": \"<string>\"\n      },\n      \"quantity\": \"<number>\",\n      \"description\": \"Noise-cancelling headphones\",\n      \"cost_details\": {\n        \"amount\": 100,\n        \"currency_code\": \"USD\"\n      },\n      \"product_id\": \"<string>\",\n      \"attributes\": {\n        \"is_clearance\": \"<boolean>\",\n        \"is_gift\": \"<boolean>\"\n      }\n    }\n  ],\n  \"attributes\": {\n    \"user_agent\": \"<string>\",\n    \"device_type\": \"<string>\",\n    \"operating_system\": \"iOS\",\n    \"operating_system_version\": \"18.3.2\",\n    \"ip_address\": \"<string>\",\n    \"ip_address_hash\": \"<string>\",\n    \"platform_type\": \"<string>\",\n    \"language\": \"<string>\"\n  },\n  \"custom_metadata\": {\n    \"is_sandbox\": \"<boolean>\",\n    \"is_add_to_order_customer\": \"<boolean>\",\n    \"is_sports_betting_eligible\": \"<boolean>\",\n    \"is_fam\": \"<boolean>\",\n    \"is_student\": \"<boolean>\"\n  },\n  \"shipping\": {\n    \"address_line_1\": \"431 Main St.\",\n    \"address_line_2\": \"Suite 2A\",\n    \"city\": \"Miami\",\n    \"state\": \"FL\",\n    \"zip\": \"45231\",\n    \"phone\": \"+1 (415) 123-4567\"\n  },\n  \"billing\": {\n    \"address_line_1\": \"431 Main St.\",\n    \"address_line_2\": \"Suite 2A\",\n    \"city\": \"Miami\",\n    \"state\": \"FL\",\n    \"zip\": \"45231\",\n    \"phone\": \"+1 (415) 123-4567\"\n  },\n  \"running_experiments\": [\n    {\n      \"name\": \"optimization_04\",\n      \"version\": 1\n    },\n    {\n      \"name\": \"optimization_04\",\n      \"version\": 1\n    }\n  ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Internal Server Error",
+              "code": 500,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    },
+    {
+      "id": "9ff6f1e1-cb21-49b2-a2ae-3a2298f2841f",
+      "name": "Events",
+      "description": {
+        "content": "",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "8fb10b0e-ad4e-4820-bfd5-7d9f195f1e22",
+          "name": "Create an event used to record user actions",
+          "request": {
+            "name": "Create an event used to record user actions",
+            "description": {},
+            "url": {
+              "path": [
+                "events"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "disabled": false,
+                "description": "(Required) The version of the api you wish to use",
+                "key": "version",
+                "value": "<string>"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"event_name\": \"<string>\",\n  \"event_datetime\": \"<dateTime>\",\n  \"session_id\": \"<uuid>\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "33795749-69b5-446c-bba8-9009eac72832",
+              "name": "The request was successful, and a new resource was created.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "events"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "disabled": false,
+                    "description": "(Required) The version of the api you wish to use",
+                    "key": "version",
+                    "value": "1.0.0"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"event_name\": \"<string>\",\n  \"event_datetime\": \"2025-03-21T17:32:28Z\",\n  \"session_id\": \"70f05c32-7760-4753-93c9-b759cf7e7fda\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Created",
+              "code": 201,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            },
+            {
+              "id": "a2546903-7a9f-49aa-8421-3bf0dc1c3506",
+              "name": "The server could not understand the request due to invalid syntax. The client should modify the request and try again.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "events"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "disabled": false,
+                    "description": "(Required) The version of the api you wish to use",
+                    "key": "version",
+                    "value": "1.0.0"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"event_name\": \"<string>\",\n  \"event_datetime\": \"2025-03-21T17:32:28Z\",\n  \"session_id\": \"70f05c32-7760-4753-93c9-b759cf7e7fda\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": \"string\",\n  \"errors\": [\n    {\n      \"message\": \"string\"\n    },\n    {\n      \"message\": \"string\"\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "57a80c08-00b7-46e4-ac9c-0c1eb8849195",
+              "name": "Authentication is required to access the requested resource. The client must include the appropriate credentials.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "events"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "disabled": false,
+                    "description": "(Required) The version of the api you wish to use",
+                    "key": "version",
+                    "value": "1.0.0"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"event_name\": \"<string>\",\n  \"event_datetime\": \"2025-03-21T17:32:28Z\",\n  \"session_id\": \"70f05c32-7760-4753-93c9-b759cf7e7fda\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "105c0a13-6349-4965-a03a-c2ddd0918987",
+              "name": "The server understood the request, but refuses to authorize it. Ensure the client has appropriate permissions.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "events"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "disabled": false,
+                    "description": "(Required) The version of the api you wish to use",
+                    "key": "version",
+                    "value": "1.0.0"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"event_name\": \"<string>\",\n  \"event_datetime\": \"2025-03-21T17:32:28Z\",\n  \"session_id\": \"70f05c32-7760-4753-93c9-b759cf7e7fda\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Forbidden",
+              "code": 403,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "450c004c-ce88-4042-a7af-8b225cc0cf06",
+              "name": "The server encountered an unexpected condition that prevented it from fulfilling the request. Report the issue to the support team if it persists.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "events"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "disabled": false,
+                    "description": "(Required) The version of the api you wish to use",
+                    "key": "version",
+                    "value": "1.0.0"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"event_name\": \"<string>\",\n  \"event_datetime\": \"2025-03-21T17:32:28Z\",\n  \"session_id\": \"70f05c32-7760-4753-93c9-b759cf7e7fda\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Internal Server Error",
+              "code": 500,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "e3700d9a-d247-40cd-ab71-fa64bb15e3f6",
+          "name": "Create a batch of events used to record user actions",
+          "request": {
+            "name": "Create a batch of events used to record user actions",
+            "description": {
+              "content": "Submit between 1 and 20 events in a single request. Each event is processed independently and the response reports the per-event result so the caller can retry only the events that failed.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "events",
+                "batch"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "disabled": false,
+                "description": "(Required) The version of the api you wish to use",
+                "key": "version",
+                "value": "<string>"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"events\": [\n    {\n      \"event_name\": \"<string>\",\n      \"event_datetime\": \"<dateTime>\",\n      \"session_id\": \"<uuid>\"\n    }\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "56bbd707-f8a0-43b3-8928-bcd2f5b4df6a",
+              "name": "Every event in the batch was accepted for processing.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "events",
+                    "batch"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "disabled": false,
+                    "description": "(Required) The version of the api you wish to use",
+                    "key": "version",
+                    "value": "1.0.0"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"events\": [\n    {\n      \"event_name\": \"<string>\",\n      \"event_datetime\": \"2025-03-21T17:32:28Z\",\n      \"session_id\": \"70f05c32-7760-4753-93c9-b759cf7e7fda\"\n    }\n  ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Accepted",
+              "code": 202,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"results\": [\n    {\n      \"index\": 0,\n      \"success\": true\n    },\n    {\n      \"index\": 0,\n      \"success\": true\n    }\n  ],\n  \"accepted\": 2,\n  \"failed\": 0\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "0921b767-f2e8-45b3-a74e-4b8f9ee02f15",
+              "name": "Some events were accepted and others failed. Inspect `results` to determine which events to retry.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "events",
+                    "batch"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "disabled": false,
+                    "description": "(Required) The version of the api you wish to use",
+                    "key": "version",
+                    "value": "1.0.0"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"events\": [\n    {\n      \"event_name\": \"<string>\",\n      \"event_datetime\": \"2025-03-21T17:32:28Z\",\n      \"session_id\": \"70f05c32-7760-4753-93c9-b759cf7e7fda\"\n    }\n  ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Multi-Status (WebDAV) (RFC 4918)",
+              "code": 207,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"results\": [\n    {\n      \"index\": 0,\n      \"success\": true\n    },\n    {\n      \"index\": 0,\n      \"success\": true\n    }\n  ],\n  \"accepted\": 2,\n  \"failed\": 0\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "0b3e67dc-2e48-4654-8d43-f1f16c19b91f",
+              "name": "The server could not understand the request due to invalid syntax. The client should modify the request and try again.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "events",
+                    "batch"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "disabled": false,
+                    "description": "(Required) The version of the api you wish to use",
+                    "key": "version",
+                    "value": "1.0.0"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"events\": [\n    {\n      \"event_name\": \"<string>\",\n      \"event_datetime\": \"2025-03-21T17:32:28Z\",\n      \"session_id\": \"70f05c32-7760-4753-93c9-b759cf7e7fda\"\n    }\n  ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": \"string\",\n  \"errors\": [\n    {\n      \"message\": \"string\"\n    },\n    {\n      \"message\": \"string\"\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "d1ab3a85-8b17-4027-b2e1-21c202a4cb58",
+              "name": "Authentication is required to access the requested resource. The client must include the appropriate credentials.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "events",
+                    "batch"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "disabled": false,
+                    "description": "(Required) The version of the api you wish to use",
+                    "key": "version",
+                    "value": "1.0.0"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"events\": [\n    {\n      \"event_name\": \"<string>\",\n      \"event_datetime\": \"2025-03-21T17:32:28Z\",\n      \"session_id\": \"70f05c32-7760-4753-93c9-b759cf7e7fda\"\n    }\n  ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "1ddb92f6-4b17-4431-885b-a0b64626bc65",
+              "name": "The server understood the request, but refuses to authorize it. Ensure the client has appropriate permissions.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "events",
+                    "batch"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "disabled": false,
+                    "description": "(Required) The version of the api you wish to use",
+                    "key": "version",
+                    "value": "1.0.0"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"events\": [\n    {\n      \"event_name\": \"<string>\",\n      \"event_datetime\": \"2025-03-21T17:32:28Z\",\n      \"session_id\": \"70f05c32-7760-4753-93c9-b759cf7e7fda\"\n    }\n  ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Forbidden",
+              "code": 403,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "d0ad56c3-3647-4810-8caa-5f6af9c8b3a7",
+              "name": "The server encountered an unexpected condition that prevented it from fulfilling the request. Report the issue to the support team if it persists.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "events",
+                    "batch"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "disabled": false,
+                    "description": "(Required) The version of the api you wish to use",
+                    "key": "version",
+                    "value": "1.0.0"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"events\": [\n    {\n      \"event_name\": \"<string>\",\n      \"event_datetime\": \"2025-03-21T17:32:28Z\",\n      \"session_id\": \"70f05c32-7760-4753-93c9-b759cf7e7fda\"\n    }\n  ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Internal Server Error",
+              "code": 500,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "b6d2e656-d9f4-410f-907c-3fcd64acb1a8",
+              "name": "Every event in the batch failed to be accepted for processing. The caller should retry the whole batch.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "events",
+                    "batch"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "disabled": false,
+                    "description": "(Required) The version of the api you wish to use",
+                    "key": "version",
+                    "value": "1.0.0"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"events\": [\n    {\n      \"event_name\": \"<string>\",\n      \"event_datetime\": \"2025-03-21T17:32:28Z\",\n      \"session_id\": \"70f05c32-7760-4753-93c9-b759cf7e7fda\"\n    }\n  ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Bad Gateway",
+              "code": 502,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"results\": [\n    {\n      \"index\": 0,\n      \"success\": true\n    },\n    {\n      \"index\": 0,\n      \"success\": true\n    }\n  ],\n  \"accepted\": 2,\n  \"failed\": 0\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "https://partners.disconetwork.com",
+      "key": "baseUrl"
+    }
+  ],
+  "info": {
+    "_postman_id": "727d2e26-9219-46c3-ad46-60a09a8c33eb",
+    "name": "External API for Disco Integration Partners",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "The API used by Disco partners that will provide their own UI experience.",
+      "type": "text/plain"
+    }
+  }
+}

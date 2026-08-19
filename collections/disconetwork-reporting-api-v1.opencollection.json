@@ -1,0 +1,90 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Disco Reporting API",
+    "version": "1.0.0"
+  },
+  "request": {
+    "auth": {
+      "type": "apikey",
+      "key": "x-api-key",
+      "value": "{{x-api-key}}",
+      "placement": "header"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Channel summary",
+        "type": "http"
+      },
+      "http": {
+        "method": "GET",
+        "url": "https://api.disconetwork.com/discobeat/reporting/v1/summary/",
+        "params": [
+          {
+            "name": "from",
+            "value": "",
+            "type": "query",
+            "description": "Start date YYYY-MM-DD (UTC), inclusive. Default 6 days before `to` (7-day window)."
+          },
+          {
+            "name": "to",
+            "value": "",
+            "type": "query",
+            "description": "End date YYYY-MM-DD (UTC), inclusive. Default today. Max range 90 days."
+          }
+        ]
+      },
+      "docs": "Channel-level metric totals across all your publishers for a date range."
+    },
+    {
+      "info": {
+        "name": "Publisher breakdown",
+        "type": "http"
+      },
+      "http": {
+        "method": "GET",
+        "url": "https://api.disconetwork.com/discobeat/reporting/v1/publishers/",
+        "params": [
+          {
+            "name": "from",
+            "value": "",
+            "type": "query",
+            "description": "Start date YYYY-MM-DD (UTC), inclusive. Default 6 days before `to` (7-day window)."
+          },
+          {
+            "name": "to",
+            "value": "",
+            "type": "query",
+            "description": "End date YYYY-MM-DD (UTC), inclusive. Default today. Max range 90 days."
+          },
+          {
+            "name": "granularity",
+            "value": "",
+            "type": "query",
+            "description": "Time-series bucket size."
+          },
+          {
+            "name": "breakdown",
+            "value": "",
+            "type": "query",
+            "description": "Series split."
+          },
+          {
+            "name": "offset",
+            "value": "",
+            "type": "query"
+          },
+          {
+            "name": "limit",
+            "value": "",
+            "type": "query"
+          }
+        ]
+      },
+      "docs": "Per-publisher metrics."
+    }
+  ],
+  "bundled": true
+}

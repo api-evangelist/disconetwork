@@ -1,0 +1,91 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Disco Reporting API V2",
+    "version": "2.0.0"
+  },
+  "request": {
+    "auth": {
+      "type": "apikey",
+      "key": "x-api-key",
+      "value": "{{x-api-key}}",
+      "placement": "header"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Build a report",
+        "type": "http"
+      },
+      "http": {
+        "method": "GET",
+        "url": "https://api.disconetwork.com/discobeat/reporting/v2/report/",
+        "params": [
+          {
+            "name": "from",
+            "value": "",
+            "type": "query",
+            "description": "Start date in UTC, inclusive."
+          },
+          {
+            "name": "to",
+            "value": "",
+            "type": "query",
+            "description": "End date in UTC, inclusive. The requested range can span at most 90 days."
+          },
+          {
+            "name": "metrics",
+            "value": "impressions,clicks,channel_payout,ctr",
+            "type": "query",
+            "description": "Comma-separated metrics enabled for the authenticated channel. Metrics must be unique.\n"
+          },
+          {
+            "name": "time_grain",
+            "value": "",
+            "type": "query",
+            "description": "UTC row interval. Hour supports at most 3 days and one breakdown. Week and month edge periods are clipped to the requested date range.\n"
+          },
+          {
+            "name": "group_by",
+            "value": "publisher,page_type",
+            "type": "query",
+            "description": "Comma-separated breakdown columns. Up to three are supported except hourly reports, which support at most one.\n"
+          },
+          {
+            "name": "publisher_ids",
+            "value": "9aa17f8c-7746-4218-9025-83d38c406179",
+            "type": "query",
+            "description": "Comma-separated publisher UUID filter. Filtering does not add a report column."
+          },
+          {
+            "name": "page_types",
+            "value": "ORDER_TRACKING,THANK_YOU",
+            "type": "query",
+            "description": "Comma-separated page-type filter. Filtering does not add a report column."
+          },
+          {
+            "name": "widget_types",
+            "value": "APP_NATIVE_ESSENTIAL",
+            "type": "query",
+            "description": "Comma-separated widget-type filter. Filtering does not add a report column."
+          },
+          {
+            "name": "offset",
+            "value": "",
+            "type": "query",
+            "description": "Pagination offset."
+          },
+          {
+            "name": "limit",
+            "value": "",
+            "type": "query",
+            "description": "JSON page size."
+          }
+        ]
+      },
+      "docs": "Returns flat, paginated rows plus summary metrics across the complete filtered result. The response includes only the requested metrics and selected breakdown columns.\n"
+    }
+  ],
+  "bundled": true
+}

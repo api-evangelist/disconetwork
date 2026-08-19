@@ -5,14 +5,12 @@ status: no-hosted-server
 docs:
 - https://disconetwork.com/developers.md
 - https://disconetwork.com/assets/index-DdW-GXFA.js
-summary: >-
-  Disco publishes NO hosted or remote MCP server. What it does ship is a real
-  in-page WebMCP surface: the production site bundle registers four tools with
-  `navigator.modelContext.provideContext({tools})` on load, so a browsing agent
-  that supports WebMCP can call them. That is a genuine agent surface, verified
-  verbatim in the shipped JavaScript, but it is NOT a connectable MCP endpoint —
-  there is no transport, no URL an MCP client can address, and no server card. No
-  `MCPServer` pointer is emitted in apis.yml for that reason.
+summary: 'Disco publishes NO hosted or remote MCP server. What it does ship is a real in-page WebMCP surface:
+  the production site bundle registers four tools with `navigator.modelContext.provideContext({tools})`
+  on load, so a browsing agent that supports WebMCP can call them. That is a genuine agent surface, verified
+  verbatim in the shipped JavaScript, but it is NOT a connectable MCP endpoint — there is no transport,
+  no URL an MCP client can address, and no server card. No `MCPServer` pointer is emitted in apis.yml
+  for that reason.'
 hosted_server:
   present: false
   probes:
@@ -20,10 +18,9 @@ hosted_server:
     status: 200
     content_type: text/html
     result: miss
-    note: >-
-      SPA HTML shell, byte-identical to the homepage and to every other path on
-      disconetwork.com. Advertised in https://disconetwork.com/developers.md
-      under "Standards & Discovery" as if it resolves; it does not.
+    note: SPA HTML shell, byte-identical to the homepage and to every other path on disconetwork.com.
+      Advertised in https://disconetwork.com/developers.md under "Standards & Discovery" as if it resolves;
+      it does not.
   - url: https://disconetwork.com/mcp
     status: 200
     content_type: text/html
@@ -49,16 +46,13 @@ webmcp:
     file: https://disconetwork.com/assets/index-DdW-GXFA.js
     fetched: '2026-08-12'
     http_status: 200
-    note: >-
-      Tool array and the provideContext call were read verbatim out of the
-      production bundle. The registration is wrapped in a try/catch and no-ops on
-      a browser without `navigator.modelContext`.
+    note: Tool array and the provideContext call were read verbatim out of the production bundle. The
+      registration is wrapped in a try/catch and no-ops on a browser without `navigator.modelContext`.
   tool_count: 4
   tools:
   - name: navigate
-    description: Navigate the Disco site to a known route. Use for sending the user
-      to a specific page like the developer docs, a product page, or the demo booking
-      form.
+    description: Navigate the Disco site to a known route. Use for sending the user to a specific page
+      like the developer docs, a product page, or the demo booking form.
     input_schema:
       type: object
       properties:
@@ -73,35 +67,34 @@ webmcp:
     input_schema:
       type: object
       properties: {}
-    effect: returns a static product list (DiscoOffers, DiscoBeat, DiscoMix, Offers
-      AI)
+    effect: returns a static product list (DiscoOffers, DiscoBeat, DiscoMix, Offers AI)
   - name: book_demo
-    description: Send the user to the Book a Demo page so they can request a meeting
-      with the Disco sales team.
+    description: Send the user to the Book a Demo page so they can request a meeting with the Disco sales
+      team.
     input_schema:
       type: object
       properties: {}
     effect: client-side navigation to /book-a-demo
   - name: get_developer_docs
-    description: Return links to Disco's developer documentation, including the DiscoBeat
-      Channel API reference and integration paths (Shopify, Web SDK, server API).
+    description: Return links to Disco's developer documentation, including the DiscoBeat Channel API
+      reference and integration paths (Shopify, Web SDK, server API).
     input_schema:
       type: object
       properties: {}
-    effect: returns /developers, /developers/discobeat, /.well-known/api-catalog and
-      /.well-known/agent-skills/index.json
-    note: >-
-      Two of the four links this tool returns do not resolve — /.well-known/api-catalog
-      and /.well-known/agent-skills/index.json both answer with the SPA HTML shell.
-      An agent following this tool's output is handed dead paths.
-finding: >-
-  Disco's WebMCP surface is entirely a marketing-site navigation layer. Not one of
-  the four tools touches the four APIs Disco actually operates — recommendations,
-  events, reporting or channel management. An agent that adopts Disco's declared
-  MCP surface can browse the website and book a sales demo; it cannot read a
-  report or record an event. See mcp/disconetwork-tool-crosswalk.yml for the
-  operation-by-operation gap.
+    effect: returns /developers, /developers/discobeat, /.well-known/api-catalog and /.well-known/agent-skills/index.json
+    note: Two of the four links this tool returns do not resolve — /.well-known/api-catalog and /.well-known/agent-skills/index.json
+      both answer with the SPA HTML shell. An agent following this tool's output is handed dead paths.
+finding: Disco's WebMCP surface is entirely a marketing-site navigation layer. Not one of the four tools
+  touches the four APIs Disco actually operates — recommendations, events, reporting or channel management.
+  An agent that adopts Disco's declared MCP surface can browse the website and book a sales demo; it cannot
+  read a report or record an event. See mcp/disconetwork-tool-crosswalk.yml for the operation-by-operation
+  gap.
 cross_links:
 - mcp/disconetwork-tool-crosswalk.yml
 - well-known/disconetwork-well-known.yml
 - llms/disconetwork-llms.txt
+deployment:
+  mode: none
+  verified: derived
+  checked: '2026-08-12'
+  source: catalog MCP census

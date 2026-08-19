@@ -1,0 +1,676 @@
+{
+  "item": [
+    {
+      "id": "378dec9f-418c-4f7e-8f04-7aaef92aa8d0",
+      "name": "Channel summary",
+      "request": {
+        "name": "Channel summary",
+        "description": {
+          "content": "Channel-level metric totals across all your publishers for a date range.",
+          "type": "text/plain"
+        },
+        "url": {
+          "path": [
+            "discobeat",
+            "reporting",
+            "v1",
+            "summary",
+            ""
+          ],
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "query": [
+            {
+              "disabled": false,
+              "key": "from",
+              "value": "<date>",
+              "description": "Start date YYYY-MM-DD (UTC), inclusive. Default 6 days before `to` (7-day window)."
+            },
+            {
+              "disabled": false,
+              "key": "to",
+              "value": "<date>",
+              "description": "End date YYYY-MM-DD (UTC), inclusive. Default today. Max range 90 days."
+            }
+          ],
+          "variable": []
+        },
+        "header": [
+          {
+            "key": "Accept",
+            "value": "application/json"
+          }
+        ],
+        "method": "GET",
+        "auth": null
+      },
+      "response": [
+        {
+          "id": "55b52ae5-b0e0-4688-8c14-364dbfb81f7e",
+          "name": "Channel totals.",
+          "originalRequest": {
+            "url": {
+              "path": [
+                "discobeat",
+                "reporting",
+                "v1",
+                "summary",
+                ""
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "key": "from",
+                  "value": "<date>"
+                },
+                {
+                  "key": "to",
+                  "value": "<date>"
+                }
+              ],
+              "variable": []
+            },
+            "header": [
+              {
+                "description": {
+                  "content": "Added as a part of security scheme: apikey",
+                  "type": "text/plain"
+                },
+                "key": "x-api-key",
+                "value": "<API Key>"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "body": {}
+          },
+          "status": "OK",
+          "code": 200,
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "body": "{\n  \"channel_id\": \"7c3e1a90-4b2d-4f8a-9c11-2e6b5a0d8f34\",\n  \"channel_name\": \"Acme\",\n  \"date_range\": {\n    \"from\": \"2026-06-08\",\n    \"to\": \"2026-06-14\"\n  },\n  \"available_window\": {\n    \"from\": \"2026-05-26\",\n    \"to\": \"2026-06-30\"\n  },\n  \"has_data\": true,\n  \"metrics\": {\n    \"raw\": {\n      \"impressions\": 480000,\n      \"clicks\": 13440,\n      \"conversions\": 672,\n      \"channel_payout\": 9600,\n      \"revenue_with_email\": 7200,\n      \"revenue_without_email\": 2400,\n      \"sessions\": 240000,\n      \"feed_loads\": 256000\n    },\n    \"calculated\": {\n      \"ctr\": 0.028,\n      \"cvr\": 0.05,\n      \"rps\": 0.04,\n      \"rpl\": 0.0375\n    }\n  },\n  \"data_freshness\": \"2026-06-14T05:00:00\",\n  \"generated_at\": \"2026-06-14T05:25:11\"\n}",
+          "cookie": [],
+          "_postman_previewlanguage": "json"
+        },
+        {
+          "id": "7254fb97-78fb-4f62-ac39-d02b6a9ccfc6",
+          "name": "Invalid parameters, unsupported date range, or unavailable reporting data.",
+          "originalRequest": {
+            "url": {
+              "path": [
+                "discobeat",
+                "reporting",
+                "v1",
+                "summary",
+                ""
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "key": "from",
+                  "value": "<date>"
+                },
+                {
+                  "key": "to",
+                  "value": "<date>"
+                }
+              ],
+              "variable": []
+            },
+            "header": [
+              {
+                "description": {
+                  "content": "Added as a part of security scheme: apikey",
+                  "type": "text/plain"
+                },
+                "key": "x-api-key",
+                "value": "<API Key>"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "body": {}
+          },
+          "status": "Bad Request",
+          "code": 400,
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "body": "{\n  \"date_range\": [\n    \"Date range cannot exceed 90 days.\"\n  ]\n}",
+          "cookie": [],
+          "_postman_previewlanguage": "json"
+        },
+        {
+          "id": "47c3dafa-466b-4356-b9d4-cf3bee536488",
+          "name": "Missing or invalid management API key.",
+          "originalRequest": {
+            "url": {
+              "path": [
+                "discobeat",
+                "reporting",
+                "v1",
+                "summary",
+                ""
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "key": "from",
+                  "value": "<date>"
+                },
+                {
+                  "key": "to",
+                  "value": "<date>"
+                }
+              ],
+              "variable": []
+            },
+            "header": [
+              {
+                "description": {
+                  "content": "Added as a part of security scheme: apikey",
+                  "type": "text/plain"
+                },
+                "key": "x-api-key",
+                "value": "<API Key>"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "body": {}
+          },
+          "status": "Unauthorized",
+          "code": 401,
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "body": "{\n  \"detail\": \"Invalid or expired management API key.\"\n}",
+          "cookie": [],
+          "_postman_previewlanguage": "json"
+        },
+        {
+          "id": "1f7b05fe-dd6f-4bee-9815-e3425d53c5a1",
+          "name": "Only GET is supported.",
+          "originalRequest": {
+            "url": {
+              "path": [
+                "discobeat",
+                "reporting",
+                "v1",
+                "summary",
+                ""
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "key": "from",
+                  "value": "<date>"
+                },
+                {
+                  "key": "to",
+                  "value": "<date>"
+                }
+              ],
+              "variable": []
+            },
+            "header": [
+              {
+                "description": {
+                  "content": "Added as a part of security scheme: apikey",
+                  "type": "text/plain"
+                },
+                "key": "x-api-key",
+                "value": "<API Key>"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "body": {}
+          },
+          "status": "Method Not Allowed",
+          "code": 405,
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "body": "{\n  \"detail\": \"Method \\\"POST\\\" not allowed.\"\n}",
+          "cookie": [],
+          "_postman_previewlanguage": "json"
+        }
+      ],
+      "event": [],
+      "protocolProfileBehavior": {
+        "disableBodyPruning": true
+      }
+    },
+    {
+      "id": "b8cd16fe-f665-47d4-ba3c-72c95dcd8457",
+      "name": "Publisher breakdown",
+      "request": {
+        "name": "Publisher breakdown",
+        "description": {
+          "content": "Per-publisher metrics.",
+          "type": "text/plain"
+        },
+        "url": {
+          "path": [
+            "discobeat",
+            "reporting",
+            "v1",
+            "publishers",
+            ""
+          ],
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "query": [
+            {
+              "disabled": false,
+              "key": "from",
+              "value": "<date>",
+              "description": "Start date YYYY-MM-DD (UTC), inclusive. Default 6 days before `to` (7-day window)."
+            },
+            {
+              "disabled": false,
+              "key": "to",
+              "value": "<date>",
+              "description": "End date YYYY-MM-DD (UTC), inclusive. Default today. Max range 90 days."
+            },
+            {
+              "disabled": false,
+              "key": "granularity",
+              "value": "day",
+              "description": "Time-series bucket size."
+            },
+            {
+              "disabled": false,
+              "key": "breakdown",
+              "value": "<string>",
+              "description": "Series split."
+            },
+            {
+              "disabled": false,
+              "key": "offset",
+              "value": "0"
+            },
+            {
+              "disabled": false,
+              "key": "limit",
+              "value": "50"
+            }
+          ],
+          "variable": []
+        },
+        "header": [
+          {
+            "key": "Accept",
+            "value": "application/json"
+          }
+        ],
+        "method": "GET",
+        "auth": null
+      },
+      "response": [
+        {
+          "id": "ad156cbd-66c2-4eca-9cbb-530a87081515",
+          "name": "Per-publisher metrics.",
+          "originalRequest": {
+            "url": {
+              "path": [
+                "discobeat",
+                "reporting",
+                "v1",
+                "publishers",
+                ""
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "key": "from",
+                  "value": "<date>"
+                },
+                {
+                  "key": "to",
+                  "value": "<date>"
+                },
+                {
+                  "key": "granularity",
+                  "value": "day"
+                },
+                {
+                  "key": "breakdown",
+                  "value": "<string>"
+                },
+                {
+                  "key": "offset",
+                  "value": "0"
+                },
+                {
+                  "key": "limit",
+                  "value": "50"
+                }
+              ],
+              "variable": []
+            },
+            "header": [
+              {
+                "description": {
+                  "content": "Added as a part of security scheme: apikey",
+                  "type": "text/plain"
+                },
+                "key": "x-api-key",
+                "value": "<API Key>"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "body": {}
+          },
+          "status": "OK",
+          "code": 200,
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "body": "{\n  \"channel_id\": \"7c3e1a90-4b2d-4f8a-9c11-2e6b5a0d8f34\",\n  \"channel_name\": \"Acme\",\n  \"date_range\": {\n    \"from\": \"2026-06-08\",\n    \"to\": \"2026-06-14\"\n  },\n  \"available_window\": {\n    \"from\": \"2026-05-26\",\n    \"to\": \"2026-06-30\"\n  },\n  \"granularity\": \"day\",\n  \"breakdown\": \"page_type\",\n  \"has_data\": true,\n  \"publishers\": [\n    {\n      \"publisher_uuid\": \"f47ac10b-58cc-4372-a567-0e02b2c3d479\",\n      \"publisher_name\": \"Acme Tracking Page\",\n      \"publisher_category\": \"Logistics\",\n      \"metrics\": {\n        \"raw\": {\n          \"impressions\": 480000,\n          \"clicks\": 13440,\n          \"conversions\": 672,\n          \"channel_payout\": 9600,\n          \"revenue_with_email\": 7200,\n          \"revenue_without_email\": 2400,\n          \"sessions\": 240000,\n          \"feed_loads\": 256000\n        },\n        \"calculated\": {\n          \"ctr\": 0.028,\n          \"cvr\": 0.05,\n          \"rps\": 0.04,\n          \"rpl\": 0.0375\n        }\n      },\n      \"series\": [\n        {\n          \"bucket\": \"2026-06-14\",\n          \"metrics\": {\n            \"raw\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"calculated\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            }\n          },\n          \"page_type\": \"ORDER_TRACKING\",\n          \"widget_type\": \"APP_NATIVE_ESSENTIAL\",\n          \"widget_id\": \"string\"\n        },\n        {\n          \"bucket\": \"2026-06-14\",\n          \"metrics\": {\n            \"raw\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"calculated\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            }\n          },\n          \"page_type\": \"ORDER_TRACKING\",\n          \"widget_type\": \"APP_NATIVE_ESSENTIAL\",\n          \"widget_id\": \"string\"\n        }\n      ]\n    },\n    {\n      \"publisher_uuid\": \"f47ac10b-58cc-4372-a567-0e02b2c3d479\",\n      \"publisher_name\": \"Acme Tracking Page\",\n      \"publisher_category\": \"Logistics\",\n      \"metrics\": {\n        \"raw\": {\n          \"impressions\": 480000,\n          \"clicks\": 13440,\n          \"conversions\": 672,\n          \"channel_payout\": 9600,\n          \"revenue_with_email\": 7200,\n          \"revenue_without_email\": 2400,\n          \"sessions\": 240000,\n          \"feed_loads\": 256000\n        },\n        \"calculated\": {\n          \"ctr\": 0.028,\n          \"cvr\": 0.05,\n          \"rps\": 0.04,\n          \"rpl\": 0.0375\n        }\n      },\n      \"series\": [\n        {\n          \"bucket\": \"2026-06-14\",\n          \"metrics\": {\n            \"raw\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"calculated\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            }\n          },\n          \"page_type\": \"ORDER_TRACKING\",\n          \"widget_type\": \"APP_NATIVE_ESSENTIAL\",\n          \"widget_id\": \"string\"\n        },\n        {\n          \"bucket\": \"2026-06-14\",\n          \"metrics\": {\n            \"raw\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"calculated\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            }\n          },\n          \"page_type\": \"ORDER_TRACKING\",\n          \"widget_type\": \"APP_NATIVE_ESSENTIAL\",\n          \"widget_id\": \"string\"\n        }\n      ]\n    }\n  ],\n  \"pagination\": {\n    \"offset\": 0,\n    \"limit\": 50,\n    \"total\": 1\n  },\n  \"data_freshness\": \"2026-06-14T05:00:00\",\n  \"generated_at\": \"2026-06-14T05:25:11\"\n}",
+          "cookie": [],
+          "_postman_previewlanguage": "json"
+        },
+        {
+          "id": "a509b2f8-6f9f-4979-9eb3-987d4bbbb902",
+          "name": "Invalid parameters, unsupported date range, or unavailable reporting data.",
+          "originalRequest": {
+            "url": {
+              "path": [
+                "discobeat",
+                "reporting",
+                "v1",
+                "publishers",
+                ""
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "key": "from",
+                  "value": "<date>"
+                },
+                {
+                  "key": "to",
+                  "value": "<date>"
+                },
+                {
+                  "key": "granularity",
+                  "value": "day"
+                },
+                {
+                  "key": "breakdown",
+                  "value": "<string>"
+                },
+                {
+                  "key": "offset",
+                  "value": "0"
+                },
+                {
+                  "key": "limit",
+                  "value": "50"
+                }
+              ],
+              "variable": []
+            },
+            "header": [
+              {
+                "description": {
+                  "content": "Added as a part of security scheme: apikey",
+                  "type": "text/plain"
+                },
+                "key": "x-api-key",
+                "value": "<API Key>"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "body": {}
+          },
+          "status": "Bad Request",
+          "code": 400,
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "body": "{\n  \"date_range\": [\n    \"Date range cannot exceed 90 days.\"\n  ]\n}",
+          "cookie": [],
+          "_postman_previewlanguage": "json"
+        },
+        {
+          "id": "61763b0c-e5d9-43e7-9548-f152af79b37e",
+          "name": "Missing or invalid management API key.",
+          "originalRequest": {
+            "url": {
+              "path": [
+                "discobeat",
+                "reporting",
+                "v1",
+                "publishers",
+                ""
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "key": "from",
+                  "value": "<date>"
+                },
+                {
+                  "key": "to",
+                  "value": "<date>"
+                },
+                {
+                  "key": "granularity",
+                  "value": "day"
+                },
+                {
+                  "key": "breakdown",
+                  "value": "<string>"
+                },
+                {
+                  "key": "offset",
+                  "value": "0"
+                },
+                {
+                  "key": "limit",
+                  "value": "50"
+                }
+              ],
+              "variable": []
+            },
+            "header": [
+              {
+                "description": {
+                  "content": "Added as a part of security scheme: apikey",
+                  "type": "text/plain"
+                },
+                "key": "x-api-key",
+                "value": "<API Key>"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "body": {}
+          },
+          "status": "Unauthorized",
+          "code": 401,
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "body": "{\n  \"detail\": \"Invalid or expired management API key.\"\n}",
+          "cookie": [],
+          "_postman_previewlanguage": "json"
+        },
+        {
+          "id": "5af19d00-8819-423a-aa20-6d867d4d5a78",
+          "name": "Only GET is supported.",
+          "originalRequest": {
+            "url": {
+              "path": [
+                "discobeat",
+                "reporting",
+                "v1",
+                "publishers",
+                ""
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "key": "from",
+                  "value": "<date>"
+                },
+                {
+                  "key": "to",
+                  "value": "<date>"
+                },
+                {
+                  "key": "granularity",
+                  "value": "day"
+                },
+                {
+                  "key": "breakdown",
+                  "value": "<string>"
+                },
+                {
+                  "key": "offset",
+                  "value": "0"
+                },
+                {
+                  "key": "limit",
+                  "value": "50"
+                }
+              ],
+              "variable": []
+            },
+            "header": [
+              {
+                "description": {
+                  "content": "Added as a part of security scheme: apikey",
+                  "type": "text/plain"
+                },
+                "key": "x-api-key",
+                "value": "<API Key>"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "body": {}
+          },
+          "status": "Method Not Allowed",
+          "code": 405,
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "body": "{\n  \"detail\": \"Method \\\"POST\\\" not allowed.\"\n}",
+          "cookie": [],
+          "_postman_previewlanguage": "json"
+        }
+      ],
+      "event": [],
+      "protocolProfileBehavior": {
+        "disableBodyPruning": true
+      }
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "https://api.disconetwork.com",
+      "key": "baseUrl"
+    }
+  ],
+  "auth": {
+    "type": "apikey",
+    "apikey": [
+      {
+        "key": "key",
+        "value": "x-api-key"
+      },
+      {
+        "key": "value",
+        "value": "{{apiKey}}"
+      },
+      {
+        "key": "in",
+        "value": "header"
+      }
+    ]
+  },
+  "info": {
+    "_postman_id": "7a6def18-1dda-4865-b583-33db7cdb5a54",
+    "name": "Disco Reporting API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "Read-only channel analytics. Authenticate with your management API key in the `x-api-key` header. All data is scoped to your channel. Reporting is not live. Requests can span up to 90 days and must fit inside the returned `available_window`. Check `available_window`, `data_freshness`, and `generated_at` in each response.\n",
+      "type": "text/plain"
+    }
+  }
+}
