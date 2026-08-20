@@ -46,6 +46,17 @@ tags:
 - Retail Media
 - Post-Purchase
 - Advertising
+- E-Commerce
+- AdTech
+- Marketing
+- Analytics
+- Reporting
+tags_raw:
+- Company
+- Commerce Media
+- Retail Media
+- Post-Purchase
+- Advertising
 - Ecommerce
 - AdTech
 - Marketing
@@ -61,6 +72,11 @@ apis:
   humanURL: https://docs.disconetwork.com/docs/api-ref/external-api-for-disco-integration-partners
   baseURL: https://partners.disconetwork.com
   tags:
+  - Recommendations
+  - Event
+  - Commerce Media
+  - Post-Purchase
+  tags_raw:
   - Recommendations
   - Events
   - Commerce Media
@@ -134,6 +150,10 @@ apis:
   humanURL: https://docs.disconetwork.com/docs/advertiser-discofeed/track-conversions/event-api
   baseURL: https://consumer.disconetwork.com
   tags:
+  - Event
+  - Attribution
+  - Conversion Tracking
+  tags_raw:
   - Events
   - Attribution
   - Conversion Tracking
