@@ -63,72 +63,13 @@ tags_raw:
 - Analytics
 - Reporting
 apis:
-- aid: disconetwork-partner-api
-  name: Disco Partner Integration API
-  description: The API used by Disco partners that provide their own UI experience.
-    Returns Disco advertiser recommendations for post-purchase placements and accepts
-    the widget, brand, product and element events (single and batched) that record
-    user actions against those placements. Authenticated with an x-api-key header.
-  humanURL: https://docs.disconetwork.com/docs/api-ref/external-api-for-disco-integration-partners
-  baseURL: https://partners.disconetwork.com
-  tags:
-  - Recommendations
-  - Event
-  - Commerce Media
-  - Post-Purchase
-  tags_raw:
-  - Recommendations
-  - Events
-  - Commerce Media
-  - Post-Purchase
-  properties:
-  - type: OpenAPI
-    url: openapi/disconetwork-partner-api.yml
-  - type: Documentation
-    url: https://docs.disconetwork.com/docs/introduction
-  - type: APIReference
-    url: https://docs.disconetwork.com/docs/api-ref/external-api-for-disco-integration-partners
-  - type: Overlay
-    url: overlays/disconetwork-partner-api-overlay.yaml
-  - type: ErrorCatalog
-    url: errors/disconetwork-problem-types.yml
-  - type: DataModel
-    url: data-model/disconetwork-data-model.yml
-- aid: disconetwork-reporting-api
-  name: Disco Reporting API
-  description: Read-only channel analytics for DiscoBeat channel partners. V1 exposes
-    a channel summary and a per-publisher breakdown with daily or hourly time series;
-    V2 returns a flat, paginated report table driven by time grain, group-by breakdowns,
-    metric selection and filters. Authenticated with a management API key in the x-api-key
-    header; data is not live and is bounded by a published available_window.
-  humanURL: https://disconetwork.com/reporting-api
-  baseURL: https://api.disconetwork.com
-  tags:
-  - Reporting
-  - Analytics
-  - Commerce Media
-  properties:
-  - type: OpenAPI
-    url: openapi/disconetwork-reporting-api-v1.yml
-  - type: OpenAPI
-    url: openapi/disconetwork-reporting-api-v2.yml
-  - type: Postman
-    url: postman/disconetwork-reporting-v1.postman_collection.json
-  - type: Postman
-    url: postman/disconetwork-reporting-v2.postman_collection.json
-  - type: APIReference
-    url: https://disconetwork.com/reporting-api
-  - type: Overlay
-    url: overlays/disconetwork-reporting-api-v1-overlay.yaml
-  - type: Overlay
-    url: overlays/disconetwork-reporting-api-v2-overlay.yaml
 - aid: disconetwork-discobeat-channel-api
   name: DiscoBeat Channel API
-  description: The channel-partner management API behind DiscoBeat. Lists ad categories
-    and subcategories, reads channel details, manages channel-wide and publisher-specific
-    subcategory exclusions, and lists, inspects, adds and removes the publishers in
-    a channel. Documented with request/response examples and curl on disconetwork.com;
-    no machine-readable specification is published for it.
+  description: >-
+    The channel-partner management API behind DiscoBeat. Lists ad categories and subcategories, reads
+    channel details, manages channel-wide and publisher-specific subcategory exclusions, and lists, inspects,
+    adds and removes the publishers in a channel. Documented with request/response examples and curl on
+    disconetwork.com; no machine-readable specification is published for it.
   humanURL: https://disconetwork.com/developers/discobeat
   baseURL: https://api.disconetwork.com
   tags:
@@ -142,11 +83,11 @@ apis:
     url: https://disconetwork.com/developers
 - aid: disconetwork-event-api
   name: Disco Event API
-  description: The server-to-server conversion intake used by advertisers who cannot
-    run the Web SDK. A POST carries an event name, the publisher account id and one
-    of three customer identifiers (raw email, SHA-256 email hash, or the URL-appended
-    click identifier) so Disco can attribute a conversion back to the impression that
-    drove it.
+  description: >-
+    The server-to-server conversion intake used by advertisers who cannot run the Web SDK. A POST carries
+    an event name, the publisher account id and one of three customer identifiers (raw email, SHA-256
+    email hash, or the URL-appended click identifier) so Disco can attribute a conversion back to the
+    impression that drove it.
   humanURL: https://docs.disconetwork.com/docs/advertiser-discofeed/track-conversions/event-api
   baseURL: https://consumer.disconetwork.com
   tags:
@@ -162,12 +103,90 @@ apis:
     url: https://docs.disconetwork.com/docs/advertiser-discofeed/track-conversions/event-api
   - type: Documentation
     url: https://docs.disconetwork.com/docs/advertiser-discofeed/track-conversions/
+- aid: disconetwork:disconetwork-discobeat-api
+  name: Disconetwork Discobeat API
+  description: The Discobeat API from Disconetwork — 3 operation(s) for discobeat.
+  humanURL: https://docs.disconetwork.com/docs/api-ref/external-api-for-disco-integration-partners
+  baseURL: https://partners.disconetwork.com
+  tags:
+  - Discobeat
+  properties:
+  - type: OpenAPI
+    url: openapi/disconetwork-discobeat-api-openapi.yml
+  - type: Documentation
+    url: https://docs.disconetwork.com/docs/introduction
+  - type: APIReference
+    url: https://docs.disconetwork.com/docs/api-ref/external-api-for-disco-integration-partners
+  - type: ErrorCatalog
+    url: errors/disconetwork-problem-types.yml
+  - type: DataModel
+    url: data-model/disconetwork-data-model.yml
+  - type: Postman
+    url: postman/disconetwork-reporting-v1.postman_collection.json
+  - type: Postman
+    url: postman/disconetwork-reporting-v2.postman_collection.json
+  - type: APIReference
+    url: https://disconetwork.com/reporting-api
+- aid: disconetwork:disconetwork-events-api
+  name: Disconetwork Events API
+  description: The Events API from Disconetwork — 2 operation(s) for events.
+  humanURL: https://docs.disconetwork.com/docs/api-ref/external-api-for-disco-integration-partners
+  baseURL: https://partners.disconetwork.com
+  tags:
+  - Events
+  properties:
+  - type: OpenAPI
+    url: openapi/disconetwork-events-api-openapi.yml
+  - type: Documentation
+    url: https://docs.disconetwork.com/docs/introduction
+  - type: APIReference
+    url: https://docs.disconetwork.com/docs/api-ref/external-api-for-disco-integration-partners
+  - type: ErrorCatalog
+    url: errors/disconetwork-problem-types.yml
+  - type: DataModel
+    url: data-model/disconetwork-data-model.yml
+  - type: Postman
+    url: postman/disconetwork-reporting-v1.postman_collection.json
+  - type: Postman
+    url: postman/disconetwork-reporting-v2.postman_collection.json
+  - type: APIReference
+    url: https://disconetwork.com/reporting-api
+- aid: disconetwork:disconetwork-recommendations-api
+  name: Disconetwork Recommendations API
+  description: The Recommendations API from Disconetwork — 1 operation(s) for recommendations.
+  humanURL: https://docs.disconetwork.com/docs/api-ref/external-api-for-disco-integration-partners
+  baseURL: https://partners.disconetwork.com
+  tags:
+  - Recommendations
+  properties:
+  - type: OpenAPI
+    url: openapi/disconetwork-recommendations-api-openapi.yml
+  - type: Documentation
+    url: https://docs.disconetwork.com/docs/introduction
+  - type: APIReference
+    url: https://docs.disconetwork.com/docs/api-ref/external-api-for-disco-integration-partners
+  - type: ErrorCatalog
+    url: errors/disconetwork-problem-types.yml
+  - type: DataModel
+    url: data-model/disconetwork-data-model.yml
+  - type: Postman
+    url: postman/disconetwork-reporting-v1.postman_collection.json
+  - type: Postman
+    url: postman/disconetwork-reporting-v2.postman_collection.json
+  - type: APIReference
+    url: https://disconetwork.com/reporting-api
 maintainers:
 - FN: Kin Lane
   email: kin@apievangelist.com
 - FN: APIs.json
   email: info@apis.io
 common:
+- type: Overlay
+  url: overlays/disconetwork-partner-api-overlay.yaml
+- type: Overlay
+  url: overlays/disconetwork-reporting-api-v1-overlay.yaml
+- type: Overlay
+  url: overlays/disconetwork-reporting-api-v2-overlay.yaml
 - type: AgenticAccess
   url: agentic-access/disconetwork-agentic-access.yml
 - type: Website
