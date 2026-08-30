@@ -145,6 +145,8 @@ apis:
   humanURL: https://docs.disconetwork.com/docs/api-ref/external-api-for-disco-integration-partners
   baseURL: https://partners.disconetwork.com
   tags:
+  - Event
+  tags_raw:
   - Events
   properties:
   - type: OpenAPI
