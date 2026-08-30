@@ -1,0 +1,832 @@
+openapi: 3.2.0
+info:
+  title: External API for Disco Integration Partners Recommendations API
+  version: 1.0.0
+  description: The API used by Disco partners that will provide their own UI experience.
+servers:
+- url: https://partners.disconetwork.com
+  description: Production
+- url: https://partners.disconetwork-staging.com
+  description: Staging
+tags:
+- name: Recommendations
+paths:
+  /recommendations:
+    post:
+      tags:
+      - Recommendations
+      summary: Get Disco Advertiser Recommendations
+      security:
+      - ApiKey: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RecommendationsResponse'
+          description: The request was successful, and the server has returned the requested resource in the response body.
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthenticated'
+        '403':
+          $ref: '#/components/responses/Unauthorized'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      parameters:
+      - in: header
+        name: version
+        description: The version of the API you wish to use
+        example: 1.0.0
+        style: simple
+        schema:
+          type: string
+        explode: false
+        required: true
+        allowReserved: false
+      description: Use the Disco Network advertiser recommendation engine to get the best offers for your customers in post-purchase experiences.
+      operationId: getDiscoAdvertiserRecommendations
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RecommendationsRequest'
+        required: true
+        description: The body of the request
+components:
+  responses:
+    Unauthorized:
+      description: The server understood the request, but refuses to authorize it. Ensure the client has appropriate permissions.
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+            required:
+            - message
+    InternalServerError:
+      content:
+        application/json:
+          schema:
+            type: object
+            required:
+            - message
+            properties:
+              message:
+                type: string
+      description: The server encountered an unexpected condition that prevented it from fulfilling the request. Report the issue to the support team if it persists.
+    Unauthenticated:
+      description: Authentication is required to access the requested resource. The client must include the appropriate credentials.
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+            required:
+            - message
+    BadRequest:
+      content:
+        application/json:
+          schema:
+            type: object
+            required:
+            - message
+            properties:
+              errors:
+                type: array
+                items:
+                  type: object
+                  required:
+                  - message
+                  properties:
+                    message:
+                      type: string
+              message:
+                type: string
+      description: The server could not understand the request due to invalid syntax. The client should modify the request and try again.
+  schemas:
+    ProductSummaryDto:
+      type: object
+      description: A description of a purchased item, to be provided in our requests
+      properties:
+        name:
+          type: string
+          description: The name of the product
+        type:
+          type: string
+          description: Category of the product
+          example: Electronics
+        variant:
+          type: object
+          additionalProperties:
+            type: string
+            example:
+              color: Black
+              size: Large
+          description: Variant of the product. (e.g., color, size)
+        quantity:
+          type: number
+          minimum: 0
+          description: Quantity purchased
+          example: '2'
+        description:
+          type: string
+          description: Description of the product.
+          example: Noise-cancelling headphones
+        cost_details:
+          $ref: '#/components/schemas/CostDetailsSummary'
+        product_id:
+          type: string
+          description: Unique identifier for the product
+        attributes:
+          $ref: '#/components/schemas/PurchaseAttributes'
+    RecommendationsResponse:
+      type: object
+      description: The response body from the recommendations endpoint
+      required:
+      - recommendations
+      - recommendation_groups
+      - footer
+      - session_id
+      properties:
+        session_id:
+          type: string
+          format: uuid
+          description: Unique identifier used in the Disco system for events
+          example: 30576e99-fda5-41bc-b62c-65109ba47147
+        resolved_widget:
+          $ref: '#/components/schemas/ResolvedWidget'
+        recommendations:
+          type: object
+          description: Each element here contains the details for a given offer. The keys here are the offer_id's found in the recommendation_groups.
+          additionalProperties:
+            type: object
+            required:
+            - advertiser
+            - offer
+            properties:
+              advertiser:
+                type: object
+                description: Contains top-level details about the advertiser for this ad recommendation
+                required:
+                - name
+                - logo_url
+                - id
+                properties:
+                  id:
+                    type: string
+                    format: uuid
+                    example: 30576e99-fda5-41bc-b62c-65109ba47147
+                    description: This is the identifier for the advertiser in the Disco Network system.
+                  name:
+                    type: string
+                    example: Marlowe's Roastery
+                    description: The advertiser's brand name
+                  logo_url:
+                    type: string
+                    format: uri
+                    description: The url of the advertiser logo. You may or may not want to display this, depending on your layout
+                  description:
+                    type: string
+                    description: The advertiser's description
+              offer:
+                type: object
+                description: Contains details about the offer
+                required:
+                - heading
+                - target_url
+                - metadata
+                - cta_details
+                - id
+                properties:
+                  id:
+                    type: string
+                    format: uuid
+                    description: The id of the recommendation. Will need to be passed back on events for this offer.
+                    example: adb0e805-ef67-4083-a2be-0ff3e0b16dce
+                  heading:
+                    type: string
+                    description: The top line header for this offer
+                    example: 15% OFF
+                  subheading:
+                    type: string
+                    description: Text to go below the top line heading of the offer
+                    example: On your next purchase
+                  json_content:
+                    type:
+                    - object
+                    - 'null'
+                    additionalProperties: true
+                    description: The JSON content for this offer. JSON content is a tree of objects that can be used to display the offer in the UI in a flexible way.
+                  target_url:
+                    type: string
+                    format: uri
+                    description: The url to take the shopper to when they click on the offer
+                    example: https://some-shop.com/collections/hop-shop/products/large-suit
+                  cta_details:
+                    type: object
+                    description: Contains the call-to-action button copies
+                    required:
+                    - accept_copy
+                    - decline_copy
+                    properties:
+                      accept_copy:
+                        type: string
+                        description: The positive-response CTA copy
+                        example: Claim Offer
+                      decline_copy:
+                        type: string
+                        description: The negative-response CTA copy
+                        example: No Thanks
+                      transition_copy:
+                        type: string
+                        description: The CTA copy used during transition to the offer
+                        example: Taking you to Marlowe's Roastery
+                      claimed_accept_copy:
+                        type: string
+                        description: The positive-response CTA copy used after an offer is clicked
+                        example: Copy code & shop
+                      claimed_decline_copy:
+                        type: string
+                        description: The negative-response CTA copy used after an offer is clicked
+                        example: Next offer
+                  assets:
+                    type: array
+                    description: An optional list of assets which can be displayed in your UI
+                    items:
+                      type: object
+                      required:
+                      - id
+                      - asset_type
+                      - insertion_order
+                      - image_url
+                      - should_trigger_claim_flow
+                      properties:
+                        id:
+                          type: string
+                          description: The id of the product/asset being displayed. This will be attached to the click event.
+                          example: PROD123
+                        asset_type:
+                          type: string
+                          description: The type of asset being returned.
+                          enum:
+                          - PRODUCT
+                          - IMAGE
+                        image_url:
+                          type: string
+                          format: uri
+                          description: The full url of the hosted image
+                        insertion_order:
+                          type: integer
+                          format: int32
+                          description: The order in which you should display each asset in the UI
+                          minimum: 0
+                          example: 0
+                        target_url:
+                          type: string
+                          format: uri
+                          example: https://www.my-shop.com/
+                          description: The url that the user will be taken to if they click this asset. This will be present if the asset is clickable.
+                        should_trigger_claim_flow:
+                          type: boolean
+                          description: Whether or not clicking on this asset should trigger a claim.
+                  metadata:
+                    oneOf:
+                    - type: object
+                      title: PROMO_CODE
+                      required:
+                      - type
+                      - code
+                      - layout_type
+                      properties:
+                        code:
+                          type: string
+                          example: IR3723
+                          description: The promo code for an offer, provided by the advertiser
+                        type:
+                          enum:
+                          - PROMO_CODE
+                          type: string
+                          description: Indicates the type of ad. `promo_code` indicates that a promo_code field is provided
+                        layout_type:
+                          type: string
+                          description: The intended display format for this ad. Use this property to help determine the layout of the parts of the offer such as text, image, links, etc.
+                          enum:
+                          - TEXT_RICH
+                          - BRAND_VISUAL
+                          - FEATURED_IMAGE
+                          - BANNER_VISUAL
+                          - STACKED_TILE
+                          - LAYERED_TILE
+                          - PRODUCT_VISUAL
+                      description: An object containing a promo code
+                    - type: object
+                      title: NO_PROMO_CODE
+                      required:
+                      - type
+                      - layout_type
+                      properties:
+                        type:
+                          enum:
+                          - NO_PROMO_CODE
+                          type: string
+                          description: Indicates the type of ad. `no_promo_code` indicates that a promo_code does not exist
+                        layout_type:
+                          type: string
+                          description: The intended display format for this ad. Use this property to help determine the layout of the parts of the offer such as text, image, links, etc.
+                          enum:
+                          - TEXT_RICH
+                          - BRAND_VISUAL
+                          - FEATURED_IMAGE
+                          - BANNER_VISUAL
+                          - STACKED_TILE
+                          - LAYERED_TILE
+                          - PRODUCT_VISUAL
+                      description: an object without a promo code
+                  disclosure_details:
+                    type: object
+                    description: Contains details about the term & conditions for an offer set by the advertiser. Should be displayed in a popup. Either `target_url` or `content` will be provided.
+                    required:
+                    - copy
+                    properties:
+                      copy:
+                        type: string
+                        description: The full text body of the disclosure set by the advertiser
+                      target_url:
+                        type: string
+                        format: uri
+                        example: https://www.your-site.com/terms-and-conditions
+                        description: An optional link to further terms and conditions hosted by the advertiser.
+                      content:
+                        type:
+                        - string
+                        - 'null'
+                        description: The terms and conditions content for this offer set by the advertiser.
+          example:
+            7c2d0ba1-9c53-4032-824d-72e49850ecc6:
+              advertiser: {}
+              offer: {}
+        recommendation_groups:
+          type: object
+          description: Ordered groups of offer ids to display. Get details for each offer from recommendations object. By default there will be one group with the key "group_0" with the recommendations you need to power the ad serving experience.
+          additionalProperties:
+            type: array
+            items:
+              type: object
+              required:
+              - insertion_order
+              - insertion_id
+              - offer_id
+              - advertiser_id
+              properties:
+                insertion_order:
+                  type: integer
+                  format: int32
+                  description: The order in which you should display this recommendation
+                  minimum: 0
+                  example: 1
+                insertion_id:
+                  type: string
+                  description: This identifier helps Disco identify the effectiveness of each recommendation, and needs to be passed in future event payloads.
+                  example: 827d0-eniu29dbnf92
+                offer_id:
+                  type: string
+                  description: The id of the offer to show in this slot. This is the key you will use to lookup details in recommendations.
+                advertiser_id:
+                  type: string
+                  description: The id of the advertiser listing the offer in this slot
+          example:
+            group_0:
+            - insertion_order: 0
+              insertion_id: 827d0-eniu29dbnf92
+              offer_id: 7c2d0ba1-9c53-4032-824d-72e49850ecc6
+              advertiser_id: 6d3f8745-9fde-47be-91fa-fbe09870f997
+        recommendation_group_properties:
+          type: object
+          description: A mapping from recommendation group id to properties describing how to display that group
+          additionalProperties:
+            type: object
+            required:
+            - slot_context
+            properties:
+              heading:
+                type: string
+                description: The heading of the group
+              slot_context:
+                type: string
+                description: Represents whether the group is a hero or scrollable group, etc.
+                enum:
+                - HERO
+                - SCROLLABLE
+        running_experiments:
+          type: array
+          description: A list of currently running experiments
+          items:
+            $ref: '#/components/schemas/ExperimentSummaryDTO'
+        footer:
+          type: object
+          description: Contains the text, links, and assets needed to display the DiscoNetwork footer.
+          required:
+          - attribution_details
+          - privacy_policy
+          properties:
+            attribution_details:
+              type: object
+              description: Contains text and assets for Disco Network attribution footer
+              required:
+              - copy
+              - disco_logo_url
+              - target_url
+              properties:
+                copy:
+                  type: string
+                  description: The copy for the footer, should come before the logo
+                  example: Powered by
+                disco_logo_url:
+                  type: string
+                  format: uri
+                  description: The url of the disco logo. Should be inline after the footer copy.
+                  example: https://launcher.disconetwork.com/static/media/disco-logo-gray.01a8140f2bc1b025de45ba9950bc6341.svg
+                target_url:
+                  type: string
+                  format: uri
+                  description: Disco Network's url
+                  example: https://disconetwork.com
+            privacy_policy:
+              type: object
+              description: Contains the text and link for the disco privacy policy.
+              required:
+              - copy
+              - target_url
+              properties:
+                copy:
+                  type: string
+                  description: The copy to display for the privacy policy link
+                  example: Privacy Policy
+                target_url:
+                  type: string
+                  format: uri
+                  description: URL to the page that hosts Disco Network's privacy policy
+                  example: https://www.disconetwork.com/privacy-policy
+    CostDetailsSummary:
+      type: object
+      properties:
+        amount:
+          type: number
+          format: float
+          description: The full cost of the item
+          example: 100.0
+        currency_code:
+          type: string
+          description: The [ISO-4217 currency code](https://www.iso.org/iso-4217-currency-codes.html)
+          example: USD
+      description: Contains all details pertaining to the cost of the parent container item
+    ResolvedWidget:
+      type:
+      - object
+      - 'null'
+      description: Selected widget configuration. Null when unavailable.
+      required:
+      - widget_id
+      - widget_mode
+      - widget_type
+      - widget_version
+      - content
+      properties:
+        widget_id:
+          type: string
+          maxLength: 64
+        layout_id:
+          type:
+          - string
+          - 'null'
+          maxLength: 64
+        widget_mode:
+          type: string
+          enum:
+          - OVERLAY
+          - INLINE
+          - FULLSCREEN
+          - PULLUP
+        widget_type:
+          type: string
+          enum:
+          - LEAD_GEN
+          - ESSENTIAL
+          - APP_NATIVE_ESSENTIAL
+          - APP_NATIVE_SCROLLABLE
+          - APP_NATIVE_HYBRID
+          - APP_NATIVE_BANNER_VISUAL
+          - APP_NATIVE_BRAND_VISUAL
+          - APP_NATIVE_GALLERY
+          - SHOPIFY_NATIVE_ESSENTIAL
+          - SHOPIFY_NATIVE_LEAD_GEN
+        widget_version:
+          type: number
+          format: float
+        content:
+          type: object
+          additionalProperties:
+            type:
+            - string
+            - 'null'
+    UserDetails:
+      type: object
+      properties:
+        title:
+          type: string
+          description: The shopper's preferred title
+          enum:
+          - MR
+          - MRS
+          - MS
+          - MISS
+        first_name:
+          type: string
+          description: The first name as provided by the shopper
+          example: Monica
+        last_name:
+          type: string
+          description: The last name as provided by the shopper
+          example: Stone
+        phone:
+          type: string
+          example: +1 (415) 123-4567
+          description: The shopper's phone number
+        gender:
+          type: string
+          description: The shopper's specified gender
+          enum:
+          - MALE
+          - FEMALE
+          - OTHER
+          - UNSPECIFIED
+        dob:
+          type: string
+          description: The shopper's date of birth. Format `YYYY-MM-DD`
+        age:
+          type: number
+          description: The shopper's age
+          minimum: 0
+    CommonRequestProperties:
+      type: object
+      description: The properties shared between the recommendations and event request payloads
+      required:
+      - placement_details
+      - user_details
+      properties:
+        user_details:
+          oneOf:
+          - type: object
+            title: email
+            allOf:
+            - type: object
+              required:
+              - email
+              properties:
+                email:
+                  type: string
+                  format: email
+                  description: The email of the shopper, as provided by the shopper
+                  example: michelle@disconetwork.com
+            - $ref: '#/components/schemas/UserDetails'
+          - type: object
+            title: email_hash
+            allOf:
+            - type: object
+              required:
+              - email_hash
+              properties:
+                email_hash:
+                  type: string
+                  description: The shopper's email as a [SHA-256 hash](https://csrc.nist.gov/pubs/fips/180-4/upd1/final)
+                  example: 211550f0381ba43da1bdbd6acca2deeaaaa9ea5bfacaa2523be92ac1091c7333
+            - $ref: '#/components/schemas/UserDetails'
+          - type: object
+            title: phone
+            allOf:
+            - type: object
+              required:
+              - phone
+              properties:
+                phone:
+                  type: string
+                  description: The phone number of the shopper
+                  example: +1 (415) 123-4567
+            - $ref: '#/components/schemas/UserDetails'
+          - type: object
+            title: external_guid
+            allOf:
+            - type: object
+              required:
+              - external_guid
+              properties:
+                external_guid:
+                  type: string
+                  description: The external guid passed by an external source
+                  example: 9f8b7c6d-1234-5678-9abc-def012345678
+            - $ref: '#/components/schemas/UserDetails'
+        placement_details:
+          $ref: '#/components/schemas/PlacementDetailsObject'
+        order_details:
+          type: object
+          description: Contains details pertaining the the overall order
+          properties:
+            cost_details:
+              $ref: '#/components/schemas/CostDetailsSummary'
+            order_id:
+              type: string
+              description: Unique identifier of the order
+            payment_type:
+              type: string
+              description: The type of payment used
+              example: VISA
+          required:
+          - cost_details
+          - order_id
+        purchases:
+          type: array
+          description: List of purchased items
+          items:
+            $ref: '#/components/schemas/ProductSummaryDto'
+        attributes:
+          type: object
+          description: General properties about the request
+          properties:
+            user_agent:
+              type: string
+              description: The user_agent, if applicable
+            device_type:
+              type: string
+              enum:
+              - MOBILE
+              - TABLET
+              - DESKTOP
+              description: The source device of the customer
+            operating_system:
+              type: string
+              description: The operating system the user is on
+              example: iOS
+            operating_system_version:
+              type: string
+              description: The version of the user's operating system
+              example: 18.3.2
+            ip_address:
+              type: string
+              description: The IP Address of the shopper
+            ip_address_hash:
+              type: string
+              description: The [SHA-256 hash](https://csrc.nist.gov/pubs/fips/180-4/upd1/final) of the shopper's IP Address
+            platform_type:
+              type: string
+              description: Describes the type of device the shopper was user
+              enum:
+              - MOBILE
+              - WEB
+            language:
+              type: string
+              description: Language associated with the current session. Use a valid [ISO-639](https://www.iso.org/iso-639-language-code) language code.
+        custom_metadata:
+          type: object
+          description: These are custom fields associated to this partner integration
+          properties:
+            is_sandbox:
+              type: boolean
+              description: Indicates if this is a sandbox request. If true, associated events will not drive conversions.
+            is_add_to_order_customer:
+              type: boolean
+              description: Did this customer use the limited time window add-to-order functionality
+            is_sports_betting_eligible:
+              type: boolean
+              description: Has the user purchased age-gated alcohol and tobacco products
+            is_fam:
+              type: boolean
+              description: Is this user a part of Gopuff subscription service
+            is_student:
+              type: boolean
+              description: Does this user have a college email address
+        shipping:
+          $ref: '#/components/schemas/AddressRequestDto'
+        billing:
+          $ref: '#/components/schemas/AddressRequestDto'
+        running_experiments:
+          type: array
+          description: A list of currently running experiments
+          items:
+            $ref: '#/components/schemas/ExperimentSummaryDTO'
+    RecommendationsRequest:
+      allOf:
+      - $ref: '#/components/schemas/CommonRequestProperties'
+      description: The body of the request for the /recommendations endpoint
+    PlacementDetailsObject:
+      type: object
+      description: Contains details about the placement of the offers within the UI
+      properties:
+        display_mode:
+          type: string
+          description: This is the type of display widget used.
+          enum:
+          - OVERLAY
+          - FULLSCREEN
+          - PULLUP
+          - INLINE
+        layout_id:
+          type: string
+          description: 'Optional legacy widget selector retained for backward compatibility. Used when widget_id is not provided.
+
+            '
+        widget_id:
+          type: string
+          maxLength: 64
+          description: Optional widget selector. Takes precedence over layout_id.
+        view:
+          type: string
+          description: What kind of view in the purchase flow was the recommendation shown on
+          enum:
+          - ORDER_STATUS
+          - CHECKOUT
+          - THANK_YOU
+          - POST_ORDER
+          - ORDER_TRACKING
+          - SUPPORT_CENTER
+          - REWARDED
+          - EMAIL
+        sub_view:
+          type: string
+          description: Used to distinguish sub-views for the same page type.
+          default: DEFAULT
+          enum:
+          - DEFAULT
+          - POST_CLAIM
+          - BOOKING
+          - PURCHASE
+          - BOOKING_AND_PURCHASE
+      required:
+      - display_mode
+      - view
+    PurchaseAttributes:
+      type: object
+      description: Free-form attributes for a purchased item
+      properties:
+        is_clearance:
+          type: boolean
+          description: Indicates whether this product is a clearance item
+        is_gift:
+          type: boolean
+          description: Indicates whether this product was purchased as a gift
+    ExperimentSummaryDTO:
+      type: object
+      description: Properties describing an actively running product experiment
+      required:
+      - name
+      - version
+      properties:
+        name:
+          type: string
+          description: The name of the current experiment
+          example: optimization_04
+        version:
+          type: integer
+          description: The bucket number of the experiment
+          minimum: 0
+          maximum: 999
+          example: 1
+    AddressRequestDto:
+      type: object
+      description: The structure of an address in our request bodies
+      required: []
+      properties:
+        address_line_1:
+          type: string
+          description: The main line of the address
+          example: 431 Main St.
+        address_line_2:
+          type: string
+          description: The optional line 2 of the address
+          example: Suite 2A
+        city:
+          type: string
+          description: The city of the address
+          example: Miami
+        state:
+          type: string
+          description: The [USPS 2-Letter State Abbreviation](https://pe.usps.com/text/pub28/28apb.htm) of the address
+          example: FL
+        zip:
+          type: string
+          description: The zipcode of the address
+          example: '45231'
+        phone:
+          type: string
+          description: The phone number of the user's shipping address, if different than user's main phone number
+          example: +1 (415) 123-4567
+  securitySchemes:
+    ApiKey:
+      in: header
+      name: x-api-key
+      type: apiKey
+      description: 'Key Auth: Requests contain a valid `x-api-key` in the request headers.'

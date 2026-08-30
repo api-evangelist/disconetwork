@@ -1,0 +1,349 @@
+openapi: 3.2.0
+info:
+  title: External API for Disco Integration Partners Events API
+  version: 1.0.0
+  description: The API used by Disco partners that will provide their own UI experience.
+servers:
+- url: https://partners.disconetwork.com
+  description: Production
+- url: https://partners.disconetwork-staging.com
+  description: Staging
+tags:
+- name: Events
+paths:
+  /events:
+    post:
+      tags:
+      - Events
+      summary: Create an event used to record user actions
+      responses:
+        '201':
+          description: The request was successful, and a new resource was created.
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthenticated'
+        '403':
+          $ref: '#/components/responses/Unauthorized'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      parameters:
+      - in: header
+        name: version
+        description: The version of the api you wish to use
+        example: 1.0.0
+        style: simple
+        schema:
+          type: string
+        explode: false
+        required: true
+        allowReserved: false
+      operationId: createAnEventUsedToRecordUserActions
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EventRequest'
+        required: true
+        description: ''
+  /events/batch:
+    post:
+      tags:
+      - Events
+      summary: Create a batch of events used to record user actions
+      description: Submit between 1 and 20 events in a single request. Each event is processed independently and the response reports the per-event result so the caller can retry only the events that failed.
+      responses:
+        '202':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BatchEventResponse'
+          description: Every event in the batch was accepted for processing.
+        '207':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BatchEventResponse'
+          description: Some events were accepted and others failed. Inspect `results` to determine which events to retry.
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthenticated'
+        '403':
+          $ref: '#/components/responses/Unauthorized'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+        '502':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BatchEventResponse'
+          description: Every event in the batch failed to be accepted for processing. The caller should retry the whole batch.
+      parameters:
+      - in: header
+        name: version
+        description: The version of the api you wish to use
+        example: 1.0.0
+        style: simple
+        schema:
+          type: string
+        explode: false
+        required: true
+        allowReserved: false
+      operationId: createABatchOfEventsUsedToRecordUserActions
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BatchEventRequest'
+        required: true
+        description: An object containing the list of events to record.
+components:
+  responses:
+    Unauthorized:
+      description: The server understood the request, but refuses to authorize it. Ensure the client has appropriate permissions.
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+            required:
+            - message
+    InternalServerError:
+      content:
+        application/json:
+          schema:
+            type: object
+            required:
+            - message
+            properties:
+              message:
+                type: string
+      description: The server encountered an unexpected condition that prevented it from fulfilling the request. Report the issue to the support team if it persists.
+    Unauthenticated:
+      description: Authentication is required to access the requested resource. The client must include the appropriate credentials.
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+            required:
+            - message
+    BadRequest:
+      content:
+        application/json:
+          schema:
+            type: object
+            required:
+            - message
+            properties:
+              errors:
+                type: array
+                items:
+                  type: object
+                  required:
+                  - message
+                  properties:
+                    message:
+                      type: string
+              message:
+                type: string
+      description: The server could not understand the request due to invalid syntax. The client should modify the request and try again.
+  schemas:
+    EventRequest:
+      oneOf:
+      - $ref: '#/components/schemas/WidgetEventRequest'
+      - $ref: '#/components/schemas/ElementClickRequest'
+      - $ref: '#/components/schemas/BrandDisplayRequest'
+      - $ref: '#/components/schemas/BrandClickRequest'
+      description: Request body for hitting the /event endpoint
+      discriminator:
+        propertyName: event_name
+        mapping:
+          WIDGET_LOAD: '#/components/schemas/WidgetEventRequest'
+          WIDGET_DISPLAY: '#/components/schemas/WidgetEventRequest'
+          WIDGET_VIEW: '#/components/schemas/WidgetEventRequest'
+          BRAND_DISPLAY: '#/components/schemas/BrandDisplayRequest'
+          BRAND_VIEW: '#/components/schemas/BrandDisplayRequest'
+          BRAND_CLICK: '#/components/schemas/BrandClickRequest'
+          ELEMENT_CLICK: '#/components/schemas/ElementClickRequest'
+    ElementClickRequest:
+      title: ElementClickRequest
+      allOf:
+      - $ref: '#/components/schemas/BaseEventProperties'
+      - type: object
+        required:
+        - initiating_target
+        properties:
+          initiating_target:
+            type: string
+            description: Indicates the UI element that triggered this event
+            enum:
+            - INLINE_NAV_FORWARD
+            - INLINE_NAV_BACKWARD
+            - INLINE_FOOTER_DISCO
+            - INLINE_FOOTER_PRIVACY
+      - type: object
+        properties:
+          brand_properties:
+            description: This is required for `INLINE_NAV_FORWARD/BACKWARD` initiating targets
+            allOf:
+            - $ref: '#/components/schemas/BrandEventProperties'
+    BatchEventRequest:
+      type: object
+      description: Request body for hitting the /events/batch endpoint
+      required:
+      - events
+      properties:
+        events:
+          type: array
+          description: The events to record. At least 1 and at most 20 events may be submitted in a single request.
+          minItems: 1
+          maxItems: 20
+          items:
+            $ref: '#/components/schemas/EventRequest'
+    BatchEventResult:
+      type: object
+      description: The processing result for a single event in the batch
+      required:
+      - index
+      - success
+      properties:
+        index:
+          type: integer
+          description: The position of the event in the submitted `events` array
+          example: 0
+        success:
+          type: boolean
+          description: Whether the event at this index was accepted for processing
+          example: true
+    BaseEventProperties:
+      type: object
+      description: The properties shared on all events
+      required:
+      - event_name
+      - event_datetime
+      - session_id
+      properties:
+        event_name:
+          enum:
+          - WIDGET_LOAD
+          - WIDGET_DISPLAY
+          - WIDGET_VIEW
+          - BRAND_DISPLAY
+          - BRAND_VIEW
+          - BRAND_CLICK
+          - PRODUCT_DISPLAY
+          - PRODUCT_VIEW
+          - PRODUCT_CLICK
+          - ELEMENT_CLICK
+          type: string
+          description: The name of the event you are sending to Disco. Casing must be all caps
+        event_datetime:
+          type: string
+          format: date-time
+          description: The [RFC-3339](https://datatracker.ietf.org/doc/html/rfc3339#section-5.6) datetime at which the event occurred on the shopper's device
+          example: 2025-03-21 17:32:28+00:00
+        session_id:
+          type: string
+          format: uuid
+          description: An identifier provided on the response of the recommendations endpoint to identify the session associated with the event
+          example: 70f05c32-7760-4753-93c9-b759cf7e7fda
+      discriminator:
+        propertyName: event_name
+    WidgetEventRequest:
+      title: WidgetEventRequest
+      allOf:
+      - $ref: '#/components/schemas/BaseEventProperties'
+    BrandClickRequest:
+      title: BrandClickRequest
+      allOf:
+      - $ref: '#/components/schemas/BaseEventProperties'
+      - type: object
+        required:
+        - initiating_target
+        properties:
+          initiating_target:
+            type: string
+            description: Indicates the UI element that triggered this event
+            enum:
+            - INLINE_ACTION_BUTTON
+            - INLINE_ASSET_TILE
+          asset_id:
+            type: string
+            description: The id of the asset clicked, if an asset click triggered this event
+      - $ref: '#/components/schemas/RequiredBrandEventProperties'
+    BrandEventProperties:
+      type: object
+      required:
+      - offer_id
+      - advertiser_id
+      - insertion_id
+      properties:
+        offer_id:
+          type: string
+          format: uuid
+          description: Unique identifier of the offer this event is being sent for
+          example: 955a3fcb-a264-4bce-a65a-0a2f1216627f
+        advertiser_id:
+          type: string
+          format: uuid
+          description: Unique identifier of the advertiser this event is being sent for
+          example: 98b5ecf0-9902-4034-ad43-1b13f7db7d7f
+        insertion_id:
+          type: string
+          description: Unique identifier associated with this advertiser provided from the recommendations endpoint
+          example: 827d0-eniu29dbnf92
+    RequiredBrandEventProperties:
+      type: object
+      required:
+      - brand_properties
+      properties:
+        brand_properties:
+          allOf:
+          - $ref: '#/components/schemas/BrandEventProperties'
+    BrandDisplayRequest:
+      title: BrandDisplayRequest
+      allOf:
+      - $ref: '#/components/schemas/BaseEventProperties'
+      - type: object
+        required:
+        - initiating_target
+        properties:
+          initiating_target:
+            type: string
+            description: Indicates the UI element that triggered this event
+            enum:
+            - INLINE_SLOT
+      - $ref: '#/components/schemas/RequiredBrandEventProperties'
+    BatchEventResponse:
+      type: object
+      description: The result of processing a batch of events
+      required:
+      - results
+      - accepted
+      - failed
+      properties:
+        results:
+          type: array
+          description: The per-event results, ordered to match the submitted `events` array
+          items:
+            $ref: '#/components/schemas/BatchEventResult'
+        accepted:
+          type: integer
+          description: The number of events that were accepted for processing
+          example: 2
+        failed:
+          type: integer
+          description: The number of events that failed to be accepted for processing
+          example: 0
+  securitySchemes:
+    ApiKey:
+      in: header
+      name: x-api-key
+      type: apiKey
+      description: 'Key Auth: Requests contain a valid `x-api-key` in the request headers.'
