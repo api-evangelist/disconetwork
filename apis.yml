@@ -31,17 +31,15 @@ accessModel:
   method: searched
 image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/icons/disconetwork.png
 name: Disconetwork
-description: 'Disco (disconetwork.com, Disco Technology Inc.) is a commerce media network
-  focused on the post-purchase moment. It helps ecommerce brands and platforms monetize
-  order-confirmation, order-tracking, checkout, email and app surfaces by placing relevant
-  partner offers in front of shoppers, and gives advertisers a performance channel to
-  reach buyers at the point of purchase. Its product suite spans DiscoOffers (publisher
-  monetization), DiscoBeat (a headless, white-labeled commerce media API for SaaS platforms),
-  DiscoMix (non-endemic demand for retail media networks) and OffersAI (the ranking and
-  personalization engine). Disco publishes a real developer surface: a partner-integration
-  OpenAPI at docs.disconetwork.com, two versions of a Reporting API with downloadable
-  OpenAPI 3.0.3 specs and Postman collections, a documented DiscoBeat Channel API, a
-  JavaScript Web SDK, and an llms.txt. Backed by Felicis.'
+description: 'Disco (disconetwork.com, Disco Technology Inc.) is a commerce media network focused on the
+  post-purchase moment. It helps ecommerce brands and platforms monetize order-confirmation, order-tracking,
+  checkout, email and app surfaces by placing relevant partner offers in front of shoppers, and gives
+  advertisers a performance channel to reach buyers at the point of purchase. Its product suite spans
+  DiscoOffers (publisher monetization), DiscoBeat (a headless, white-labeled commerce media API for SaaS
+  platforms), DiscoMix (non-endemic demand for retail media networks) and OffersAI (the ranking and personalization
+  engine). Disco publishes a real developer surface: a partner-integration OpenAPI at docs.disconetwork.com,
+  two versions of a Reporting API with downloadable OpenAPI 3.0.3 specs and Postman collections, a documented
+  DiscoBeat Channel API, a JavaScript Web SDK, and an llms.txt. Backed by Felicis.'
 url: https://raw.githubusercontent.com/api-evangelist/disconetwork/refs/heads/main/apis.yml
 x-type: company
 x-source: vc-portfolio
@@ -75,13 +73,12 @@ tags_raw:
 - Analytics
 - Reporting
 apis:
-- aid: disconetwork-discobeat-channel-api
+- aid: disconetwork:disconetwork-discobeat-channel-api
   name: DiscoBeat Channel API
-  description: >-
-    The channel-partner management API behind DiscoBeat. Lists ad categories and subcategories, reads
-    channel details, manages channel-wide and publisher-specific subcategory exclusions, and lists, inspects,
-    adds and removes the publishers in a channel. Documented with request/response examples and curl on
-    disconetwork.com; no machine-readable specification is published for it.
+  description: The channel-partner management API behind DiscoBeat. Lists ad categories and subcategories,
+    reads channel details, manages channel-wide and publisher-specific subcategory exclusions, and lists,
+    inspects, adds and removes the publishers in a channel. Documented with request/response examples
+    and curl on disconetwork.com; no machine-readable specification is published for it.
   humanURL: https://disconetwork.com/developers/discobeat
   baseURL: https://api.disconetwork.com
   tags:
@@ -93,13 +90,12 @@ apis:
     url: https://disconetwork.com/developers/discobeat
   - type: Documentation
     url: https://disconetwork.com/developers
-- aid: disconetwork-event-api
+- aid: disconetwork:disconetwork-event-api
   name: Disco Event API
-  description: >-
-    The server-to-server conversion intake used by advertisers who cannot run the Web SDK. A POST carries
-    an event name, the publisher account id and one of three customer identifiers (raw email, SHA-256
-    email hash, or the URL-appended click identifier) so Disco can attribute a conversion back to the
-    impression that drove it.
+  description: The server-to-server conversion intake used by advertisers who cannot run the Web SDK.
+    A POST carries an event name, the publisher account id and one of three customer identifiers (raw
+    email, SHA-256 email hash, or the URL-appended click identifier) so Disco can attribute a conversion
+    back to the impression that drove it.
   humanURL: https://docs.disconetwork.com/docs/advertiser-discofeed/track-conversions/event-api
   baseURL: https://consumer.disconetwork.com
   tags:
