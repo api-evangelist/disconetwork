@@ -101,9 +101,7 @@ paths:
   /discobeat/reporting/v2/report/:
     get:
       summary: Build a report
-      description: 'Returns flat, paginated rows plus summary metrics across the complete filtered result. The response includes only the requested metrics and selected breakdown columns.
-
-        '
+      description: Returns flat, paginated rows plus summary metrics across the complete filtered result. The response includes only the requested metrics and selected breakdown columns.
       operationId: getReportingV2Report
       parameters:
       - $ref: '#/components/parameters/From_2'
@@ -200,20 +198,44 @@ components:
         feed_loads:
           type: integer
           example: 256000
-    DateRange:
+    AvailableWindow:
       type: object
       required:
       - from
       - to
+      description: Date range currently available from this reporting source.
       properties:
         from:
           type: string
           format: date
-          example: '2026-06-08'
+          example: '2026-05-26'
         to:
           type: string
           format: date
-          example: '2026-06-14'
+          example: '2026-06-30'
+    AvailabilityError:
+      type: object
+      required:
+      - code
+      - message
+      properties:
+        code:
+          type: string
+          enum:
+          - REPORTING_DATA_UNAVAILABLE
+          - DATE_RANGE_OUTSIDE_AVAILABLE_WINDOW
+        message:
+          type: string
+        available_window:
+          $ref: '#/components/schemas/AvailableWindow'
+    AuthError:
+      type: object
+      required:
+      - detail
+      properties:
+        detail:
+          type: string
+          example: Invalid or expired management API key.
     SeriesPoint:
       type: object
       required:
@@ -303,70 +325,6 @@ components:
           - string
           - 'null'
           example: '2026-06-14T05:25:11'
-    AvailableWindow:
-      type: object
-      required:
-      - from
-      - to
-      description: Date range currently available from this reporting source.
-      properties:
-        from:
-          type: string
-          format: date
-          example: '2026-05-26'
-        to:
-          type: string
-          format: date
-          example: '2026-06-30'
-    AuthError:
-      type: object
-      required:
-      - detail
-      properties:
-        detail:
-          type: string
-          example: Invalid or expired management API key.
-    AvailabilityError:
-      type: object
-      required:
-      - code
-      - message
-      properties:
-        code:
-          type: string
-          enum:
-          - REPORTING_DATA_UNAVAILABLE
-          - DATE_RANGE_OUTSIDE_AVAILABLE_WINDOW
-        message:
-          type: string
-        available_window:
-          $ref: '#/components/schemas/AvailableWindow'
-    PublisherRow:
-      type: object
-      required:
-      - publisher_uuid
-      - publisher_name
-      - publisher_category
-      - metrics
-      - series
-      properties:
-        publisher_uuid:
-          type: string
-          example: f47ac10b-58cc-4372-a567-0e02b2c3d479
-        publisher_name:
-          type: string
-          example: Acme Tracking Page
-        publisher_category:
-          type:
-          - string
-          - 'null'
-          example: Logistics
-        metrics:
-          $ref: '#/components/schemas/MetricBlock'
-        series:
-          type: array
-          items:
-            $ref: '#/components/schemas/SeriesPoint'
     SummaryResponse:
       type: object
       required:
@@ -404,16 +362,32 @@ components:
           - string
           - 'null'
           example: '2026-06-14T05:25:11'
-    MetricBlock:
+    PublisherRow:
       type: object
       required:
-      - raw
-      - calculated
+      - publisher_uuid
+      - publisher_name
+      - publisher_category
+      - metrics
+      - series
       properties:
-        raw:
-          $ref: '#/components/schemas/RawMetrics'
-        calculated:
-          $ref: '#/components/schemas/CalculatedMetrics'
+        publisher_uuid:
+          type: string
+          example: f47ac10b-58cc-4372-a567-0e02b2c3d479
+        publisher_name:
+          type: string
+          example: Acme Tracking Page
+        publisher_category:
+          type:
+          - string
+          - 'null'
+          example: Logistics
+        metrics:
+          $ref: '#/components/schemas/MetricBlock'
+        series:
+          type: array
+          items:
+            $ref: '#/components/schemas/SeriesPoint'
     Pagination:
       type: object
       required:
@@ -430,67 +404,36 @@ components:
         total:
           type: integer
           example: 1
+    MetricBlock:
+      type: object
+      required:
+      - raw
+      - calculated
+      properties:
+        raw:
+          $ref: '#/components/schemas/RawMetrics'
+        calculated:
+          $ref: '#/components/schemas/CalculatedMetrics'
     ValidationError:
       type: object
       additionalProperties: true
-    ReportRow:
-      allOf:
-      - type: object
-        required:
-        - period_start
-        - period_end
-        properties:
-          period_start:
-            type: string
-            format: date-time
-            description: Inclusive UTC period boundary.
-            example: '2026-07-18T00:00:00Z'
-          period_end:
-            type: string
-            format: date-time
-            description: Exclusive UTC period boundary.
-            example: '2026-07-19T00:00:00Z'
-          publisher_id:
-            type:
-            - string
-            - 'null'
-            example: 9aa17f8c-7746-4218-9025-83d38c406179
-          publisher_name:
-            type:
-            - string
-            - 'null'
-            example: AfterShip Tracking Page
-          page_type:
-            type:
-            - string
-            - 'null'
-            example: ORDER_TRACKING
-          widget_type:
-            type:
-            - string
-            - 'null'
-            example: APP_NATIVE_ESSENTIAL
-          widget_id:
-            type:
-            - string
-            - 'null'
-            maxLength: 64
-      - $ref: '#/components/schemas/MetricValues'
-    Metric:
-      type: string
-      enum:
-      - impressions
-      - clicks
-      - conversions
-      - channel_payout
-      - revenue_with_email
-      - revenue_without_email
-      - sessions
-      - feed_loads
-      - ctr
-      - cvr
-      - rps
-      - rpl
+    DateRange:
+      type: object
+      required:
+      - from
+      - to
+      properties:
+        from:
+          type: string
+          format: date
+          example: '2026-06-08'
+        to:
+          type: string
+          format: date
+          example: '2026-06-14'
+    ErrorResponse:
+      type: object
+      additionalProperties: true
     MetricValues:
       type: object
       properties:
@@ -555,6 +498,69 @@ components:
           $ref: '#/components/schemas/Pagination_2'
         meta:
           $ref: '#/components/schemas/ReportMeta'
+    Pagination_2:
+      type: object
+      required:
+      - offset
+      - limit
+      - total
+      - has_more
+      properties:
+        offset:
+          type: integer
+          example: 0
+        limit:
+          type: integer
+          example: 50
+        total:
+          type: integer
+          example: 36
+        has_more:
+          type: boolean
+          example: false
+    ReportRow:
+      allOf:
+      - type: object
+        required:
+        - period_start
+        - period_end
+        properties:
+          period_start:
+            type: string
+            format: date-time
+            description: Inclusive UTC period boundary.
+            example: '2026-07-18T00:00:00Z'
+          period_end:
+            type: string
+            format: date-time
+            description: Exclusive UTC period boundary.
+            example: '2026-07-19T00:00:00Z'
+          publisher_id:
+            type:
+            - string
+            - 'null'
+            example: 9aa17f8c-7746-4218-9025-83d38c406179
+          publisher_name:
+            type:
+            - string
+            - 'null'
+            example: AfterShip Tracking Page
+          page_type:
+            type:
+            - string
+            - 'null'
+            example: ORDER_TRACKING
+          widget_type:
+            type:
+            - string
+            - 'null'
+            example: APP_NATIVE_ESSENTIAL
+          widget_id:
+            type:
+            - string
+            - 'null'
+            maxLength: 64
+      - $ref: '#/components/schemas/MetricValues'
     ReportMeta:
       type: object
       required:
@@ -577,46 +583,22 @@ components:
           - string
           - 'null'
           example: 7e9fe348-7558-4e28-b8c6-b26ea44899eb
-    ErrorResponse:
-      type: object
-      additionalProperties: true
-    Pagination_2:
-      type: object
-      required:
-      - offset
-      - limit
-      - total
-      - has_more
-      properties:
-        offset:
-          type: integer
-          example: 0
-        limit:
-          type: integer
-          example: 50
-        total:
-          type: integer
-          example: 36
-        has_more:
-          type: boolean
-          example: false
+    Metric:
+      type: string
+      enum:
+      - impressions
+      - clicks
+      - conversions
+      - channel_payout
+      - revenue_with_email
+      - revenue_without_email
+      - sessions
+      - feed_loads
+      - ctr
+      - cvr
+      - rps
+      - rpl
   responses:
-    MethodNotAllowed:
-      description: Only GET is supported.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/AuthError'
-          example:
-            detail: Method "POST" not allowed.
-    Unauthorized:
-      description: Missing or invalid management API key.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/AuthError'
-          example:
-            detail: Invalid or expired management API key.
     BadRequest:
       description: Invalid parameters, unsupported date range, or unavailable reporting data.
       content:
@@ -641,6 +623,22 @@ components:
                 available_window:
                   from: '2026-05-26'
                   to: '2026-06-30'
+    Unauthorized:
+      description: Missing or invalid management API key.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/AuthError'
+          example:
+            detail: Invalid or expired management API key.
+    MethodNotAllowed:
+      description: Only GET is supported.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/AuthError'
+          example:
+            detail: Method "POST" not allowed.
     MethodNotAllowed_2:
       description: Only GET is supported.
       content:
@@ -649,14 +647,6 @@ components:
             $ref: '#/components/schemas/ErrorResponse'
           example:
             detail: Method "POST" not allowed.
-    Unauthorized_2:
-      description: Missing or invalid management API key.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-          example:
-            detail: Invalid or expired management API key.
     BadRequest_2:
       description: Invalid query, unavailable metric or data, date outside the available window, or result over 10,000 rows.
       content:
@@ -686,6 +676,14 @@ components:
                 message: Report exceeds the interactive row limit. Narrow the date range or remove one or more breakdowns.
                 max_rows: 10000
                 total_rows: 12000
+    Unauthorized_2:
+      description: Missing or invalid management API key.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            detail: Invalid or expired management API key.
   parameters:
     From:
       name: from
@@ -703,6 +701,45 @@ components:
       schema:
         type: string
         format: date
+    Offset:
+      name: offset
+      in: query
+      required: false
+      description: Pagination offset.
+      schema:
+        type: integer
+        minimum: 0
+        default: 0
+    TimeGrain:
+      name: time_grain
+      in: query
+      required: false
+      description: 'UTC row interval. Hour supports at most 3 days and one breakdown. Week and month edge periods are clipped to the requested date range.
+
+        '
+      schema:
+        type: string
+        enum:
+        - total
+        - day
+        - week
+        - month
+        - hour
+        default: total
+    WidgetTypes:
+      name: widget_types
+      in: query
+      required: false
+      description: Comma-separated widget-type filter. Filtering does not add a report column.
+      style: form
+      explode: false
+      schema:
+        type: array
+        maxItems: 250
+        items:
+          type: string
+      example:
+      - APP_NATIVE_ESSENTIAL
     Metrics:
       name: metrics
       in: query
@@ -723,39 +760,6 @@ components:
       - clicks
       - channel_payout
       - ctr
-    Offset:
-      name: offset
-      in: query
-      required: false
-      description: Pagination offset.
-      schema:
-        type: integer
-        minimum: 0
-        default: 0
-    PageTypes:
-      name: page_types
-      in: query
-      required: false
-      description: Comma-separated page-type filter. Filtering does not add a report column.
-      style: form
-      explode: false
-      schema:
-        type: array
-        maxItems: 250
-        items:
-          type: string
-      example:
-      - ORDER_TRACKING
-      - THANK_YOU
-    From_2:
-      name: from
-      in: query
-      required: true
-      description: Start date in UTC, inclusive.
-      schema:
-        type: string
-        format: date
-        example: '2026-07-18'
     PublisherIds:
       name: publisher_ids
       in: query
@@ -793,6 +797,15 @@ components:
       example:
       - publisher
       - page_type
+    From_2:
+      name: from
+      in: query
+      required: true
+      description: Start date in UTC, inclusive.
+      schema:
+        type: string
+        format: date
+        example: '2026-07-18'
     Limit:
       name: limit
       in: query
@@ -803,36 +816,6 @@ components:
         minimum: 1
         maximum: 250
         default: 50
-    WidgetTypes:
-      name: widget_types
-      in: query
-      required: false
-      description: Comma-separated widget-type filter. Filtering does not add a report column.
-      style: form
-      explode: false
-      schema:
-        type: array
-        maxItems: 250
-        items:
-          type: string
-      example:
-      - APP_NATIVE_ESSENTIAL
-    TimeGrain:
-      name: time_grain
-      in: query
-      required: false
-      description: 'UTC row interval. Hour supports at most 3 days and one breakdown. Week and month edge periods are clipped to the requested date range.
-
-        '
-      schema:
-        type: string
-        enum:
-        - total
-        - day
-        - week
-        - month
-        - hour
-        default: total
     To_2:
       name: to
       in: query
@@ -842,6 +825,21 @@ components:
         type: string
         format: date
         example: '2026-07-20'
+    PageTypes:
+      name: page_types
+      in: query
+      required: false
+      description: Comma-separated page-type filter. Filtering does not add a report column.
+      style: form
+      explode: false
+      schema:
+        type: array
+        maxItems: 250
+        items:
+          type: string
+      example:
+      - ORDER_TRACKING
+      - THANK_YOU
   securitySchemes:
     ManagementApiKey:
       type: apiKey

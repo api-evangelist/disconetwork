@@ -3,9 +3,9 @@ info:
   title: API Evangelist enhancements for the Disco Reporting API V1
   version: 1.0.0
 extends: openapi/disconetwork-reporting-api-v1.yml
-generated: '2026-08-12'
-method: generated
-source: openapi/disconetwork-reporting-api-v1.yml
+x-generated: '2026-08-12'
+x-method: generated
+x-source: openapi/disconetwork-reporting-api-v1.yml
 actions:
 - target: $.info
   update:

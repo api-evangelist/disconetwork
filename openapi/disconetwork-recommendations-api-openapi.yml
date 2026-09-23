@@ -1,6 +1,6 @@
 openapi: 3.2.0
 info:
-  title: External API for Disco Integration Partners Recommendations API
+  title: External API for Disco Integration Partners Recommendations…
   version: 1.0.0
   description: The API used by Disco partners that will provide their own UI experience.
 servers:
@@ -55,6 +55,37 @@ paths:
         description: The body of the request
 components:
   responses:
+    BadRequest:
+      content:
+        application/json:
+          schema:
+            type: object
+            required:
+            - message
+            properties:
+              errors:
+                type: array
+                items:
+                  type: object
+                  required:
+                  - message
+                  properties:
+                    message:
+                      type: string
+              message:
+                type: string
+      description: The server could not understand the request due to invalid syntax. The client should modify the request and try again.
+    Unauthenticated:
+      description: Authentication is required to access the requested resource. The client must include the appropriate credentials.
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+            required:
+            - message
     Unauthorized:
       description: The server understood the request, but refuses to authorize it. Ensure the client has appropriate permissions.
       content:
@@ -77,73 +108,36 @@ components:
               message:
                 type: string
       description: The server encountered an unexpected condition that prevented it from fulfilling the request. Report the issue to the support team if it persists.
-    Unauthenticated:
-      description: Authentication is required to access the requested resource. The client must include the appropriate credentials.
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              message:
-                type: string
-            required:
-            - message
-    BadRequest:
-      content:
-        application/json:
-          schema:
-            type: object
-            required:
-            - message
-            properties:
-              errors:
-                type: array
-                items:
-                  type: object
-                  required:
-                  - message
-                  properties:
-                    message:
-                      type: string
-              message:
-                type: string
-      description: The server could not understand the request due to invalid syntax. The client should modify the request and try again.
   schemas:
-    ProductSummaryDto:
+    AddressRequestDto:
       type: object
-      description: A description of a purchased item, to be provided in our requests
+      description: The structure of an address in our request bodies
+      required: []
       properties:
-        name:
+        address_line_1:
           type: string
-          description: The name of the product
-        type:
+          description: The main line of the address
+          example: 431 Main St.
+        address_line_2:
           type: string
-          description: Category of the product
-          example: Electronics
-        variant:
-          type: object
-          additionalProperties:
-            type: string
-            example:
-              color: Black
-              size: Large
-          description: Variant of the product. (e.g., color, size)
-        quantity:
-          type: number
-          minimum: 0
-          description: Quantity purchased
-          example: '2'
-        description:
+          description: The optional line 2 of the address
+          example: Suite 2A
+        city:
           type: string
-          description: Description of the product.
-          example: Noise-cancelling headphones
-        cost_details:
-          $ref: '#/components/schemas/CostDetailsSummary'
-        product_id:
+          description: The city of the address
+          example: Miami
+        state:
           type: string
-          description: Unique identifier for the product
-        attributes:
-          $ref: '#/components/schemas/PurchaseAttributes'
+          description: The [USPS 2-Letter State Abbreviation](https://pe.usps.com/text/pub28/28apb.htm) of the address
+          example: FL
+        zip:
+          type: string
+          description: The zipcode of the address
+          example: '45231'
+        phone:
+          type: string
+          description: The phone number of the user's shipping address, if different than user's main phone number
+          example: +1 (415) 123-4567
     RecommendationsResponse:
       type: object
       description: The response body from the recommendations endpoint
@@ -472,19 +466,44 @@ components:
                   format: uri
                   description: URL to the page that hosts Disco Network's privacy policy
                   example: https://www.disconetwork.com/privacy-policy
-    CostDetailsSummary:
+    UserDetails:
       type: object
       properties:
-        amount:
-          type: number
-          format: float
-          description: The full cost of the item
-          example: 100.0
-        currency_code:
+        title:
           type: string
-          description: The [ISO-4217 currency code](https://www.iso.org/iso-4217-currency-codes.html)
-          example: USD
-      description: Contains all details pertaining to the cost of the parent container item
+          description: The shopper's preferred title
+          enum:
+          - MR
+          - MRS
+          - MS
+          - MISS
+        first_name:
+          type: string
+          description: The first name as provided by the shopper
+          example: Monica
+        last_name:
+          type: string
+          description: The last name as provided by the shopper
+          example: Stone
+        phone:
+          type: string
+          example: +1 (415) 123-4567
+          description: The shopper's phone number
+        gender:
+          type: string
+          description: The shopper's specified gender
+          enum:
+          - MALE
+          - FEMALE
+          - OTHER
+          - UNSPECIFIED
+        dob:
+          type: string
+          description: The shopper's date of birth. Format `YYYY-MM-DD`
+        age:
+          type: number
+          description: The shopper's age
+          minimum: 0
     ResolvedWidget:
       type:
       - object
@@ -534,44 +553,6 @@ components:
             type:
             - string
             - 'null'
-    UserDetails:
-      type: object
-      properties:
-        title:
-          type: string
-          description: The shopper's preferred title
-          enum:
-          - MR
-          - MRS
-          - MS
-          - MISS
-        first_name:
-          type: string
-          description: The first name as provided by the shopper
-          example: Monica
-        last_name:
-          type: string
-          description: The last name as provided by the shopper
-          example: Stone
-        phone:
-          type: string
-          example: +1 (415) 123-4567
-          description: The shopper's phone number
-        gender:
-          type: string
-          description: The shopper's specified gender
-          enum:
-          - MALE
-          - FEMALE
-          - OTHER
-          - UNSPECIFIED
-        dob:
-          type: string
-          description: The shopper's date of birth. Format `YYYY-MM-DD`
-        age:
-          type: number
-          description: The shopper's age
-          minimum: 0
     CommonRequestProperties:
       type: object
       description: The properties shared between the recommendations and event request payloads
@@ -718,10 +699,6 @@ components:
           description: A list of currently running experiments
           items:
             $ref: '#/components/schemas/ExperimentSummaryDTO'
-    RecommendationsRequest:
-      allOf:
-      - $ref: '#/components/schemas/CommonRequestProperties'
-      description: The body of the request for the /recommendations endpoint
     PlacementDetailsObject:
       type: object
       description: Contains details about the placement of the offers within the UI
@@ -768,6 +745,41 @@ components:
       required:
       - display_mode
       - view
+    ProductSummaryDto:
+      type: object
+      description: A description of a purchased item, to be provided in our requests
+      properties:
+        name:
+          type: string
+          description: The name of the product
+        type:
+          type: string
+          description: Category of the product
+          example: Electronics
+        variant:
+          type: object
+          additionalProperties:
+            type: string
+            example:
+              color: Black
+              size: Large
+          description: Variant of the product. (e.g., color, size)
+        quantity:
+          type: number
+          minimum: 0
+          description: Quantity purchased
+          example: '2'
+        description:
+          type: string
+          description: Description of the product.
+          example: Noise-cancelling headphones
+        cost_details:
+          $ref: '#/components/schemas/CostDetailsSummary'
+        product_id:
+          type: string
+          description: Unique identifier for the product
+        attributes:
+          $ref: '#/components/schemas/PurchaseAttributes'
     PurchaseAttributes:
       type: object
       description: Free-form attributes for a purchased item
@@ -778,6 +790,10 @@ components:
         is_gift:
           type: boolean
           description: Indicates whether this product was purchased as a gift
+    RecommendationsRequest:
+      allOf:
+      - $ref: '#/components/schemas/CommonRequestProperties'
+      description: The body of the request for the /recommendations endpoint
     ExperimentSummaryDTO:
       type: object
       description: Properties describing an actively running product experiment
@@ -795,35 +811,19 @@ components:
           minimum: 0
           maximum: 999
           example: 1
-    AddressRequestDto:
+    CostDetailsSummary:
       type: object
-      description: The structure of an address in our request bodies
-      required: []
       properties:
-        address_line_1:
+        amount:
+          type: number
+          format: float
+          description: The full cost of the item
+          example: 100.0
+        currency_code:
           type: string
-          description: The main line of the address
-          example: 431 Main St.
-        address_line_2:
-          type: string
-          description: The optional line 2 of the address
-          example: Suite 2A
-        city:
-          type: string
-          description: The city of the address
-          example: Miami
-        state:
-          type: string
-          description: The [USPS 2-Letter State Abbreviation](https://pe.usps.com/text/pub28/28apb.htm) of the address
-          example: FL
-        zip:
-          type: string
-          description: The zipcode of the address
-          example: '45231'
-        phone:
-          type: string
-          description: The phone number of the user's shipping address, if different than user's main phone number
-          example: +1 (415) 123-4567
+          description: The [ISO-4217 currency code](https://www.iso.org/iso-4217-currency-codes.html)
+          example: USD
+      description: Contains all details pertaining to the cost of the parent container item
   securitySchemes:
     ApiKey:
       in: header

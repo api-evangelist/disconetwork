@@ -1,0 +1,25 @@
+# Front Door AI Index — disconetwork — 2026-09-17
+# AI vocabulary counted on the provider's root page. Generated; do not edit.
+# `score` is null unless ownership is `own` — see front_door_ai.py.
+front_door_ai:
+  slug: disconetwork
+  lexicon_version: '1.0'
+  probed_at: '2026-09-17'
+  host: disconetwork.com
+  final_host: disconetwork.com
+  ownership: own
+  owner: disconetwork
+  shares_host_with: null
+  inherited_from: null
+  verdict: scored
+  score: 6
+  host_score: 6
+  density: 6.86
+  words: 874
+  tiers:
+    agentic: 0
+    core: 6
+    model: 0
+  ambiguous: 0
+  top_terms:
+    AI: 6

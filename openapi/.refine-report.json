@@ -1,0 +1,34 @@
+{
+  "provider": "disconetwork",
+  "sources": [
+    "_original/disconetwork-partner-api.yml",
+    "_original/disconetwork-reporting-api-v1.yml",
+    "_original/disconetwork-reporting-api-v2.yml"
+  ],
+  "outputs": [
+    "disconetwork-events-api-openapi.yml",
+    "disconetwork-recommendations-api-openapi.yml",
+    "disconetwork-discobeat-api-openapi.yml"
+  ],
+  "archived": [],
+  "errors": [],
+  "warnings": [],
+  "notes": [
+    "sourced from openapi/_original/ (3 archived document(s)); previously refined output at the top level was skipped rather than re-split",
+    "disconetwork-partner-api.yml: upgraded openapi 3.0.0 -> OpenAPI 3.2.0",
+    "disconetwork-reporting-api-v1.yml: upgraded openapi 3.0.3 -> OpenAPI 3.2.0",
+    "disconetwork-reporting-api-v1.yml: tagged paths GET /discobeat/reporting/v1/summary/ -> Discobeat",
+    "disconetwork-reporting-api-v1.yml: tagged paths GET /discobeat/reporting/v1/publishers/ -> Discobeat",
+    "disconetwork-reporting-api-v1.yml: declared missing tag: Discobeat",
+    "disconetwork-reporting-api-v2.yml: upgraded openapi 3.0.3 -> OpenAPI 3.2.0",
+    "disconetwork-reporting-api-v2.yml: tagged paths GET /discobeat/reporting/v2/report/ -> Discobeat",
+    "disconetwork-reporting-api-v2.yml: declared missing tag: Discobeat",
+    "tag 'Discobeat' spans 2 source specs (disconetwork-reporting-api-v1.yml, disconetwork-reporting-api-v2.yml): per-path servers applied",
+    "apis.yml register: already-registered"
+  ],
+  "skipped": [
+    "disconetwork-discobeat-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "disconetwork-events-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "disconetwork-recommendations-api-openapi.yml: previously refined output, superseded by openapi/_original/"
+  ]
+}

@@ -3,9 +3,9 @@ info:
   title: API Evangelist enhancements for the Disco Partner Integration API
   version: 1.0.0
 extends: openapi/disconetwork-partner-api.yml
-generated: '2026-08-12'
-method: generated
-source: openapi/disconetwork-partner-api.yml
+x-generated: '2026-08-12'
+x-method: generated
+x-source: openapi/disconetwork-partner-api.yml
 actions:
 - target: $.info
   update:
