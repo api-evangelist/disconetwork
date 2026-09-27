@@ -1,4 +1,7 @@
 aid: disconetwork
+x-docs-platform: docusaurus
+x-docs-platform-confidence: medium
+x-docs-platform-checked: 2026-09-25
 x-enrichment:
   date: '2026-08-12'
   status: enriched

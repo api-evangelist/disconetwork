@@ -54,61 +54,247 @@ paths:
         required: true
         description: The body of the request
 components:
-  responses:
-    BadRequest:
-      content:
-        application/json:
-          schema:
-            type: object
-            required:
-            - message
-            properties:
-              errors:
-                type: array
-                items:
-                  type: object
-                  required:
-                  - message
-                  properties:
-                    message:
-                      type: string
-              message:
-                type: string
-      description: The server could not understand the request due to invalid syntax. The client should modify the request and try again.
-    Unauthenticated:
-      description: Authentication is required to access the requested resource. The client must include the appropriate credentials.
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              message:
-                type: string
-            required:
-            - message
-    Unauthorized:
-      description: The server understood the request, but refuses to authorize it. Ensure the client has appropriate permissions.
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              message:
-                type: string
-            required:
-            - message
-    InternalServerError:
-      content:
-        application/json:
-          schema:
-            type: object
-            required:
-            - message
-            properties:
-              message:
-                type: string
-      description: The server encountered an unexpected condition that prevented it from fulfilling the request. Report the issue to the support team if it persists.
   schemas:
+    ProductSummaryDto:
+      type: object
+      description: A description of a purchased item, to be provided in our requests
+      properties:
+        name:
+          type: string
+          description: The name of the product
+        type:
+          type: string
+          description: Category of the product
+          example: Electronics
+        variant:
+          type: object
+          additionalProperties:
+            type: string
+            example:
+              color: Black
+              size: Large
+          description: Variant of the product. (e.g., color, size)
+        quantity:
+          type: number
+          minimum: 0
+          description: Quantity purchased
+          example: '2'
+        description:
+          type: string
+          description: Description of the product.
+          example: Noise-cancelling headphones
+        cost_details:
+          $ref: '#/components/schemas/CostDetailsSummary'
+        product_id:
+          type: string
+          description: Unique identifier for the product
+        attributes:
+          $ref: '#/components/schemas/PurchaseAttributes'
+    CommonRequestProperties:
+      type: object
+      description: The properties shared between the recommendations and event request payloads
+      required:
+      - placement_details
+      - user_details
+      properties:
+        user_details:
+          oneOf:
+          - type: object
+            title: email
+            allOf:
+            - type: object
+              required:
+              - email
+              properties:
+                email:
+                  type: string
+                  format: email
+                  description: The email of the shopper, as provided by the shopper
+                  example: michelle@disconetwork.com
+            - $ref: '#/components/schemas/UserDetails'
+          - type: object
+            title: email_hash
+            allOf:
+            - type: object
+              required:
+              - email_hash
+              properties:
+                email_hash:
+                  type: string
+                  description: The shopper's email as a [SHA-256 hash](https://csrc.nist.gov/pubs/fips/180-4/upd1/final)
+                  example: 211550f0381ba43da1bdbd6acca2deeaaaa9ea5bfacaa2523be92ac1091c7333
+            - $ref: '#/components/schemas/UserDetails'
+          - type: object
+            title: phone
+            allOf:
+            - type: object
+              required:
+              - phone
+              properties:
+                phone:
+                  type: string
+                  description: The phone number of the shopper
+                  example: +1 (415) 123-4567
+            - $ref: '#/components/schemas/UserDetails'
+          - type: object
+            title: external_guid
+            allOf:
+            - type: object
+              required:
+              - external_guid
+              properties:
+                external_guid:
+                  type: string
+                  description: The external guid passed by an external source
+                  example: 9f8b7c6d-1234-5678-9abc-def012345678
+            - $ref: '#/components/schemas/UserDetails'
+        placement_details:
+          $ref: '#/components/schemas/PlacementDetailsObject'
+        order_details:
+          type: object
+          description: Contains details pertaining the the overall order
+          properties:
+            cost_details:
+              $ref: '#/components/schemas/CostDetailsSummary'
+            order_id:
+              type: string
+              description: Unique identifier of the order
+            payment_type:
+              type: string
+              description: The type of payment used
+              example: VISA
+          required:
+          - cost_details
+          - order_id
+        purchases:
+          type: array
+          description: List of purchased items
+          items:
+            $ref: '#/components/schemas/ProductSummaryDto'
+        attributes:
+          type: object
+          description: General properties about the request
+          properties:
+            user_agent:
+              type: string
+              description: The user_agent, if applicable
+            device_type:
+              type: string
+              enum:
+              - MOBILE
+              - TABLET
+              - DESKTOP
+              description: The source device of the customer
+            operating_system:
+              type: string
+              description: The operating system the user is on
+              example: iOS
+            operating_system_version:
+              type: string
+              description: The version of the user's operating system
+              example: 18.3.2
+            ip_address:
+              type: string
+              description: The IP Address of the shopper
+            ip_address_hash:
+              type: string
+              description: The [SHA-256 hash](https://csrc.nist.gov/pubs/fips/180-4/upd1/final) of the shopper's IP Address
+            platform_type:
+              type: string
+              description: Describes the type of device the shopper was user
+              enum:
+              - MOBILE
+              - WEB
+            language:
+              type: string
+              description: Language associated with the current session. Use a valid [ISO-639](https://www.iso.org/iso-639-language-code) language code.
+        custom_metadata:
+          type: object
+          description: These are custom fields associated to this partner integration
+          properties:
+            is_sandbox:
+              type: boolean
+              description: Indicates if this is a sandbox request. If true, associated events will not drive conversions.
+            is_add_to_order_customer:
+              type: boolean
+              description: Did this customer use the limited time window add-to-order functionality
+            is_sports_betting_eligible:
+              type: boolean
+              description: Has the user purchased age-gated alcohol and tobacco products
+            is_fam:
+              type: boolean
+              description: Is this user a part of Gopuff subscription service
+            is_student:
+              type: boolean
+              description: Does this user have a college email address
+        shipping:
+          $ref: '#/components/schemas/AddressRequestDto'
+        billing:
+          $ref: '#/components/schemas/AddressRequestDto'
+        running_experiments:
+          type: array
+          description: A list of currently running experiments
+          items:
+            $ref: '#/components/schemas/ExperimentSummaryDTO'
+    ResolvedWidget:
+      type:
+      - object
+      - 'null'
+      description: Selected widget configuration. Null when unavailable.
+      required:
+      - widget_id
+      - widget_mode
+      - widget_type
+      - widget_version
+      - content
+      properties:
+        widget_id:
+          type: string
+          maxLength: 64
+        layout_id:
+          type:
+          - string
+          - 'null'
+          maxLength: 64
+        widget_mode:
+          type: string
+          enum:
+          - OVERLAY
+          - INLINE
+          - FULLSCREEN
+          - PULLUP
+        widget_type:
+          type: string
+          enum:
+          - LEAD_GEN
+          - ESSENTIAL
+          - APP_NATIVE_ESSENTIAL
+          - APP_NATIVE_SCROLLABLE
+          - APP_NATIVE_HYBRID
+          - APP_NATIVE_BANNER_VISUAL
+          - APP_NATIVE_BRAND_VISUAL
+          - APP_NATIVE_GALLERY
+          - SHOPIFY_NATIVE_ESSENTIAL
+          - SHOPIFY_NATIVE_LEAD_GEN
+        widget_version:
+          type: number
+          format: float
+        content:
+          type: object
+          additionalProperties:
+            type:
+            - string
+            - 'null'
+    PurchaseAttributes:
+      type: object
+      description: Free-form attributes for a purchased item
+      properties:
+        is_clearance:
+          type: boolean
+          description: Indicates whether this product is a clearance item
+        is_gift:
+          type: boolean
+          description: Indicates whether this product was purchased as a gift
     AddressRequestDto:
       type: object
       description: The structure of an address in our request bodies
@@ -466,6 +652,27 @@ components:
                   format: uri
                   description: URL to the page that hosts Disco Network's privacy policy
                   example: https://www.disconetwork.com/privacy-policy
+    ExperimentSummaryDTO:
+      type: object
+      description: Properties describing an actively running product experiment
+      required:
+      - name
+      - version
+      properties:
+        name:
+          type: string
+          description: The name of the current experiment
+          example: optimization_04
+        version:
+          type: integer
+          description: The bucket number of the experiment
+          minimum: 0
+          maximum: 999
+          example: 1
+    RecommendationsRequest:
+      allOf:
+      - $ref: '#/components/schemas/CommonRequestProperties'
+      description: The body of the request for the /recommendations endpoint
     UserDetails:
       type: object
       properties:
@@ -504,201 +711,6 @@ components:
           type: number
           description: The shopper's age
           minimum: 0
-    ResolvedWidget:
-      type:
-      - object
-      - 'null'
-      description: Selected widget configuration. Null when unavailable.
-      required:
-      - widget_id
-      - widget_mode
-      - widget_type
-      - widget_version
-      - content
-      properties:
-        widget_id:
-          type: string
-          maxLength: 64
-        layout_id:
-          type:
-          - string
-          - 'null'
-          maxLength: 64
-        widget_mode:
-          type: string
-          enum:
-          - OVERLAY
-          - INLINE
-          - FULLSCREEN
-          - PULLUP
-        widget_type:
-          type: string
-          enum:
-          - LEAD_GEN
-          - ESSENTIAL
-          - APP_NATIVE_ESSENTIAL
-          - APP_NATIVE_SCROLLABLE
-          - APP_NATIVE_HYBRID
-          - APP_NATIVE_BANNER_VISUAL
-          - APP_NATIVE_BRAND_VISUAL
-          - APP_NATIVE_GALLERY
-          - SHOPIFY_NATIVE_ESSENTIAL
-          - SHOPIFY_NATIVE_LEAD_GEN
-        widget_version:
-          type: number
-          format: float
-        content:
-          type: object
-          additionalProperties:
-            type:
-            - string
-            - 'null'
-    CommonRequestProperties:
-      type: object
-      description: The properties shared between the recommendations and event request payloads
-      required:
-      - placement_details
-      - user_details
-      properties:
-        user_details:
-          oneOf:
-          - type: object
-            title: email
-            allOf:
-            - type: object
-              required:
-              - email
-              properties:
-                email:
-                  type: string
-                  format: email
-                  description: The email of the shopper, as provided by the shopper
-                  example: michelle@disconetwork.com
-            - $ref: '#/components/schemas/UserDetails'
-          - type: object
-            title: email_hash
-            allOf:
-            - type: object
-              required:
-              - email_hash
-              properties:
-                email_hash:
-                  type: string
-                  description: The shopper's email as a [SHA-256 hash](https://csrc.nist.gov/pubs/fips/180-4/upd1/final)
-                  example: 211550f0381ba43da1bdbd6acca2deeaaaa9ea5bfacaa2523be92ac1091c7333
-            - $ref: '#/components/schemas/UserDetails'
-          - type: object
-            title: phone
-            allOf:
-            - type: object
-              required:
-              - phone
-              properties:
-                phone:
-                  type: string
-                  description: The phone number of the shopper
-                  example: +1 (415) 123-4567
-            - $ref: '#/components/schemas/UserDetails'
-          - type: object
-            title: external_guid
-            allOf:
-            - type: object
-              required:
-              - external_guid
-              properties:
-                external_guid:
-                  type: string
-                  description: The external guid passed by an external source
-                  example: 9f8b7c6d-1234-5678-9abc-def012345678
-            - $ref: '#/components/schemas/UserDetails'
-        placement_details:
-          $ref: '#/components/schemas/PlacementDetailsObject'
-        order_details:
-          type: object
-          description: Contains details pertaining the the overall order
-          properties:
-            cost_details:
-              $ref: '#/components/schemas/CostDetailsSummary'
-            order_id:
-              type: string
-              description: Unique identifier of the order
-            payment_type:
-              type: string
-              description: The type of payment used
-              example: VISA
-          required:
-          - cost_details
-          - order_id
-        purchases:
-          type: array
-          description: List of purchased items
-          items:
-            $ref: '#/components/schemas/ProductSummaryDto'
-        attributes:
-          type: object
-          description: General properties about the request
-          properties:
-            user_agent:
-              type: string
-              description: The user_agent, if applicable
-            device_type:
-              type: string
-              enum:
-              - MOBILE
-              - TABLET
-              - DESKTOP
-              description: The source device of the customer
-            operating_system:
-              type: string
-              description: The operating system the user is on
-              example: iOS
-            operating_system_version:
-              type: string
-              description: The version of the user's operating system
-              example: 18.3.2
-            ip_address:
-              type: string
-              description: The IP Address of the shopper
-            ip_address_hash:
-              type: string
-              description: The [SHA-256 hash](https://csrc.nist.gov/pubs/fips/180-4/upd1/final) of the shopper's IP Address
-            platform_type:
-              type: string
-              description: Describes the type of device the shopper was user
-              enum:
-              - MOBILE
-              - WEB
-            language:
-              type: string
-              description: Language associated with the current session. Use a valid [ISO-639](https://www.iso.org/iso-639-language-code) language code.
-        custom_metadata:
-          type: object
-          description: These are custom fields associated to this partner integration
-          properties:
-            is_sandbox:
-              type: boolean
-              description: Indicates if this is a sandbox request. If true, associated events will not drive conversions.
-            is_add_to_order_customer:
-              type: boolean
-              description: Did this customer use the limited time window add-to-order functionality
-            is_sports_betting_eligible:
-              type: boolean
-              description: Has the user purchased age-gated alcohol and tobacco products
-            is_fam:
-              type: boolean
-              description: Is this user a part of Gopuff subscription service
-            is_student:
-              type: boolean
-              description: Does this user have a college email address
-        shipping:
-          $ref: '#/components/schemas/AddressRequestDto'
-        billing:
-          $ref: '#/components/schemas/AddressRequestDto'
-        running_experiments:
-          type: array
-          description: A list of currently running experiments
-          items:
-            $ref: '#/components/schemas/ExperimentSummaryDTO'
     PlacementDetailsObject:
       type: object
       description: Contains details about the placement of the offers within the UI
@@ -745,72 +757,6 @@ components:
       required:
       - display_mode
       - view
-    ProductSummaryDto:
-      type: object
-      description: A description of a purchased item, to be provided in our requests
-      properties:
-        name:
-          type: string
-          description: The name of the product
-        type:
-          type: string
-          description: Category of the product
-          example: Electronics
-        variant:
-          type: object
-          additionalProperties:
-            type: string
-            example:
-              color: Black
-              size: Large
-          description: Variant of the product. (e.g., color, size)
-        quantity:
-          type: number
-          minimum: 0
-          description: Quantity purchased
-          example: '2'
-        description:
-          type: string
-          description: Description of the product.
-          example: Noise-cancelling headphones
-        cost_details:
-          $ref: '#/components/schemas/CostDetailsSummary'
-        product_id:
-          type: string
-          description: Unique identifier for the product
-        attributes:
-          $ref: '#/components/schemas/PurchaseAttributes'
-    PurchaseAttributes:
-      type: object
-      description: Free-form attributes for a purchased item
-      properties:
-        is_clearance:
-          type: boolean
-          description: Indicates whether this product is a clearance item
-        is_gift:
-          type: boolean
-          description: Indicates whether this product was purchased as a gift
-    RecommendationsRequest:
-      allOf:
-      - $ref: '#/components/schemas/CommonRequestProperties'
-      description: The body of the request for the /recommendations endpoint
-    ExperimentSummaryDTO:
-      type: object
-      description: Properties describing an actively running product experiment
-      required:
-      - name
-      - version
-      properties:
-        name:
-          type: string
-          description: The name of the current experiment
-          example: optimization_04
-        version:
-          type: integer
-          description: The bucket number of the experiment
-          minimum: 0
-          maximum: 999
-          example: 1
     CostDetailsSummary:
       type: object
       properties:
@@ -824,6 +770,60 @@ components:
           description: The [ISO-4217 currency code](https://www.iso.org/iso-4217-currency-codes.html)
           example: USD
       description: Contains all details pertaining to the cost of the parent container item
+  responses:
+    BadRequest:
+      content:
+        application/json:
+          schema:
+            type: object
+            required:
+            - message
+            properties:
+              errors:
+                type: array
+                items:
+                  type: object
+                  required:
+                  - message
+                  properties:
+                    message:
+                      type: string
+              message:
+                type: string
+      description: The server could not understand the request due to invalid syntax. The client should modify the request and try again.
+    InternalServerError:
+      content:
+        application/json:
+          schema:
+            type: object
+            required:
+            - message
+            properties:
+              message:
+                type: string
+      description: The server encountered an unexpected condition that prevented it from fulfilling the request. Report the issue to the support team if it persists.
+    Unauthorized:
+      description: The server understood the request, but refuses to authorize it. Ensure the client has appropriate permissions.
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+            required:
+            - message
+    Unauthenticated:
+      description: Authentication is required to access the requested resource. The client must include the appropriate credentials.
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+            required:
+            - message
   securitySchemes:
     ApiKey:
       in: header
