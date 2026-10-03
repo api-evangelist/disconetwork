@@ -134,112 +134,6 @@ paths:
       description: Disco API
 components:
   schemas:
-    CalculatedMetrics:
-      description: Derived from raw metrics. Ratios are rounded to four decimals. Zero denominators return 0.
-      type: object
-      required:
-      - ctr
-      - cvr
-      - rps
-      - rpl
-      properties:
-        ctr:
-          type: number
-          format: float
-          example: 0.028
-        cvr:
-          type: number
-          format: float
-          example: 0.05
-        rps:
-          type: number
-          format: float
-          example: 0.04
-        rpl:
-          type: number
-          format: float
-          example: 0.0375
-    MetricBlock:
-      type: object
-      required:
-      - raw
-      - calculated
-      properties:
-        raw:
-          $ref: '#/components/schemas/RawMetrics'
-        calculated:
-          $ref: '#/components/schemas/CalculatedMetrics'
-    AvailabilityError:
-      type: object
-      required:
-      - code
-      - message
-      properties:
-        code:
-          type: string
-          enum:
-          - REPORTING_DATA_UNAVAILABLE
-          - DATE_RANGE_OUTSIDE_AVAILABLE_WINDOW
-        message:
-          type: string
-        available_window:
-          $ref: '#/components/schemas/AvailableWindow'
-    SeriesPoint:
-      type: object
-      required:
-      - bucket
-      - metrics
-      properties:
-        bucket:
-          type: string
-          description: A date (granularity=day) or an ISO hour timestamp (granularity=hour).
-          example: '2026-06-14'
-        page_type:
-          type:
-          - string
-          - 'null'
-          description: Present when breakdown=page_type.
-          example: ORDER_TRACKING
-        widget_type:
-          type:
-          - string
-          - 'null'
-          description: Present when breakdown=widget_type.
-          example: APP_NATIVE_ESSENTIAL
-        widget_id:
-          type:
-          - string
-          - 'null'
-          maxLength: 64
-          description: Present when breakdown=widget_id.
-        metrics:
-          $ref: '#/components/schemas/MetricBlock'
-    AvailableWindow:
-      type: object
-      required:
-      - from
-      - to
-      description: Date range currently available from this reporting source.
-      properties:
-        from:
-          type: string
-          format: date
-          example: '2026-05-26'
-        to:
-          type: string
-          format: date
-          example: '2026-06-30'
-    ValidationError:
-      type: object
-      additionalProperties: true
-    AuthError:
-      type: object
-      required:
-      - detail
-      properties:
-        detail:
-          type: string
-          example: Invalid or expired management API key.
     DateRange:
       type: object
       required:
@@ -254,6 +148,14 @@ components:
           type: string
           format: date
           example: '2026-06-14'
+    AuthError:
+      type: object
+      required:
+      - detail
+      properties:
+        detail:
+          type: string
+          example: Invalid or expired management API key.
     RawMetrics:
       type: object
       required:
@@ -293,59 +195,34 @@ components:
         feed_loads:
           type: integer
           example: 256000
-    Pagination:
+    ValidationError:
+      type: object
+      additionalProperties: true
+    CalculatedMetrics:
+      description: Derived from raw metrics. Ratios are rounded to four decimals. Zero denominators return 0.
       type: object
       required:
-      - offset
-      - limit
-      - total
+      - ctr
+      - cvr
+      - rps
+      - rpl
       properties:
-        offset:
-          type: integer
-          example: 0
-        limit:
-          type: integer
-          example: 50
-        total:
-          type: integer
-          example: 1
-    SummaryResponse:
-      type: object
-      required:
-      - channel_id
-      - channel_name
-      - date_range
-      - available_window
-      - has_data
-      - metrics
-      - data_freshness
-      - generated_at
-      properties:
-        channel_id:
-          type: string
-          example: 7c3e1a90-4b2d-4f8a-9c11-2e6b5a0d8f34
-        channel_name:
-          type: string
-          example: Acme
-        date_range:
-          $ref: '#/components/schemas/DateRange'
-        available_window:
-          $ref: '#/components/schemas/AvailableWindow'
-        has_data:
-          type: boolean
-          example: true
-        metrics:
-          $ref: '#/components/schemas/MetricBlock'
-        data_freshness:
-          type:
-          - string
-          - 'null'
-          example: '2026-06-14T05:00:00'
-        generated_at:
-          type:
-          - string
-          - 'null'
-          example: '2026-06-14T05:25:11'
+        ctr:
+          type: number
+          format: float
+          example: 0.028
+        cvr:
+          type: number
+          format: float
+          example: 0.05
+        rps:
+          type: number
+          format: float
+          example: 0.04
+        rpl:
+          type: number
+          format: float
+          example: 0.0375
     PublishersResponse:
       type: object
       required:
@@ -405,6 +282,98 @@ components:
           - string
           - 'null'
           example: '2026-06-14T05:25:11'
+    SeriesPoint:
+      type: object
+      required:
+      - bucket
+      - metrics
+      properties:
+        bucket:
+          type: string
+          description: A date (granularity=day) or an ISO hour timestamp (granularity=hour).
+          example: '2026-06-14'
+        page_type:
+          type:
+          - string
+          - 'null'
+          description: Present when breakdown=page_type.
+          example: ORDER_TRACKING
+        widget_type:
+          type:
+          - string
+          - 'null'
+          description: Present when breakdown=widget_type.
+          example: APP_NATIVE_ESSENTIAL
+        widget_id:
+          type:
+          - string
+          - 'null'
+          maxLength: 64
+          description: Present when breakdown=widget_id.
+        metrics:
+          $ref: '#/components/schemas/MetricBlock'
+    SummaryResponse:
+      type: object
+      required:
+      - channel_id
+      - channel_name
+      - date_range
+      - available_window
+      - has_data
+      - metrics
+      - data_freshness
+      - generated_at
+      properties:
+        channel_id:
+          type: string
+          example: 7c3e1a90-4b2d-4f8a-9c11-2e6b5a0d8f34
+        channel_name:
+          type: string
+          example: Acme
+        date_range:
+          $ref: '#/components/schemas/DateRange'
+        available_window:
+          $ref: '#/components/schemas/AvailableWindow'
+        has_data:
+          type: boolean
+          example: true
+        metrics:
+          $ref: '#/components/schemas/MetricBlock'
+        data_freshness:
+          type:
+          - string
+          - 'null'
+          example: '2026-06-14T05:00:00'
+        generated_at:
+          type:
+          - string
+          - 'null'
+          example: '2026-06-14T05:25:11'
+    MetricBlock:
+      type: object
+      required:
+      - raw
+      - calculated
+      properties:
+        raw:
+          $ref: '#/components/schemas/RawMetrics'
+        calculated:
+          $ref: '#/components/schemas/CalculatedMetrics'
+    AvailableWindow:
+      type: object
+      required:
+      - from
+      - to
+      description: Date range currently available from this reporting source.
+      properties:
+        from:
+          type: string
+          format: date
+          example: '2026-05-26'
+        to:
+          type: string
+          format: date
+          example: '2026-06-30'
     PublisherRow:
       type: object
       required:
@@ -431,71 +400,37 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/SeriesPoint'
-    ReportRow:
-      allOf:
-      - type: object
-        required:
-        - period_start
-        - period_end
-        properties:
-          period_start:
-            type: string
-            format: date-time
-            description: Inclusive UTC period boundary.
-            example: '2026-07-18T00:00:00Z'
-          period_end:
-            type: string
-            format: date-time
-            description: Exclusive UTC period boundary.
-            example: '2026-07-19T00:00:00Z'
-          publisher_id:
-            type:
-            - string
-            - 'null'
-            example: 9aa17f8c-7746-4218-9025-83d38c406179
-          publisher_name:
-            type:
-            - string
-            - 'null'
-            example: AfterShip Tracking Page
-          page_type:
-            type:
-            - string
-            - 'null'
-            example: ORDER_TRACKING
-          widget_type:
-            type:
-            - string
-            - 'null'
-            example: APP_NATIVE_ESSENTIAL
-          widget_id:
-            type:
-            - string
-            - 'null'
-            maxLength: 64
-      - $ref: '#/components/schemas/MetricValues'
-    ReportMeta:
+    AvailabilityError:
       type: object
       required:
-      - timezone
-      - data_through
-      - request_id
+      - code
+      - message
       properties:
-        timezone:
+        code:
           type: string
           enum:
-          - UTC
-        data_through:
-          type:
-          - string
-          - 'null'
-          format: date-time
-          example: '2026-07-22T23:00:00Z'
-        request_id:
-          type:
-          - string
-          - 'null'
-          example: 7e9fe348-7558-4e28-b8c6-b26ea44899eb
+          - REPORTING_DATA_UNAVAILABLE
+          - DATE_RANGE_OUTSIDE_AVAILABLE_WINDOW
+        message:
+          type: string
+        available_window:
+          $ref: '#/components/schemas/AvailableWindow'
+    Pagination:
+      type: object
+      required:
+      - offset
+      - limit
+      - total
+      properties:
+        offset:
+          type: integer
+          example: 0
+        limit:
+          type: integer
+          example: 50
+        total:
+          type: integer
+          example: 1
     MetricValues:
       type: object
       properties:
@@ -542,24 +477,6 @@ components:
           type: number
           format: double
           example: 0.0485
-    ReportResponse:
-      type: object
-      required:
-      - data
-      - summary
-      - pagination
-      - meta
-      properties:
-        data:
-          type: array
-          items:
-            $ref: '#/components/schemas/ReportRow'
-        summary:
-          $ref: '#/components/schemas/MetricValues'
-        pagination:
-          $ref: '#/components/schemas/Pagination_2'
-        meta:
-          $ref: '#/components/schemas/ReportMeta'
     Pagination_2:
       type: object
       required:
@@ -580,6 +497,28 @@ components:
         has_more:
           type: boolean
           example: false
+    ReportMeta:
+      type: object
+      required:
+      - timezone
+      - data_through
+      - request_id
+      properties:
+        timezone:
+          type: string
+          enum:
+          - UTC
+        data_through:
+          type:
+          - string
+          - 'null'
+          format: date-time
+          example: '2026-07-22T23:00:00Z'
+        request_id:
+          type:
+          - string
+          - 'null'
+          example: 7e9fe348-7558-4e28-b8c6-b26ea44899eb
     Metric:
       type: string
       enum:
@@ -598,6 +537,223 @@ components:
     ErrorResponse:
       type: object
       additionalProperties: true
+    ReportResponse:
+      type: object
+      required:
+      - data
+      - summary
+      - pagination
+      - meta
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/ReportRow'
+        summary:
+          $ref: '#/components/schemas/MetricValues'
+        pagination:
+          $ref: '#/components/schemas/Pagination_2'
+        meta:
+          $ref: '#/components/schemas/ReportMeta'
+    ReportRow:
+      allOf:
+      - type: object
+        required:
+        - period_start
+        - period_end
+        properties:
+          period_start:
+            type: string
+            format: date-time
+            description: Inclusive UTC period boundary.
+            example: '2026-07-18T00:00:00Z'
+          period_end:
+            type: string
+            format: date-time
+            description: Exclusive UTC period boundary.
+            example: '2026-07-19T00:00:00Z'
+          publisher_id:
+            type:
+            - string
+            - 'null'
+            example: 9aa17f8c-7746-4218-9025-83d38c406179
+          publisher_name:
+            type:
+            - string
+            - 'null'
+            example: AfterShip Tracking Page
+          page_type:
+            type:
+            - string
+            - 'null'
+            example: ORDER_TRACKING
+          widget_type:
+            type:
+            - string
+            - 'null'
+            example: APP_NATIVE_ESSENTIAL
+          widget_id:
+            type:
+            - string
+            - 'null'
+            maxLength: 64
+      - $ref: '#/components/schemas/MetricValues'
+  parameters:
+    To:
+      name: to
+      in: query
+      required: false
+      description: End date YYYY-MM-DD (UTC), inclusive. Default today. Max range 90 days.
+      schema:
+        type: string
+        format: date
+    From:
+      name: from
+      in: query
+      required: false
+      description: Start date YYYY-MM-DD (UTC), inclusive. Default 6 days before `to` (7-day window).
+      schema:
+        type: string
+        format: date
+    Limit:
+      name: limit
+      in: query
+      required: false
+      description: JSON page size.
+      schema:
+        type: integer
+        minimum: 1
+        maximum: 250
+        default: 50
+    PageTypes:
+      name: page_types
+      in: query
+      required: false
+      description: Comma-separated page-type filter. Filtering does not add a report column.
+      style: form
+      explode: false
+      schema:
+        type: array
+        maxItems: 250
+        items:
+          type: string
+      example:
+      - ORDER_TRACKING
+      - THANK_YOU
+    Offset:
+      name: offset
+      in: query
+      required: false
+      description: Pagination offset.
+      schema:
+        type: integer
+        minimum: 0
+        default: 0
+    PublisherIds:
+      name: publisher_ids
+      in: query
+      required: false
+      description: Comma-separated publisher UUID filter. Filtering does not add a report column.
+      style: form
+      explode: false
+      schema:
+        type: array
+        maxItems: 250
+        items:
+          type: string
+      example:
+      - 9aa17f8c-7746-4218-9025-83d38c406179
+    Metrics:
+      name: metrics
+      in: query
+      required: true
+      description: 'Comma-separated metrics enabled for the authenticated channel. Metrics must be unique.
+
+        '
+      style: form
+      explode: false
+      schema:
+        type: array
+        minItems: 1
+        uniqueItems: true
+        items:
+          $ref: '#/components/schemas/Metric'
+      example:
+      - impressions
+      - clicks
+      - channel_payout
+      - ctr
+    TimeGrain:
+      name: time_grain
+      in: query
+      required: false
+      description: 'UTC row interval. Hour supports at most 3 days and one breakdown. Week and month edge periods are clipped to the requested date range.
+
+        '
+      schema:
+        type: string
+        enum:
+        - total
+        - day
+        - week
+        - month
+        - hour
+        default: total
+    To_2:
+      name: to
+      in: query
+      required: true
+      description: End date in UTC, inclusive. The requested range can span at most 90 days.
+      schema:
+        type: string
+        format: date
+        example: '2026-07-20'
+    GroupBy:
+      name: group_by
+      in: query
+      required: false
+      description: 'Comma-separated breakdown columns. Up to three are supported except hourly reports, which support at most one.
+
+        '
+      style: form
+      explode: false
+      schema:
+        type: array
+        maxItems: 3
+        uniqueItems: true
+        items:
+          type: string
+          enum:
+          - publisher
+          - page_type
+          - widget_type
+          - widget_id
+      example:
+      - publisher
+      - page_type
+    WidgetTypes:
+      name: widget_types
+      in: query
+      required: false
+      description: Comma-separated widget-type filter. Filtering does not add a report column.
+      style: form
+      explode: false
+      schema:
+        type: array
+        maxItems: 250
+        items:
+          type: string
+      example:
+      - APP_NATIVE_ESSENTIAL
+    From_2:
+      name: from
+      in: query
+      required: true
+      description: Start date in UTC, inclusive.
+      schema:
+        type: string
+        format: date
+        example: '2026-07-18'
   responses:
     Unauthorized:
       description: Missing or invalid management API key.
@@ -668,14 +824,6 @@ components:
                 message: Report exceeds the interactive row limit. Narrow the date range or remove one or more breakdowns.
                 max_rows: 10000
                 total_rows: 12000
-    Unauthorized_2:
-      description: Missing or invalid management API key.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-          example:
-            detail: Invalid or expired management API key.
     MethodNotAllowed_2:
       description: Only GET is supported.
       content:
@@ -684,162 +832,14 @@ components:
             $ref: '#/components/schemas/ErrorResponse'
           example:
             detail: Method "POST" not allowed.
-  parameters:
-    From:
-      name: from
-      in: query
-      required: false
-      description: Start date YYYY-MM-DD (UTC), inclusive. Default 6 days before `to` (7-day window).
-      schema:
-        type: string
-        format: date
-    To:
-      name: to
-      in: query
-      required: false
-      description: End date YYYY-MM-DD (UTC), inclusive. Default today. Max range 90 days.
-      schema:
-        type: string
-        format: date
-    Metrics:
-      name: metrics
-      in: query
-      required: true
-      description: 'Comma-separated metrics enabled for the authenticated channel. Metrics must be unique.
-
-        '
-      style: form
-      explode: false
-      schema:
-        type: array
-        minItems: 1
-        uniqueItems: true
-        items:
-          $ref: '#/components/schemas/Metric'
-      example:
-      - impressions
-      - clicks
-      - channel_payout
-      - ctr
-    PageTypes:
-      name: page_types
-      in: query
-      required: false
-      description: Comma-separated page-type filter. Filtering does not add a report column.
-      style: form
-      explode: false
-      schema:
-        type: array
-        maxItems: 250
-        items:
-          type: string
-      example:
-      - ORDER_TRACKING
-      - THANK_YOU
-    Offset:
-      name: offset
-      in: query
-      required: false
-      description: Pagination offset.
-      schema:
-        type: integer
-        minimum: 0
-        default: 0
-    PublisherIds:
-      name: publisher_ids
-      in: query
-      required: false
-      description: Comma-separated publisher UUID filter. Filtering does not add a report column.
-      style: form
-      explode: false
-      schema:
-        type: array
-        maxItems: 250
-        items:
-          type: string
-      example:
-      - 9aa17f8c-7746-4218-9025-83d38c406179
-    From_2:
-      name: from
-      in: query
-      required: true
-      description: Start date in UTC, inclusive.
-      schema:
-        type: string
-        format: date
-        example: '2026-07-18'
-    To_2:
-      name: to
-      in: query
-      required: true
-      description: End date in UTC, inclusive. The requested range can span at most 90 days.
-      schema:
-        type: string
-        format: date
-        example: '2026-07-20'
-    TimeGrain:
-      name: time_grain
-      in: query
-      required: false
-      description: 'UTC row interval. Hour supports at most 3 days and one breakdown. Week and month edge periods are clipped to the requested date range.
-
-        '
-      schema:
-        type: string
-        enum:
-        - total
-        - day
-        - week
-        - month
-        - hour
-        default: total
-    WidgetTypes:
-      name: widget_types
-      in: query
-      required: false
-      description: Comma-separated widget-type filter. Filtering does not add a report column.
-      style: form
-      explode: false
-      schema:
-        type: array
-        maxItems: 250
-        items:
-          type: string
-      example:
-      - APP_NATIVE_ESSENTIAL
-    GroupBy:
-      name: group_by
-      in: query
-      required: false
-      description: 'Comma-separated breakdown columns. Up to three are supported except hourly reports, which support at most one.
-
-        '
-      style: form
-      explode: false
-      schema:
-        type: array
-        maxItems: 3
-        uniqueItems: true
-        items:
-          type: string
-          enum:
-          - publisher
-          - page_type
-          - widget_type
-          - widget_id
-      example:
-      - publisher
-      - page_type
-    Limit:
-      name: limit
-      in: query
-      required: false
-      description: JSON page size.
-      schema:
-        type: integer
-        minimum: 1
-        maximum: 250
-        default: 50
+    Unauthorized_2:
+      description: Missing or invalid management API key.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            detail: Invalid or expired management API key.
   securitySchemes:
     ManagementApiKey:
       type: apiKey
