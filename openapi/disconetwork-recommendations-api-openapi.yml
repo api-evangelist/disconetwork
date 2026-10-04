@@ -54,60 +54,6 @@ paths:
         required: true
         description: The body of the request
 components:
-  responses:
-    Unauthenticated:
-      description: Authentication is required to access the requested resource. The client must include the appropriate credentials.
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              message:
-                type: string
-            required:
-            - message
-    InternalServerError:
-      content:
-        application/json:
-          schema:
-            type: object
-            required:
-            - message
-            properties:
-              message:
-                type: string
-      description: The server encountered an unexpected condition that prevented it from fulfilling the request. Report the issue to the support team if it persists.
-    Unauthorized:
-      description: The server understood the request, but refuses to authorize it. Ensure the client has appropriate permissions.
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              message:
-                type: string
-            required:
-            - message
-    BadRequest:
-      content:
-        application/json:
-          schema:
-            type: object
-            required:
-            - message
-            properties:
-              errors:
-                type: array
-                items:
-                  type: object
-                  required:
-                  - message
-                  properties:
-                    message:
-                      type: string
-              message:
-                type: string
-      description: The server could not understand the request due to invalid syntax. The client should modify the request and try again.
   schemas:
     ProductSummaryDto:
       type: object
@@ -173,36 +119,6 @@ components:
           type: string
           description: The phone number of the user's shipping address, if different than user's main phone number
           example: +1 (415) 123-4567
-    CostDetailsSummary:
-      type: object
-      properties:
-        amount:
-          type: number
-          format: float
-          description: The full cost of the item
-          example: 100.0
-        currency_code:
-          type: string
-          description: The [ISO-4217 currency code](https://www.iso.org/iso-4217-currency-codes.html)
-          example: USD
-      description: Contains all details pertaining to the cost of the parent container item
-    ExperimentSummaryDTO:
-      type: object
-      description: Properties describing an actively running product experiment
-      required:
-      - name
-      - version
-      properties:
-        name:
-          type: string
-          description: The name of the current experiment
-          example: optimization_04
-        version:
-          type: integer
-          description: The bucket number of the experiment
-          minimum: 0
-          maximum: 999
-          example: 1
     PlacementDetailsObject:
       type: object
       description: Contains details about the placement of the offers within the UI
@@ -259,6 +175,10 @@ components:
         is_gift:
           type: boolean
           description: Indicates whether this product was purchased as a gift
+    RecommendationsRequest:
+      allOf:
+      - $ref: '#/components/schemas/CommonRequestProperties'
+      description: The body of the request for the /recommendations endpoint
     ResolvedWidget:
       type:
       - object
@@ -308,6 +228,44 @@ components:
             type:
             - string
             - 'null'
+    UserDetails:
+      type: object
+      properties:
+        title:
+          type: string
+          description: The shopper's preferred title
+          enum:
+          - MR
+          - MRS
+          - MS
+          - MISS
+        first_name:
+          type: string
+          description: The first name as provided by the shopper
+          example: Monica
+        last_name:
+          type: string
+          description: The last name as provided by the shopper
+          example: Stone
+        phone:
+          type: string
+          example: +1 (415) 123-4567
+          description: The shopper's phone number
+        gender:
+          type: string
+          description: The shopper's specified gender
+          enum:
+          - MALE
+          - FEMALE
+          - OTHER
+          - UNSPECIFIED
+        dob:
+          type: string
+          description: The shopper's date of birth. Format `YYYY-MM-DD`
+        age:
+          type: number
+          description: The shopper's age
+          minimum: 0
     CommonRequestProperties:
       type: object
       description: The properties shared between the recommendations and event request payloads
@@ -454,10 +412,36 @@ components:
           description: A list of currently running experiments
           items:
             $ref: '#/components/schemas/ExperimentSummaryDTO'
-    RecommendationsRequest:
-      allOf:
-      - $ref: '#/components/schemas/CommonRequestProperties'
-      description: The body of the request for the /recommendations endpoint
+    ExperimentSummaryDTO:
+      type: object
+      description: Properties describing an actively running product experiment
+      required:
+      - name
+      - version
+      properties:
+        name:
+          type: string
+          description: The name of the current experiment
+          example: optimization_04
+        version:
+          type: integer
+          description: The bucket number of the experiment
+          minimum: 0
+          maximum: 999
+          example: 1
+    CostDetailsSummary:
+      type: object
+      properties:
+        amount:
+          type: number
+          format: float
+          description: The full cost of the item
+          example: 100.0
+        currency_code:
+          type: string
+          description: The [ISO-4217 currency code](https://www.iso.org/iso-4217-currency-codes.html)
+          example: USD
+      description: Contains all details pertaining to the cost of the parent container item
     RecommendationsResponse:
       type: object
       description: The response body from the recommendations endpoint
@@ -786,44 +770,60 @@ components:
                   format: uri
                   description: URL to the page that hosts Disco Network's privacy policy
                   example: https://www.disconetwork.com/privacy-policy
-    UserDetails:
-      type: object
-      properties:
-        title:
-          type: string
-          description: The shopper's preferred title
-          enum:
-          - MR
-          - MRS
-          - MS
-          - MISS
-        first_name:
-          type: string
-          description: The first name as provided by the shopper
-          example: Monica
-        last_name:
-          type: string
-          description: The last name as provided by the shopper
-          example: Stone
-        phone:
-          type: string
-          example: +1 (415) 123-4567
-          description: The shopper's phone number
-        gender:
-          type: string
-          description: The shopper's specified gender
-          enum:
-          - MALE
-          - FEMALE
-          - OTHER
-          - UNSPECIFIED
-        dob:
-          type: string
-          description: The shopper's date of birth. Format `YYYY-MM-DD`
-        age:
-          type: number
-          description: The shopper's age
-          minimum: 0
+  responses:
+    Unauthenticated:
+      description: Authentication is required to access the requested resource. The client must include the appropriate credentials.
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+            required:
+            - message
+    BadRequest:
+      content:
+        application/json:
+          schema:
+            type: object
+            required:
+            - message
+            properties:
+              errors:
+                type: array
+                items:
+                  type: object
+                  required:
+                  - message
+                  properties:
+                    message:
+                      type: string
+              message:
+                type: string
+      description: The server could not understand the request due to invalid syntax. The client should modify the request and try again.
+    Unauthorized:
+      description: The server understood the request, but refuses to authorize it. Ensure the client has appropriate permissions.
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+            required:
+            - message
+    InternalServerError:
+      content:
+        application/json:
+          schema:
+            type: object
+            required:
+            - message
+            properties:
+              message:
+                type: string
+      description: The server encountered an unexpected condition that prevented it from fulfilling the request. Report the issue to the support team if it persists.
   securitySchemes:
     ApiKey:
       in: header

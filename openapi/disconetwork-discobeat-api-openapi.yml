@@ -134,70 +134,61 @@ paths:
       description: Disco API
 components:
   schemas:
-    DateRange:
+    SeriesPoint:
       type: object
       required:
-      - from
-      - to
+      - bucket
+      - metrics
       properties:
-        from:
+        bucket:
           type: string
-          format: date
-          example: '2026-06-08'
-        to:
-          type: string
-          format: date
+          description: A date (granularity=day) or an ISO hour timestamp (granularity=hour).
           example: '2026-06-14'
-    AuthError:
+        page_type:
+          type:
+          - string
+          - 'null'
+          description: Present when breakdown=page_type.
+          example: ORDER_TRACKING
+        widget_type:
+          type:
+          - string
+          - 'null'
+          description: Present when breakdown=widget_type.
+          example: APP_NATIVE_ESSENTIAL
+        widget_id:
+          type:
+          - string
+          - 'null'
+          maxLength: 64
+          description: Present when breakdown=widget_id.
+        metrics:
+          $ref: '#/components/schemas/MetricBlock'
+    MetricBlock:
       type: object
       required:
-      - detail
+      - raw
+      - calculated
       properties:
-        detail:
+        raw:
+          $ref: '#/components/schemas/RawMetrics'
+        calculated:
+          $ref: '#/components/schemas/CalculatedMetrics'
+    AvailabilityError:
+      type: object
+      required:
+      - code
+      - message
+      properties:
+        code:
           type: string
-          example: Invalid or expired management API key.
-    RawMetrics:
-      type: object
-      required:
-      - impressions
-      - clicks
-      - conversions
-      - channel_payout
-      - revenue_with_email
-      - revenue_without_email
-      - sessions
-      - feed_loads
-      properties:
-        impressions:
-          type: integer
-          example: 480000
-        clicks:
-          type: integer
-          example: 13440
-        conversions:
-          type: integer
-          example: 672
-        channel_payout:
-          type: number
-          format: float
-          example: 9600.0
-        revenue_with_email:
-          type: number
-          format: float
-          example: 7200.0
-        revenue_without_email:
-          type: number
-          format: float
-          example: 2400.0
-        sessions:
-          type: integer
-          example: 240000
-        feed_loads:
-          type: integer
-          example: 256000
-    ValidationError:
-      type: object
-      additionalProperties: true
+          enum:
+          - REPORTING_DATA_UNAVAILABLE
+          - DATE_RANGE_OUTSIDE_AVAILABLE_WINDOW
+        message:
+          type: string
+        available_window:
+          $ref: '#/components/schemas/AvailableWindow'
     CalculatedMetrics:
       description: Derived from raw metrics. Ratios are rounded to four decimals. Zero denominators return 0.
       type: object
@@ -223,6 +214,102 @@ components:
           type: number
           format: float
           example: 0.0375
+    ValidationError:
+      type: object
+      additionalProperties: true
+    PublisherRow:
+      type: object
+      required:
+      - publisher_uuid
+      - publisher_name
+      - publisher_category
+      - metrics
+      - series
+      properties:
+        publisher_uuid:
+          type: string
+          example: f47ac10b-58cc-4372-a567-0e02b2c3d479
+        publisher_name:
+          type: string
+          example: Acme Tracking Page
+        publisher_category:
+          type:
+          - string
+          - 'null'
+          example: Logistics
+        metrics:
+          $ref: '#/components/schemas/MetricBlock'
+        series:
+          type: array
+          items:
+            $ref: '#/components/schemas/SeriesPoint'
+    Pagination:
+      type: object
+      required:
+      - offset
+      - limit
+      - total
+      properties:
+        offset:
+          type: integer
+          example: 0
+        limit:
+          type: integer
+          example: 50
+        total:
+          type: integer
+          example: 1
+    SummaryResponse:
+      type: object
+      required:
+      - channel_id
+      - channel_name
+      - date_range
+      - available_window
+      - has_data
+      - metrics
+      - data_freshness
+      - generated_at
+      properties:
+        channel_id:
+          type: string
+          example: 7c3e1a90-4b2d-4f8a-9c11-2e6b5a0d8f34
+        channel_name:
+          type: string
+          example: Acme
+        date_range:
+          $ref: '#/components/schemas/DateRange'
+        available_window:
+          $ref: '#/components/schemas/AvailableWindow'
+        has_data:
+          type: boolean
+          example: true
+        metrics:
+          $ref: '#/components/schemas/MetricBlock'
+        data_freshness:
+          type:
+          - string
+          - 'null'
+          example: '2026-06-14T05:00:00'
+        generated_at:
+          type:
+          - string
+          - 'null'
+          example: '2026-06-14T05:25:11'
+    DateRange:
+      type: object
+      required:
+      - from
+      - to
+      properties:
+        from:
+          type: string
+          format: date
+          example: '2026-06-08'
+        to:
+          type: string
+          format: date
+          example: '2026-06-14'
     PublishersResponse:
       type: object
       required:
@@ -282,83 +369,14 @@ components:
           - string
           - 'null'
           example: '2026-06-14T05:25:11'
-    SeriesPoint:
+    AuthError:
       type: object
       required:
-      - bucket
-      - metrics
+      - detail
       properties:
-        bucket:
+        detail:
           type: string
-          description: A date (granularity=day) or an ISO hour timestamp (granularity=hour).
-          example: '2026-06-14'
-        page_type:
-          type:
-          - string
-          - 'null'
-          description: Present when breakdown=page_type.
-          example: ORDER_TRACKING
-        widget_type:
-          type:
-          - string
-          - 'null'
-          description: Present when breakdown=widget_type.
-          example: APP_NATIVE_ESSENTIAL
-        widget_id:
-          type:
-          - string
-          - 'null'
-          maxLength: 64
-          description: Present when breakdown=widget_id.
-        metrics:
-          $ref: '#/components/schemas/MetricBlock'
-    SummaryResponse:
-      type: object
-      required:
-      - channel_id
-      - channel_name
-      - date_range
-      - available_window
-      - has_data
-      - metrics
-      - data_freshness
-      - generated_at
-      properties:
-        channel_id:
-          type: string
-          example: 7c3e1a90-4b2d-4f8a-9c11-2e6b5a0d8f34
-        channel_name:
-          type: string
-          example: Acme
-        date_range:
-          $ref: '#/components/schemas/DateRange'
-        available_window:
-          $ref: '#/components/schemas/AvailableWindow'
-        has_data:
-          type: boolean
-          example: true
-        metrics:
-          $ref: '#/components/schemas/MetricBlock'
-        data_freshness:
-          type:
-          - string
-          - 'null'
-          example: '2026-06-14T05:00:00'
-        generated_at:
-          type:
-          - string
-          - 'null'
-          example: '2026-06-14T05:25:11'
-    MetricBlock:
-      type: object
-      required:
-      - raw
-      - calculated
-      properties:
-        raw:
-          $ref: '#/components/schemas/RawMetrics'
-        calculated:
-          $ref: '#/components/schemas/CalculatedMetrics'
+          example: Invalid or expired management API key.
     AvailableWindow:
       type: object
       required:
@@ -374,53 +392,67 @@ components:
           type: string
           format: date
           example: '2026-06-30'
-    PublisherRow:
+    RawMetrics:
       type: object
       required:
-      - publisher_uuid
-      - publisher_name
-      - publisher_category
-      - metrics
-      - series
+      - impressions
+      - clicks
+      - conversions
+      - channel_payout
+      - revenue_with_email
+      - revenue_without_email
+      - sessions
+      - feed_loads
       properties:
-        publisher_uuid:
-          type: string
-          example: f47ac10b-58cc-4372-a567-0e02b2c3d479
-        publisher_name:
-          type: string
-          example: Acme Tracking Page
-        publisher_category:
-          type:
-          - string
-          - 'null'
-          example: Logistics
-        metrics:
-          $ref: '#/components/schemas/MetricBlock'
-        series:
-          type: array
-          items:
-            $ref: '#/components/schemas/SeriesPoint'
-    AvailabilityError:
-      type: object
-      required:
-      - code
-      - message
-      properties:
-        code:
-          type: string
-          enum:
-          - REPORTING_DATA_UNAVAILABLE
-          - DATE_RANGE_OUTSIDE_AVAILABLE_WINDOW
-        message:
-          type: string
-        available_window:
-          $ref: '#/components/schemas/AvailableWindow'
-    Pagination:
+        impressions:
+          type: integer
+          example: 480000
+        clicks:
+          type: integer
+          example: 13440
+        conversions:
+          type: integer
+          example: 672
+        channel_payout:
+          type: number
+          format: float
+          example: 9600.0
+        revenue_with_email:
+          type: number
+          format: float
+          example: 7200.0
+        revenue_without_email:
+          type: number
+          format: float
+          example: 2400.0
+        sessions:
+          type: integer
+          example: 240000
+        feed_loads:
+          type: integer
+          example: 256000
+    Metric:
+      type: string
+      enum:
+      - impressions
+      - clicks
+      - conversions
+      - channel_payout
+      - revenue_with_email
+      - revenue_without_email
+      - sessions
+      - feed_loads
+      - ctr
+      - cvr
+      - rps
+      - rpl
+    Pagination_2:
       type: object
       required:
       - offset
       - limit
       - total
+      - has_more
       properties:
         offset:
           type: integer
@@ -430,7 +462,10 @@ components:
           example: 50
         total:
           type: integer
-          example: 1
+          example: 36
+        has_more:
+          type: boolean
+          example: false
     MetricValues:
       type: object
       properties:
@@ -477,26 +512,6 @@ components:
           type: number
           format: double
           example: 0.0485
-    Pagination_2:
-      type: object
-      required:
-      - offset
-      - limit
-      - total
-      - has_more
-      properties:
-        offset:
-          type: integer
-          example: 0
-        limit:
-          type: integer
-          example: 50
-        total:
-          type: integer
-          example: 36
-        has_more:
-          type: boolean
-          example: false
     ReportMeta:
       type: object
       required:
@@ -519,42 +534,9 @@ components:
           - string
           - 'null'
           example: 7e9fe348-7558-4e28-b8c6-b26ea44899eb
-    Metric:
-      type: string
-      enum:
-      - impressions
-      - clicks
-      - conversions
-      - channel_payout
-      - revenue_with_email
-      - revenue_without_email
-      - sessions
-      - feed_loads
-      - ctr
-      - cvr
-      - rps
-      - rpl
     ErrorResponse:
       type: object
       additionalProperties: true
-    ReportResponse:
-      type: object
-      required:
-      - data
-      - summary
-      - pagination
-      - meta
-      properties:
-        data:
-          type: array
-          items:
-            $ref: '#/components/schemas/ReportRow'
-        summary:
-          $ref: '#/components/schemas/MetricValues'
-        pagination:
-          $ref: '#/components/schemas/Pagination_2'
-        meta:
-          $ref: '#/components/schemas/ReportMeta'
     ReportRow:
       allOf:
       - type: object
@@ -598,15 +580,25 @@ components:
             - 'null'
             maxLength: 64
       - $ref: '#/components/schemas/MetricValues'
+    ReportResponse:
+      type: object
+      required:
+      - data
+      - summary
+      - pagination
+      - meta
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/ReportRow'
+        summary:
+          $ref: '#/components/schemas/MetricValues'
+        pagination:
+          $ref: '#/components/schemas/Pagination_2'
+        meta:
+          $ref: '#/components/schemas/ReportMeta'
   parameters:
-    To:
-      name: to
-      in: query
-      required: false
-      description: End date YYYY-MM-DD (UTC), inclusive. Default today. Max range 90 days.
-      schema:
-        type: string
-        format: date
     From:
       name: from
       in: query
@@ -615,16 +607,14 @@ components:
       schema:
         type: string
         format: date
-    Limit:
-      name: limit
+    To:
+      name: to
       in: query
       required: false
-      description: JSON page size.
+      description: End date YYYY-MM-DD (UTC), inclusive. Default today. Max range 90 days.
       schema:
-        type: integer
-        minimum: 1
-        maximum: 250
-        default: 50
+        type: string
+        format: date
     PageTypes:
       name: page_types
       in: query
@@ -663,26 +653,6 @@ components:
           type: string
       example:
       - 9aa17f8c-7746-4218-9025-83d38c406179
-    Metrics:
-      name: metrics
-      in: query
-      required: true
-      description: 'Comma-separated metrics enabled for the authenticated channel. Metrics must be unique.
-
-        '
-      style: form
-      explode: false
-      schema:
-        type: array
-        minItems: 1
-        uniqueItems: true
-        items:
-          $ref: '#/components/schemas/Metric'
-      example:
-      - impressions
-      - clicks
-      - channel_payout
-      - ctr
     TimeGrain:
       name: time_grain
       in: query
@@ -699,6 +669,30 @@ components:
         - month
         - hour
         default: total
+    Limit:
+      name: limit
+      in: query
+      required: false
+      description: JSON page size.
+      schema:
+        type: integer
+        minimum: 1
+        maximum: 250
+        default: 50
+    WidgetTypes:
+      name: widget_types
+      in: query
+      required: false
+      description: Comma-separated widget-type filter. Filtering does not add a report column.
+      style: form
+      explode: false
+      schema:
+        type: array
+        maxItems: 250
+        items:
+          type: string
+      example:
+      - APP_NATIVE_ESSENTIAL
     To_2:
       name: to
       in: query
@@ -731,20 +725,6 @@ components:
       example:
       - publisher
       - page_type
-    WidgetTypes:
-      name: widget_types
-      in: query
-      required: false
-      description: Comma-separated widget-type filter. Filtering does not add a report column.
-      style: form
-      explode: false
-      schema:
-        type: array
-        maxItems: 250
-        items:
-          type: string
-      example:
-      - APP_NATIVE_ESSENTIAL
     From_2:
       name: from
       in: query
@@ -754,15 +734,35 @@ components:
         type: string
         format: date
         example: '2026-07-18'
+    Metrics:
+      name: metrics
+      in: query
+      required: true
+      description: 'Comma-separated metrics enabled for the authenticated channel. Metrics must be unique.
+
+        '
+      style: form
+      explode: false
+      schema:
+        type: array
+        minItems: 1
+        uniqueItems: true
+        items:
+          $ref: '#/components/schemas/Metric'
+      example:
+      - impressions
+      - clicks
+      - channel_payout
+      - ctr
   responses:
-    Unauthorized:
-      description: Missing or invalid management API key.
+    MethodNotAllowed:
+      description: Only GET is supported.
       content:
         application/json:
           schema:
             $ref: '#/components/schemas/AuthError'
           example:
-            detail: Invalid or expired management API key.
+            detail: Method "POST" not allowed.
     BadRequest:
       description: Invalid parameters, unsupported date range, or unavailable reporting data.
       content:
@@ -787,12 +787,20 @@ components:
                 available_window:
                   from: '2026-05-26'
                   to: '2026-06-30'
-    MethodNotAllowed:
-      description: Only GET is supported.
+    Unauthorized:
+      description: Missing or invalid management API key.
       content:
         application/json:
           schema:
             $ref: '#/components/schemas/AuthError'
+          example:
+            detail: Invalid or expired management API key.
+    MethodNotAllowed_2:
+      description: Only GET is supported.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
           example:
             detail: Method "POST" not allowed.
     BadRequest_2:
@@ -824,14 +832,6 @@ components:
                 message: Report exceeds the interactive row limit. Narrow the date range or remove one or more breakdowns.
                 max_rows: 10000
                 total_rows: 12000
-    MethodNotAllowed_2:
-      description: Only GET is supported.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-          example:
-            detail: Method "POST" not allowed.
     Unauthorized_2:
       description: Missing or invalid management API key.
       content:

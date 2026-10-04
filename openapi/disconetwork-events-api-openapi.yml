@@ -100,42 +100,6 @@ paths:
         description: An object containing the list of events to record.
 components:
   schemas:
-    BatchEventResult:
-      type: object
-      description: The processing result for a single event in the batch
-      required:
-      - index
-      - success
-      properties:
-        index:
-          type: integer
-          description: The position of the event in the submitted `events` array
-          example: 0
-        success:
-          type: boolean
-          description: Whether the event at this index was accepted for processing
-          example: true
-    BrandEventProperties:
-      type: object
-      required:
-      - offer_id
-      - advertiser_id
-      - insertion_id
-      properties:
-        offer_id:
-          type: string
-          format: uuid
-          description: Unique identifier of the offer this event is being sent for
-          example: 955a3fcb-a264-4bce-a65a-0a2f1216627f
-        advertiser_id:
-          type: string
-          format: uuid
-          description: Unique identifier of the advertiser this event is being sent for
-          example: 98b5ecf0-9902-4034-ad43-1b13f7db7d7f
-        insertion_id:
-          type: string
-          description: Unique identifier associated with this advertiser provided from the recommendations endpoint
-          example: 827d0-eniu29dbnf92
     RequiredBrandEventProperties:
       type: object
       required:
@@ -144,6 +108,19 @@ components:
         brand_properties:
           allOf:
           - $ref: '#/components/schemas/BrandEventProperties'
+    BatchEventRequest:
+      type: object
+      description: Request body for hitting the /events/batch endpoint
+      required:
+      - events
+      properties:
+        events:
+          type: array
+          description: The events to record. At least 1 and at most 20 events may be submitted in a single request.
+          minItems: 1
+          maxItems: 20
+          items:
+            $ref: '#/components/schemas/EventRequest'
     BrandClickRequest:
       title: BrandClickRequest
       allOf:
@@ -162,27 +139,37 @@ components:
             type: string
             description: The id of the asset clicked, if an asset click triggered this event
       - $ref: '#/components/schemas/RequiredBrandEventProperties'
-    BatchEventResponse:
-      type: object
-      description: The result of processing a batch of events
-      required:
-      - results
-      - accepted
-      - failed
-      properties:
-        results:
-          type: array
-          description: The per-event results, ordered to match the submitted `events` array
-          items:
-            $ref: '#/components/schemas/BatchEventResult'
-        accepted:
-          type: integer
-          description: The number of events that were accepted for processing
-          example: 2
-        failed:
-          type: integer
-          description: The number of events that failed to be accepted for processing
-          example: 0
+    EventRequest:
+      oneOf:
+      - $ref: '#/components/schemas/WidgetEventRequest'
+      - $ref: '#/components/schemas/ElementClickRequest'
+      - $ref: '#/components/schemas/BrandDisplayRequest'
+      - $ref: '#/components/schemas/BrandClickRequest'
+      description: Request body for hitting the /event endpoint
+      discriminator:
+        propertyName: event_name
+        mapping:
+          WIDGET_LOAD: '#/components/schemas/WidgetEventRequest'
+          WIDGET_DISPLAY: '#/components/schemas/WidgetEventRequest'
+          WIDGET_VIEW: '#/components/schemas/WidgetEventRequest'
+          BRAND_DISPLAY: '#/components/schemas/BrandDisplayRequest'
+          BRAND_VIEW: '#/components/schemas/BrandDisplayRequest'
+          BRAND_CLICK: '#/components/schemas/BrandClickRequest'
+          ELEMENT_CLICK: '#/components/schemas/ElementClickRequest'
+    BrandDisplayRequest:
+      title: BrandDisplayRequest
+      allOf:
+      - $ref: '#/components/schemas/BaseEventProperties'
+      - type: object
+        required:
+        - initiating_target
+        properties:
+          initiating_target:
+            type: string
+            description: Indicates the UI element that triggered this event
+            enum:
+            - INLINE_SLOT
+      - $ref: '#/components/schemas/RequiredBrandEventProperties'
     ElementClickRequest:
       title: ElementClickRequest
       allOf:
@@ -205,54 +192,25 @@ components:
             description: This is required for `INLINE_NAV_FORWARD/BACKWARD` initiating targets
             allOf:
             - $ref: '#/components/schemas/BrandEventProperties'
-    BrandDisplayRequest:
-      title: BrandDisplayRequest
-      allOf:
-      - $ref: '#/components/schemas/BaseEventProperties'
-      - type: object
-        required:
-        - initiating_target
-        properties:
-          initiating_target:
-            type: string
-            description: Indicates the UI element that triggered this event
-            enum:
-            - INLINE_SLOT
-      - $ref: '#/components/schemas/RequiredBrandEventProperties'
-    BatchEventRequest:
+    BatchEventResult:
       type: object
-      description: Request body for hitting the /events/batch endpoint
+      description: The processing result for a single event in the batch
       required:
-      - events
+      - index
+      - success
       properties:
-        events:
-          type: array
-          description: The events to record. At least 1 and at most 20 events may be submitted in a single request.
-          minItems: 1
-          maxItems: 20
-          items:
-            $ref: '#/components/schemas/EventRequest'
+        index:
+          type: integer
+          description: The position of the event in the submitted `events` array
+          example: 0
+        success:
+          type: boolean
+          description: Whether the event at this index was accepted for processing
+          example: true
     WidgetEventRequest:
       title: WidgetEventRequest
       allOf:
       - $ref: '#/components/schemas/BaseEventProperties'
-    EventRequest:
-      oneOf:
-      - $ref: '#/components/schemas/WidgetEventRequest'
-      - $ref: '#/components/schemas/ElementClickRequest'
-      - $ref: '#/components/schemas/BrandDisplayRequest'
-      - $ref: '#/components/schemas/BrandClickRequest'
-      description: Request body for hitting the /event endpoint
-      discriminator:
-        propertyName: event_name
-        mapping:
-          WIDGET_LOAD: '#/components/schemas/WidgetEventRequest'
-          WIDGET_DISPLAY: '#/components/schemas/WidgetEventRequest'
-          WIDGET_VIEW: '#/components/schemas/WidgetEventRequest'
-          BRAND_DISPLAY: '#/components/schemas/BrandDisplayRequest'
-          BRAND_VIEW: '#/components/schemas/BrandDisplayRequest'
-          BRAND_CLICK: '#/components/schemas/BrandClickRequest'
-          ELEMENT_CLICK: '#/components/schemas/ElementClickRequest'
     BaseEventProperties:
       type: object
       description: The properties shared on all events
@@ -287,31 +245,51 @@ components:
           example: 70f05c32-7760-4753-93c9-b759cf7e7fda
       discriminator:
         propertyName: event_name
+    BrandEventProperties:
+      type: object
+      required:
+      - offer_id
+      - advertiser_id
+      - insertion_id
+      properties:
+        offer_id:
+          type: string
+          format: uuid
+          description: Unique identifier of the offer this event is being sent for
+          example: 955a3fcb-a264-4bce-a65a-0a2f1216627f
+        advertiser_id:
+          type: string
+          format: uuid
+          description: Unique identifier of the advertiser this event is being sent for
+          example: 98b5ecf0-9902-4034-ad43-1b13f7db7d7f
+        insertion_id:
+          type: string
+          description: Unique identifier associated with this advertiser provided from the recommendations endpoint
+          example: 827d0-eniu29dbnf92
+    BatchEventResponse:
+      type: object
+      description: The result of processing a batch of events
+      required:
+      - results
+      - accepted
+      - failed
+      properties:
+        results:
+          type: array
+          description: The per-event results, ordered to match the submitted `events` array
+          items:
+            $ref: '#/components/schemas/BatchEventResult'
+        accepted:
+          type: integer
+          description: The number of events that were accepted for processing
+          example: 2
+        failed:
+          type: integer
+          description: The number of events that failed to be accepted for processing
+          example: 0
   responses:
     Unauthenticated:
       description: Authentication is required to access the requested resource. The client must include the appropriate credentials.
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              message:
-                type: string
-            required:
-            - message
-    InternalServerError:
-      content:
-        application/json:
-          schema:
-            type: object
-            required:
-            - message
-            properties:
-              message:
-                type: string
-      description: The server encountered an unexpected condition that prevented it from fulfilling the request. Report the issue to the support team if it persists.
-    Unauthorized:
-      description: The server understood the request, but refuses to authorize it. Ensure the client has appropriate permissions.
       content:
         application/json:
           schema:
@@ -341,6 +319,28 @@ components:
               message:
                 type: string
       description: The server could not understand the request due to invalid syntax. The client should modify the request and try again.
+    Unauthorized:
+      description: The server understood the request, but refuses to authorize it. Ensure the client has appropriate permissions.
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+            required:
+            - message
+    InternalServerError:
+      content:
+        application/json:
+          schema:
+            type: object
+            required:
+            - message
+            properties:
+              message:
+                type: string
+      description: The server encountered an unexpected condition that prevented it from fulfilling the request. Report the issue to the support team if it persists.
   securitySchemes:
     ApiKey:
       in: header
