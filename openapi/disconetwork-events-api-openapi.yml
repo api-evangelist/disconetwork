@@ -100,62 +100,6 @@ paths:
         description: An object containing the list of events to record.
 components:
   schemas:
-    RequiredBrandEventProperties:
-      type: object
-      required:
-      - brand_properties
-      properties:
-        brand_properties:
-          allOf:
-          - $ref: '#/components/schemas/BrandEventProperties'
-    BatchEventRequest:
-      type: object
-      description: Request body for hitting the /events/batch endpoint
-      required:
-      - events
-      properties:
-        events:
-          type: array
-          description: The events to record. At least 1 and at most 20 events may be submitted in a single request.
-          minItems: 1
-          maxItems: 20
-          items:
-            $ref: '#/components/schemas/EventRequest'
-    BrandClickRequest:
-      title: BrandClickRequest
-      allOf:
-      - $ref: '#/components/schemas/BaseEventProperties'
-      - type: object
-        required:
-        - initiating_target
-        properties:
-          initiating_target:
-            type: string
-            description: Indicates the UI element that triggered this event
-            enum:
-            - INLINE_ACTION_BUTTON
-            - INLINE_ASSET_TILE
-          asset_id:
-            type: string
-            description: The id of the asset clicked, if an asset click triggered this event
-      - $ref: '#/components/schemas/RequiredBrandEventProperties'
-    EventRequest:
-      oneOf:
-      - $ref: '#/components/schemas/WidgetEventRequest'
-      - $ref: '#/components/schemas/ElementClickRequest'
-      - $ref: '#/components/schemas/BrandDisplayRequest'
-      - $ref: '#/components/schemas/BrandClickRequest'
-      description: Request body for hitting the /event endpoint
-      discriminator:
-        propertyName: event_name
-        mapping:
-          WIDGET_LOAD: '#/components/schemas/WidgetEventRequest'
-          WIDGET_DISPLAY: '#/components/schemas/WidgetEventRequest'
-          WIDGET_VIEW: '#/components/schemas/WidgetEventRequest'
-          BRAND_DISPLAY: '#/components/schemas/BrandDisplayRequest'
-          BRAND_VIEW: '#/components/schemas/BrandDisplayRequest'
-          BRAND_CLICK: '#/components/schemas/BrandClickRequest'
-          ELEMENT_CLICK: '#/components/schemas/ElementClickRequest'
     BrandDisplayRequest:
       title: BrandDisplayRequest
       allOf:
@@ -170,6 +114,19 @@ components:
             enum:
             - INLINE_SLOT
       - $ref: '#/components/schemas/RequiredBrandEventProperties'
+    BatchEventRequest:
+      type: object
+      description: Request body for hitting the /events/batch endpoint
+      required:
+      - events
+      properties:
+        events:
+          type: array
+          description: The events to record. At least 1 and at most 20 events may be submitted in a single request.
+          minItems: 1
+          maxItems: 20
+          items:
+            $ref: '#/components/schemas/EventRequest'
     ElementClickRequest:
       title: ElementClickRequest
       allOf:
@@ -192,21 +149,23 @@ components:
             description: This is required for `INLINE_NAV_FORWARD/BACKWARD` initiating targets
             allOf:
             - $ref: '#/components/schemas/BrandEventProperties'
-    BatchEventResult:
-      type: object
-      description: The processing result for a single event in the batch
-      required:
-      - index
-      - success
-      properties:
-        index:
-          type: integer
-          description: The position of the event in the submitted `events` array
-          example: 0
-        success:
-          type: boolean
-          description: Whether the event at this index was accepted for processing
-          example: true
+    EventRequest:
+      oneOf:
+      - $ref: '#/components/schemas/WidgetEventRequest'
+      - $ref: '#/components/schemas/ElementClickRequest'
+      - $ref: '#/components/schemas/BrandDisplayRequest'
+      - $ref: '#/components/schemas/BrandClickRequest'
+      description: Request body for hitting the /event endpoint
+      discriminator:
+        propertyName: event_name
+        mapping:
+          WIDGET_LOAD: '#/components/schemas/WidgetEventRequest'
+          WIDGET_DISPLAY: '#/components/schemas/WidgetEventRequest'
+          WIDGET_VIEW: '#/components/schemas/WidgetEventRequest'
+          BRAND_DISPLAY: '#/components/schemas/BrandDisplayRequest'
+          BRAND_VIEW: '#/components/schemas/BrandDisplayRequest'
+          BRAND_CLICK: '#/components/schemas/BrandClickRequest'
+          ELEMENT_CLICK: '#/components/schemas/ElementClickRequest'
     WidgetEventRequest:
       title: WidgetEventRequest
       allOf:
@@ -245,6 +204,24 @@ components:
           example: 70f05c32-7760-4753-93c9-b759cf7e7fda
       discriminator:
         propertyName: event_name
+    BrandClickRequest:
+      title: BrandClickRequest
+      allOf:
+      - $ref: '#/components/schemas/BaseEventProperties'
+      - type: object
+        required:
+        - initiating_target
+        properties:
+          initiating_target:
+            type: string
+            description: Indicates the UI element that triggered this event
+            enum:
+            - INLINE_ACTION_BUTTON
+            - INLINE_ASSET_TILE
+          asset_id:
+            type: string
+            description: The id of the asset clicked, if an asset click triggered this event
+      - $ref: '#/components/schemas/RequiredBrandEventProperties'
     BrandEventProperties:
       type: object
       required:
@@ -287,7 +264,41 @@ components:
           type: integer
           description: The number of events that failed to be accepted for processing
           example: 0
+    BatchEventResult:
+      type: object
+      description: The processing result for a single event in the batch
+      required:
+      - index
+      - success
+      properties:
+        index:
+          type: integer
+          description: The position of the event in the submitted `events` array
+          example: 0
+        success:
+          type: boolean
+          description: Whether the event at this index was accepted for processing
+          example: true
+    RequiredBrandEventProperties:
+      type: object
+      required:
+      - brand_properties
+      properties:
+        brand_properties:
+          allOf:
+          - $ref: '#/components/schemas/BrandEventProperties'
   responses:
+    Unauthorized:
+      description: The server understood the request, but refuses to authorize it. Ensure the client has appropriate permissions.
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+            required:
+            - message
     Unauthenticated:
       description: Authentication is required to access the requested resource. The client must include the appropriate credentials.
       content:
@@ -319,17 +330,6 @@ components:
               message:
                 type: string
       description: The server could not understand the request due to invalid syntax. The client should modify the request and try again.
-    Unauthorized:
-      description: The server understood the request, but refuses to authorize it. Ensure the client has appropriate permissions.
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              message:
-                type: string
-            required:
-            - message
     InternalServerError:
       content:
         application/json:

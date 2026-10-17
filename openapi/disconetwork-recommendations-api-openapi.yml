@@ -55,6 +55,19 @@ paths:
         description: The body of the request
 components:
   schemas:
+    CostDetailsSummary:
+      type: object
+      properties:
+        amount:
+          type: number
+          format: float
+          description: The full cost of the item
+          example: 100.0
+        currency_code:
+          type: string
+          description: The [ISO-4217 currency code](https://www.iso.org/iso-4217-currency-codes.html)
+          example: USD
+      description: Contains all details pertaining to the cost of the parent container item
     ProductSummaryDto:
       type: object
       description: A description of a purchased item, to be provided in our requests
@@ -90,182 +103,23 @@ components:
           description: Unique identifier for the product
         attributes:
           $ref: '#/components/schemas/PurchaseAttributes'
-    AddressRequestDto:
+    ExperimentSummaryDTO:
       type: object
-      description: The structure of an address in our request bodies
-      required: []
-      properties:
-        address_line_1:
-          type: string
-          description: The main line of the address
-          example: 431 Main St.
-        address_line_2:
-          type: string
-          description: The optional line 2 of the address
-          example: Suite 2A
-        city:
-          type: string
-          description: The city of the address
-          example: Miami
-        state:
-          type: string
-          description: The [USPS 2-Letter State Abbreviation](https://pe.usps.com/text/pub28/28apb.htm) of the address
-          example: FL
-        zip:
-          type: string
-          description: The zipcode of the address
-          example: '45231'
-        phone:
-          type: string
-          description: The phone number of the user's shipping address, if different than user's main phone number
-          example: +1 (415) 123-4567
-    PlacementDetailsObject:
-      type: object
-      description: Contains details about the placement of the offers within the UI
-      properties:
-        display_mode:
-          type: string
-          description: This is the type of display widget used.
-          enum:
-          - OVERLAY
-          - FULLSCREEN
-          - PULLUP
-          - INLINE
-        layout_id:
-          type: string
-          description: 'Optional legacy widget selector retained for backward compatibility. Used when widget_id is not provided.
-
-            '
-        widget_id:
-          type: string
-          maxLength: 64
-          description: Optional widget selector. Takes precedence over layout_id.
-        view:
-          type: string
-          description: What kind of view in the purchase flow was the recommendation shown on
-          enum:
-          - ORDER_STATUS
-          - CHECKOUT
-          - THANK_YOU
-          - POST_ORDER
-          - ORDER_TRACKING
-          - SUPPORT_CENTER
-          - REWARDED
-          - EMAIL
-        sub_view:
-          type: string
-          description: Used to distinguish sub-views for the same page type.
-          default: DEFAULT
-          enum:
-          - DEFAULT
-          - POST_CLAIM
-          - BOOKING
-          - PURCHASE
-          - BOOKING_AND_PURCHASE
+      description: Properties describing an actively running product experiment
       required:
-      - display_mode
-      - view
-    PurchaseAttributes:
-      type: object
-      description: Free-form attributes for a purchased item
+      - name
+      - version
       properties:
-        is_clearance:
-          type: boolean
-          description: Indicates whether this product is a clearance item
-        is_gift:
-          type: boolean
-          description: Indicates whether this product was purchased as a gift
-    RecommendationsRequest:
-      allOf:
-      - $ref: '#/components/schemas/CommonRequestProperties'
-      description: The body of the request for the /recommendations endpoint
-    ResolvedWidget:
-      type:
-      - object
-      - 'null'
-      description: Selected widget configuration. Null when unavailable.
-      required:
-      - widget_id
-      - widget_mode
-      - widget_type
-      - widget_version
-      - content
-      properties:
-        widget_id:
+        name:
           type: string
-          maxLength: 64
-        layout_id:
-          type:
-          - string
-          - 'null'
-          maxLength: 64
-        widget_mode:
-          type: string
-          enum:
-          - OVERLAY
-          - INLINE
-          - FULLSCREEN
-          - PULLUP
-        widget_type:
-          type: string
-          enum:
-          - LEAD_GEN
-          - ESSENTIAL
-          - APP_NATIVE_ESSENTIAL
-          - APP_NATIVE_SCROLLABLE
-          - APP_NATIVE_HYBRID
-          - APP_NATIVE_BANNER_VISUAL
-          - APP_NATIVE_BRAND_VISUAL
-          - APP_NATIVE_GALLERY
-          - SHOPIFY_NATIVE_ESSENTIAL
-          - SHOPIFY_NATIVE_LEAD_GEN
-        widget_version:
-          type: number
-          format: float
-        content:
-          type: object
-          additionalProperties:
-            type:
-            - string
-            - 'null'
-    UserDetails:
-      type: object
-      properties:
-        title:
-          type: string
-          description: The shopper's preferred title
-          enum:
-          - MR
-          - MRS
-          - MS
-          - MISS
-        first_name:
-          type: string
-          description: The first name as provided by the shopper
-          example: Monica
-        last_name:
-          type: string
-          description: The last name as provided by the shopper
-          example: Stone
-        phone:
-          type: string
-          example: +1 (415) 123-4567
-          description: The shopper's phone number
-        gender:
-          type: string
-          description: The shopper's specified gender
-          enum:
-          - MALE
-          - FEMALE
-          - OTHER
-          - UNSPECIFIED
-        dob:
-          type: string
-          description: The shopper's date of birth. Format `YYYY-MM-DD`
-        age:
-          type: number
-          description: The shopper's age
+          description: The name of the current experiment
+          example: optimization_04
+        version:
+          type: integer
+          description: The bucket number of the experiment
           minimum: 0
+          maximum: 999
+          example: 1
     CommonRequestProperties:
       type: object
       description: The properties shared between the recommendations and event request payloads
@@ -412,36 +266,182 @@ components:
           description: A list of currently running experiments
           items:
             $ref: '#/components/schemas/ExperimentSummaryDTO'
-    ExperimentSummaryDTO:
+    PurchaseAttributes:
       type: object
-      description: Properties describing an actively running product experiment
-      required:
-      - name
-      - version
+      description: Free-form attributes for a purchased item
       properties:
-        name:
+        is_clearance:
+          type: boolean
+          description: Indicates whether this product is a clearance item
+        is_gift:
+          type: boolean
+          description: Indicates whether this product was purchased as a gift
+    UserDetails:
+      type: object
+      properties:
+        title:
           type: string
-          description: The name of the current experiment
-          example: optimization_04
-        version:
-          type: integer
-          description: The bucket number of the experiment
+          description: The shopper's preferred title
+          enum:
+          - MR
+          - MRS
+          - MS
+          - MISS
+        first_name:
+          type: string
+          description: The first name as provided by the shopper
+          example: Monica
+        last_name:
+          type: string
+          description: The last name as provided by the shopper
+          example: Stone
+        phone:
+          type: string
+          example: +1 (415) 123-4567
+          description: The shopper's phone number
+        gender:
+          type: string
+          description: The shopper's specified gender
+          enum:
+          - MALE
+          - FEMALE
+          - OTHER
+          - UNSPECIFIED
+        dob:
+          type: string
+          description: The shopper's date of birth. Format `YYYY-MM-DD`
+        age:
+          type: number
+          description: The shopper's age
           minimum: 0
-          maximum: 999
-          example: 1
-    CostDetailsSummary:
+    PlacementDetailsObject:
       type: object
+      description: Contains details about the placement of the offers within the UI
       properties:
-        amount:
+        display_mode:
+          type: string
+          description: This is the type of display widget used.
+          enum:
+          - OVERLAY
+          - FULLSCREEN
+          - PULLUP
+          - INLINE
+        layout_id:
+          type: string
+          description: 'Optional legacy widget selector retained for backward compatibility. Used when widget_id is not provided.
+
+            '
+        widget_id:
+          type: string
+          maxLength: 64
+          description: Optional widget selector. Takes precedence over layout_id.
+        view:
+          type: string
+          description: What kind of view in the purchase flow was the recommendation shown on
+          enum:
+          - ORDER_STATUS
+          - CHECKOUT
+          - THANK_YOU
+          - POST_ORDER
+          - ORDER_TRACKING
+          - SUPPORT_CENTER
+          - REWARDED
+          - EMAIL
+        sub_view:
+          type: string
+          description: Used to distinguish sub-views for the same page type.
+          default: DEFAULT
+          enum:
+          - DEFAULT
+          - POST_CLAIM
+          - BOOKING
+          - PURCHASE
+          - BOOKING_AND_PURCHASE
+      required:
+      - display_mode
+      - view
+    AddressRequestDto:
+      type: object
+      description: The structure of an address in our request bodies
+      required: []
+      properties:
+        address_line_1:
+          type: string
+          description: The main line of the address
+          example: 431 Main St.
+        address_line_2:
+          type: string
+          description: The optional line 2 of the address
+          example: Suite 2A
+        city:
+          type: string
+          description: The city of the address
+          example: Miami
+        state:
+          type: string
+          description: The [USPS 2-Letter State Abbreviation](https://pe.usps.com/text/pub28/28apb.htm) of the address
+          example: FL
+        zip:
+          type: string
+          description: The zipcode of the address
+          example: '45231'
+        phone:
+          type: string
+          description: The phone number of the user's shipping address, if different than user's main phone number
+          example: +1 (415) 123-4567
+    RecommendationsRequest:
+      allOf:
+      - $ref: '#/components/schemas/CommonRequestProperties'
+      description: The body of the request for the /recommendations endpoint
+    ResolvedWidget:
+      type:
+      - object
+      - 'null'
+      description: Selected widget configuration. Null when unavailable.
+      required:
+      - widget_id
+      - widget_mode
+      - widget_type
+      - widget_version
+      - content
+      properties:
+        widget_id:
+          type: string
+          maxLength: 64
+        layout_id:
+          type:
+          - string
+          - 'null'
+          maxLength: 64
+        widget_mode:
+          type: string
+          enum:
+          - OVERLAY
+          - INLINE
+          - FULLSCREEN
+          - PULLUP
+        widget_type:
+          type: string
+          enum:
+          - LEAD_GEN
+          - ESSENTIAL
+          - APP_NATIVE_ESSENTIAL
+          - APP_NATIVE_SCROLLABLE
+          - APP_NATIVE_HYBRID
+          - APP_NATIVE_BANNER_VISUAL
+          - APP_NATIVE_BRAND_VISUAL
+          - APP_NATIVE_GALLERY
+          - SHOPIFY_NATIVE_ESSENTIAL
+          - SHOPIFY_NATIVE_LEAD_GEN
+        widget_version:
           type: number
           format: float
-          description: The full cost of the item
-          example: 100.0
-        currency_code:
-          type: string
-          description: The [ISO-4217 currency code](https://www.iso.org/iso-4217-currency-codes.html)
-          example: USD
-      description: Contains all details pertaining to the cost of the parent container item
+        content:
+          type: object
+          additionalProperties:
+            type:
+            - string
+            - 'null'
     RecommendationsResponse:
       type: object
       description: The response body from the recommendations endpoint
@@ -771,6 +771,17 @@ components:
                   description: URL to the page that hosts Disco Network's privacy policy
                   example: https://www.disconetwork.com/privacy-policy
   responses:
+    Unauthorized:
+      description: The server understood the request, but refuses to authorize it. Ensure the client has appropriate permissions.
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+            required:
+            - message
     Unauthenticated:
       description: Authentication is required to access the requested resource. The client must include the appropriate credentials.
       content:
@@ -802,17 +813,6 @@ components:
               message:
                 type: string
       description: The server could not understand the request due to invalid syntax. The client should modify the request and try again.
-    Unauthorized:
-      description: The server understood the request, but refuses to authorize it. Ensure the client has appropriate permissions.
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              message:
-                type: string
-            required:
-            - message
     InternalServerError:
       content:
         application/json:
