@@ -64,6 +64,141 @@
 > Full detail: **[Where this data comes from](https://apievangelist.com/about/where-our-data-comes-from)**
 <!-- API-EVANGELIST-PROVENANCE:END -->
 
-Disconetwork is a company surfaced as a portfolio company of felicis and added to the API Evangelist network as a stub for enrichment. This profile is a lead awaiting the enrichment pipeline.
+Disco (disconetwork.com, Disco Technology Inc.) is a commerce media network focused on the post-purchase moment. It helps ecommerce brands and platforms monetize order-confirmation, order-tracking, checkout, email and app surfaces by placing relevant partner offers in front of shoppers, and gives advertisers a performance channel to reach buyers at the point of purchase. Its product suite spans DiscoOffers (publisher monetization), DiscoBeat (a headless, white-labeled commerce media API for SaaS platforms), DiscoMix (non-endemic demand for retail media networks) and OffersAI (the ranking and personalization engine). Disco publishes a real developer surface: a partner-integration OpenAPI at docs.disconetwork.com, two versions of a Reporting API with downloadable OpenAPI 3.0.3 specs and Postman collections, a documented DiscoBeat Channel API, a JavaScript Web SDK, and an llms.txt. Backed by Felicis.
 
-Backed by: felicis — https://disconetwork.com
+**Areas:** Company · Commerce Media · Retail Media · Post-Purchase · Advertising · E-Commerce · AdTech · Marketing · Analytics · Reporting
+
+## Disconetwork on APIs.io
+
+Everything profiled for Disconetwork is published on APIs.io rather than in this repository. Start at the provider page — **[apis.io/providers/disconetwork/](https://apis.io/providers/disconetwork/)** — or go straight to one of the APIs or properties below.
+
+### APIs (5)
+
+- [DiscoBeat Channel API](https://apis.io/apis/disconetwork/disconetwork-discobeat-channel-api/) — The channel-partner management API behind DiscoBeat. Lists ad categories and subcategories, reads channel details, manages channel-wide and…
+- [Disco Event API](https://apis.io/apis/disconetwork/disconetwork-event-api/) — The server-to-server conversion intake used by advertisers who cannot run the Web SDK. A POST carries an event name, the publisher account id and one of…
+- [Disconetwork Discobeat API](https://apis.io/apis/disconetwork/disconetwork-discobeat-api/) — The Discobeat API from Disconetwork — 3 operation(s) for discobeat.
+- [Disconetwork Events API](https://apis.io/apis/disconetwork/disconetwork-events-api/) — The Events API from Disconetwork — 2 operation(s) for events.
+- [Disconetwork Recommendations API](https://apis.io/apis/disconetwork/disconetwork-recommendations-api/) — The Recommendations API from Disconetwork — 1 operation(s) for recommendations.
+
+### Published properties
+
+Each property below is a page on APIs.io carrying the machine-readable artifact and what it says.
+
+#### AsyncAPI (1)
+
+Event-driven and webhook contracts.
+
+- [Disconetwork Event Surface](https://apis.io/asyncapis/disconetwork/disconetwork-event-surface/)
+
+#### Agentic access (1)
+
+Which operations an agent can call, which act, and which need a human in the loop.
+
+- [Disconetwork Agentic Access](https://apis.io/agentic-access/disconetwork/disconetwork-agentic-access/)
+
+#### Collections (5)
+
+Postman and Open Collection request collections.
+
+- [External API for Disco Integration Partners](https://apis.io/collections/disconetwork/open-disconetwork-partner-api/)
+- [Disco Reporting API](https://apis.io/collections/disconetwork/open-disconetwork-reporting-api-v1/)
+- [Disco Reporting API V2](https://apis.io/collections/disconetwork/open-disconetwork-reporting-api-v2/)
+- [Disco Reporting API](https://apis.io/collections/disconetwork/postman-disconetwork-reporting-v1/)
+- [Disco Reporting API V2](https://apis.io/collections/disconetwork/postman-disconetwork-reporting-v2/)
+
+#### Overlays (3)
+
+OpenAPI overlays, including conversational phrasing for each operation.
+
+- [Disconetwork Partner Api Overlay](https://apis.io/overlays/disconetwork/disconetwork-partner-api-overlay/)
+- [Disconetwork Reporting Api V1 Overlay](https://apis.io/overlays/disconetwork/disconetwork-reporting-api-v1-overlay/)
+- [Disconetwork Reporting Api V2 Overlay](https://apis.io/overlays/disconetwork/disconetwork-reporting-api-v2-overlay/)
+
+#### Security (2)
+
+Authentication, trust centre, and vulnerability disclosure.
+
+- [Disconetwork Authentication](https://apis.io/security/disconetwork/disconetwork-authentication/)
+- [Disconetwork Domain Security](https://apis.io/security/disconetwork/disconetwork-domain-security/)
+
+#### Plans and pricing (1)
+
+Published plans, tiers and prices.
+
+- [Disconetwork Plans Pricing](https://apis.io/plans/disconetwork/disconetwork-plans-pricing/)
+
+#### Rate limits (1)
+
+Published request limits.
+
+- [Disconetwork Rate Limits](https://apis.io/rate-limits/disconetwork/disconetwork-rate-limits/)
+
+## Where to find this API
+
+Links to the company's own pages. This repository publishes no copy of their specifications — the canonical document is theirs and lives at the URLs below.
+
+- [Website](https://disconetwork.com)
+- [Documentation](https://docs.disconetwork.com/docs/introduction)
+- [Getting started](https://docs.disconetwork.com/docs/publish-discofeed)
+- [API reference](https://docs.disconetwork.com/docs/api-ref/external-api-for-disco-integration-partners)
+- [Pricing](https://support.disconetwork.com/hc/en-us/articles/15854633791003-Disco-Pricing-Billing)
+- [Sign up](https://disconetwork.com/book-a-demo)
+- [Blog](https://disconetwork.com/press)
+- [Terms of service](https://disconetwork.com/terms-of-service)
+- [Privacy policy](https://disconetwork.com/privacy-policy)
+- [Status](https://status.disconetwork.com)
+
+## API Evangelist rating
+
+**Kin Score 44.2** — developing · rubric 0.25.0 · scored 2026-10-23
+
+| Facet | Score |
+|---|---|
+| Discoverability | 78.6 |
+| Contract quality | 56.8 |
+| Contract governance | 4.5 |
+| Operational transparency | 52.6 |
+| Developer ergonomics | 65.6 |
+| Access clarity | 10.5 |
+
+**Agent readiness 34.5** — agent-ready
+
+| Agent-readiness dimension | Result |
+|---|---|
+| Spec Presence | yes |
+| Agentic Access | derived (partial credit) |
+| Reversibility Documented | — |
+| MCP Server | — |
+| Auth Clarity | bearer (partial credit) |
+| Idempotency | — |
+| Error Semantics | derived (partial credit) |
+| OpenAPI Examples | verified |
+| Rate Limit Signal | documented (partial credit) |
+| Event Surface Described | yes |
+| Agent Skills | derived (partial credit) |
+| Well Known Catalog | — |
+| Consent Identity | — |
+| Agent Card | — |
+| Dry Run Mode | — |
+| Delegated Identity | — |
+| Protected Resource Metadata | — |
+| Dynamic Client Registration | — |
+| Agentic Commerce | — |
+| Pagination Ratio | paginated |
+| Operation Distinctiveness | distinct |
+
+**Regulatory alignment 16.7** — Horizontal (data, software, accessibility, platform)
+
+The rubric is published at [github.com/api-evangelist/kin-score](https://github.com/api-evangelist/kin-score). The per-check breakdown behind these numbers — which checks were earned, partial or missed — along with score history and how this provider compares to its peers, is available at [apis.io/providers/disconetwork/](https://apis.io/providers/disconetwork/).
+
+## How this profile is made
+
+API Evangelist profiles a company's public API surface the way a developer would find it: the website, developer portal and documentation, the specifications it publishes, its public repositories, and its pricing, status and changelog pages. From that it derives the properties above — contracts split per API, workflows, schemas, collections, governance rules, plans and rate limits — and scores them against the published [Kin Score rubric](https://github.com/api-evangelist/kin-score).
+
+The artifacts are published on [APIs.io](https://apis.io), not in this repository. This repository is the public record for Disconetwork: the place to say something is wrong, missing or out of date, and to ask for a re-score or a removal.
+
+## Open an issue
+
+- **Something about this listing** — a wrong description, a missing API, a stale artifact or a question about the rating: [open an issue on this repository](https://github.com/api-evangelist/disconetwork/issues/new).
+- **A new API, or one that is not in the catalog yet** — [submit it on APIs.io](https://apis.io/add/).
+- **Anything else** — [the APIs.io inbox](https://github.com/api-search/inbox/issues/new) or [info@apievangelist.com](mailto:info@apievangelist.com).
